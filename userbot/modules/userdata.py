@@ -9,7 +9,8 @@ import os
 
 from telethon.errors import ImageProcessFailedError, PhotoCropSizeSmallError
 from telethon.errors.rpcerrorlist import (PhotoExtInvalidError,
-                                          UsernameOccupiedError)
+                                          UsernameOccupiedError,
+                                          UsernameInvalidError)
 from telethon.tl.functions.account import (UpdateProfileRequest,
                                            UpdateUsernameRequest)
 from telethon.tl.functions.photos import (DeletePhotosRequest,
