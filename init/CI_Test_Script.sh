@@ -67,7 +67,7 @@ lint() {
             git add .
             git commit -m "[AUTO-LINT]: ${message}" --author="${COMMIT_AUTHOR}" --signoff
             git remote rm origin
-            git remote add origin https://baalajimaestro:${GH_PERSONAL_TOKEN}@github.com/raphielgang/telegram-userbot.git
+            git remote add origin https://baalajimaestro:${GH_PERSONAL_TOKEN}@github.com/watzon/tg_userbot.git
             git push -f origin $PARSE_BRANCH
             tg_sendinfo "<code>Code has been Linted and Force Pushed!</code>"
   else
