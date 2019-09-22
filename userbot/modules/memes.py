@@ -558,7 +558,7 @@ async def thonkify(thonk):
         try:
             await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
         except errors.FloodWaitError as e:
-            time.sleep(e.seconds)
+            time.sleep(e.seconds + 1)
             await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
 
 @register(outgoing=True, pattern="^.fry")
@@ -587,7 +587,7 @@ async def fry(message):
         try:
             await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
         except errors.FloodWaitError as e:
-            time.sleep(e.seconds)
+            time.sleep(e.seconds + 1)
             await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
 
 async def resize_photo(photo):
