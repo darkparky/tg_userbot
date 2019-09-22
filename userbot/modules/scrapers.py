@@ -219,12 +219,12 @@ async def text_to_speech(query):
             await query.client.send_message(
                 BOTLOG_CHATID, "tts of " + message + " executed successfully!")
 
-@register(outgoing=True, pattern=r"^.trt(?: |$)(to=[\S]{2}\s?)?([\s\S]*)")
+@register(outgoing=True, pattern=r"^.trt(?: |$)(?:to=([\S]{2})\s?)?([\s\S]*)")
 async def translateme(trans):
     """ For .trt command, translate the given text using Google Translate. """
     translator = Translator()
     textx = await trans.get_reply_message()
-    dest_lang = trans.pattern_match.group(2) or LANG
+    dest_lang = trans.pattern_match.group(1) or LANG
     message = trans.pattern_match.group(2)
     if message:
         pass
