@@ -11,11 +11,15 @@ import random
 import re
 import time
 import base64
+import tempfile
+import math
 from io import BytesIO
 
 from cowpy import cow
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageOps, ImageEnhance
 from userbot.modules.thonkify_dict import thonkifydict
+from userbot.modules.deepfryer import deepfry
+
 
 from userbot import CMD_HELP, ZALG_LIST
 from userbot.events import register
@@ -550,4 +554,57 @@ async def thonkify(thonk):
         await thonk.delete()
         await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
 
-CMD_HELP.update({"memes": "Ask 🅱️ottom🅱️ext🅱️ot (@NotAMemeBot) for that."})
+@register(outgoing=True, pattern="^.fry")
+async def fry(message):
+    """ For .fry command, fries stickers or creates new ones. """
+    reply_message = await message.get_reply_message()
+    photo = BytesIO()
+    if message.media:
+        media_bytes = await message.download_media(photo)
+    elif reply_message.media:
+        media_bytes = await reply_message.download_media(photo)
+    else:
+        await message.edit("`Can't deepfry nothing`")
+        return
+
+    if photo:    
+        image = await resize_photo(photo)
+        image = await deepfry(image)
+
+        temp = tempfile.NamedTemporaryFile(delete=False, suffix='.jpg')
+        temp.close()
+        image.save(temp.name)
+
+        await message.delete()
+        await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
+
+async def resize_photo(photo):
+    """ Resize the given photo to 512x512 """
+    image = Image.open(photo)
+    maxsize = (512, 512)
+    if (image.width and image.height) < 512:
+        size1 = image.width
+        size2 = image.height
+        if image.width > image.height:
+            scale = 512/size1
+            size1new = 512
+            size2new = size2 * scale
+        else:
+            scale = 512/size2
+            size1new = size1 * scale
+            size2new = 512
+        size1new = math.floor(size1new)
+        size2new = math.floor(size2new)
+        sizenew = (size1new, size2new)
+        image = image.resize(sizenew)
+    else:
+        image.thumbnail(maxsize)
+
+    return image
+
+CMD_HELP.update({
+    ".cowsay": "Returns a cowsay with the included text. Also works with several other 'says'",
+    ".cp": "Copypasta, the famous meme",
+    ".vapor": "Vaporize everything!",
+    ".str": "Stretch the text"
+})

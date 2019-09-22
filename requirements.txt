@@ -32,3 +32,4 @@ pyDownload
 PyDrive
 psutil
 pylast
+deeppyer >= 1.0.1
