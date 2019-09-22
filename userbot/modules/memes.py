@@ -587,6 +587,7 @@ async def fry(message):
         try:
             await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
         except errors.FloodWaitError as e:
+            time.sleep(e.seconds)
             await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
 
 async def resize_photo(photo):
