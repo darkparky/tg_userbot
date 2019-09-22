@@ -197,6 +197,9 @@ async def text_to_speech(query):
     except RuntimeError:
         await query.edit('Error loading the languages dictionary.')
         return
+    
+    await query.delete()
+
     tts = gTTS(message, LANG)
     tts.save("k.mp3")
     with open("k.mp3", "rb") as audio:
@@ -206,13 +209,11 @@ async def text_to_speech(query):
         tts = gTTS(message, LANG)
         tts.save("k.mp3")
     with open("k.mp3", "r"):
-        await query.client.send_file(query.chat_id, "k.mp3", voice_note=True)
+        await query.client.send_file(query.chat_id, "k.mp3", voice_note=True, reply_to=textx)
         os.remove("k.mp3")
         if BOTLOG:
             await query.client.send_message(
                 BOTLOG_CHATID, "tts of " + message + " executed successfully!")
-        await query.delete()
-
 
 @register(outgoing=True, pattern=r"^.trt(?: |$)([\s\S]*)")
 async def translateme(trans):
@@ -254,7 +255,7 @@ async def lang(value):
     """ For .lang command, change the default langauge of userbot scrapers. """
     global LANG
     LANG = value.pattern_match.group(1)
-    await value.edit("Default language changed to **" + LANG + "**")
+    await value.delete()
     if BOTLOG:
         await value.client.send_message(
             BOTLOG_CHATID, "Default language changed to **" + LANG + "**")

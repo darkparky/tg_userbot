@@ -13,12 +13,13 @@ import subprocess
 import sys
 import traceback
 from os import remove
-from time import gmtime, strftime
+from time import gmtime, strftime, sleep
 from traceback import format_exc
 
 from telethon import events
+from telethon.errors.rpcbaseerrors import FloodError
 
-from userbot import bot, BRAIN_CHECKER
+from userbot import bot, BRAIN_CHECKER, BOTLOG, BOTLOG_CHATID
 from telethon.tl.types import ChannelParticipantsAdmins
 
 
@@ -80,6 +81,15 @@ def register(**args):
                 await func(check)
             # This is a gay exception and must be passed out. So that it doesnt spam chats
 
+            except FloodError:
+                errored = True
+                while errored:
+                    sleep(2)
+                    try:
+                        await func(check)
+                        errored = False
+                    except:
+                        pass
             except KeyboardInterrupt:
                 pass
             except BaseException:
@@ -134,11 +144,18 @@ def register(**args):
                     file.write(ftext)
                     file.close()
 
-                    await check.client.send_file(
-                        check.chat_id,
-                        "error.log",
-                        caption=text,
-                    )
+                    if BOTLOG:
+                        await check.client.send_file(
+                            BOTLOG_CHATID,
+                            "error.log",
+                            caption=text,
+                        )
+                    else:
+                        await check.client.send_file(
+                            check.chat_id,
+                            "error.log",
+                            caption=text,
+                        )
                     remove("error.log")
             else:
                 pass

@@ -19,7 +19,7 @@ class Colours:
 
 
 # TODO: Replace face recognition API with something like OpenCV.
-async def deepfry(img: Image, *, token: str=None, url_base: str='westcentralus', session: aiohttp.ClientSession=None, type=DeepfryTypes.RED) -> Image:
+async def deepfry(img: Image, *, token: str=None, api_url: str=None, session: aiohttp.ClientSession=None, type=DeepfryTypes.RED) -> Image:
     """
     Deepfry an image.
     img: PIL.Image - Image to deepfry.
@@ -33,15 +33,16 @@ async def deepfry(img: Image, *, token: str=None, url_base: str='westcentralus',
     if type not in DeepfryTypes:
         raise ValueError(f'Unknown deepfry type "{type}", expected a value from deeppyer.DeepfryTypes')
 
-    if token:
-        req_url = f'https://{url_base}.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=true' # WHY THE FUCK IS THIS SO LONG
+    if token and api_url:
+        req_url = f'{api_url}/detect?returnFaceId=false&returnFaceLandmarks=true' # WHY THE FUCK IS THIS SO LONG
         headers = {
             'Content-Type': 'application/octet-stream',
             'Ocp-Apim-Subscription-Key': token,
-            'User-Agent': 'DeepPyer/1.0'
+            'User-Agent': 'DeepPyer/1.0',
+            'Content-Length': str(len(img.tobytes()))
         }
-        b = BytesIO()
 
+        b = BytesIO()
         img.save('flare.png')
         b.seek(0)
 

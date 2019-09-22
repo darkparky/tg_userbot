@@ -32,7 +32,7 @@ async def let_me_google_that_for_you(lmgtfy):
         elif textx:
             query = textx
             query = query.message
-        reply_text = 'Hmm, [Let Me Google That For You](http://lmgtfy.com/?s=g&iie=1&q=' + query.replace(" ", "+") + ")"
+        reply_text = 'Hmm... [Let Me Google That For You](http://lmgtfy.com/?s=g&iie=1&q=' + query.replace(" ", "+") + ")"
         await lmgtfy.edit(reply_text)
 
 @register(outgoing=True, pattern="^.random")

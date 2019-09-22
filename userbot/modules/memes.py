@@ -13,17 +13,16 @@ import time
 import base64
 import tempfile
 import math
-import time
 from io import BytesIO
 
 from cowpy import cow
-from telethon import errors
 from PIL import Image, ImageChops, ImageOps, ImageEnhance
 from userbot.modules.thonkify_dict import thonkifydict
 from userbot.modules.deepfryer import deepfry
 
 
-from userbot import CMD_HELP, ZALG_LIST
+from userbot import (CMD_HELP, ZALG_LIST, BOTLOG, BOTLOG_CHATID,
+                        FACE_API_KEY, FACE_API_URL)
 from userbot.events import register
 
 # ================= CONSTANT =================
@@ -534,10 +533,10 @@ async def thonkify(thonk):
     # Image.new creates a new image and paste "pastes" the character one by one comparing it with "value" variable
     x = 0
     y = 896
-    image = Image.new('RGBA', [x, y], (0, 0, 0))
+    image = Image.new('RGBA', [x, y], (0, 0, 0, 0))
     for character in message:
         value = thonkifydict.get(character)
-        addedimg = Image.new('RGBA', [x + value.size[0] + tracking.size[0], y], (0, 0, 0))
+        addedimg = Image.new('RGBA', [x + value.size[0] + tracking.size[0], y], (0, 0, 0, 0))
         addedimg.paste(image, [0, 0])
         addedimg.paste(tracking, [x, 0])
         addedimg.paste(value, [x + tracking.size[0], 0])
@@ -554,12 +553,8 @@ async def thonkify(thonk):
         image.save(buffer, 'PNG')
         buffer.seek(0)
         await thonk.delete()
+        await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
 
-        try:
-            await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
-        except errors.FloodWaitError as e:
-            time.sleep(e.seconds + 1)
-            await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
 
 @register(outgoing=True, pattern="^.fry")
 async def fry(message):
@@ -567,28 +562,23 @@ async def fry(message):
     reply_message = await message.get_reply_message()
     photo = BytesIO()
     if message.media:
-        media_bytes = await message.download_media(photo)
+        await message.download_media(photo)
     elif reply_message.media:
-        media_bytes = await reply_message.download_media(photo)
+        await reply_message.download_media(photo)
     else:
         await message.edit("`Can't deepfry nothing`")
         return
 
     if photo:    
         image = await resize_photo(photo)
-        image = await deepfry(image)
+        image = await deepfry(image, token=FACE_API_KEY, api_url=FACE_API_URL)
 
         temp = tempfile.NamedTemporaryFile(delete=False, suffix='.jpg')
         temp.close()
         image.save(temp.name)
 
         await message.delete()
-        
-        try:
-            await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
-        except errors.FloodWaitError as e:
-            time.sleep(e.seconds + 1)
-            await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
+        await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
 
 async def resize_photo(photo):
     """ Resize the given photo to 512x512 """
