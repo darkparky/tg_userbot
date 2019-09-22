@@ -619,5 +619,10 @@ CMD_HELP.update({
     "cp": "Copypasta, the famous meme",
     "vapor": "Vaporize everything!",
     "str": "Stretch the text",
+    "zal": "Invoke the feeling of chaos",
+    "owo": "UwU",
+    "clap": "Clap for someone",
+    "shg": "Shrug",
+    "thonk": "Thonkify an image",
     "fry": "Deep fry an image"
 })
