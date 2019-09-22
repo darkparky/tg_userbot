@@ -22,7 +22,8 @@ async def help(event):
         await event.edit("Please specify which module do you want help for!")
         string = ""
         commands = list(CMD_HELP.values())
-        for i in commands.sort():
+        commands.sort()
+        for i in commands:
             string += "`" + str(i)
             string += "`, "
         string = string[:-2]
