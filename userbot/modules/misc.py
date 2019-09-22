@@ -15,6 +15,26 @@ from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 
 
+@register(outgoing=True, pattern="^Oof$")
+async def Oof(e):
+    t = "Oof"
+    for j in range(15):
+        t = t[:-1] + "of"
+        await e.edit(t)
+
+@register(outgoing=True, pattern="^.lfy(?: |$)(.*)",)
+async def let_me_google_that_for_you(lmgtfy):
+    if not lmgtfy.text[0].isalpha() and lmgtfy.text[0] not in ("/", "#", "@", "!"):
+        textx = await lmgtfy.get_reply_message()
+        query = lmgtfy.text
+        if query[5:]:
+            query = str(query[5:])
+        elif textx:
+            query = textx
+            query = query.message
+        reply_text = 'Hmm, [Let Me Google That For You](http://lmgtfy.com/?s=g&iie=1&q=' + query.replace(" ", "+") + ")"
+        await lmgtfy.edit(reply_text)
+
 @register(outgoing=True, pattern="^.random")
 async def randomise(items):
     """ For .random command, get a random item from the list of items. """
@@ -68,13 +88,6 @@ async def knocksomesense(event):
     execl(sys.executable, sys.executable, *sys.argv)
     # Shut the existing one down
     exit()
-
-
-@register(outgoing=True, pattern="^.support$")
-async def bot_support(wannahelp):
-    """ For .support command, just returns the group link. """
-    await wannahelp.edit("Link Portal: @userbot_support")
-
 
 @register(outgoing=True, pattern="^.repo$")
 async def repo_is_here(wannasee):
