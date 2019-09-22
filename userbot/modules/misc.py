@@ -11,16 +11,36 @@ from os import execl
 from random import randint
 from time import sleep
 
+from telethon.tl.types import ChannelParticipantsAdmins
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 
+@register(outgoing=True, pattern="^r/(\S+)")
+async def subreddit(r):
+    sub = r.pattern_match.group(1)
+    link = f"**[r/{sub}](https://reddit.com/r/{sub})**"
 
-@register(outgoing=True, pattern="^Oof$")
+    await r.edit(link)
+
+@register(outgoing=True, pattern="^([Oo]of)$")
 async def Oof(e):
-    t = "Oof"
+    t = e.pattern_match.group(1)
     for j in range(15):
         t = t[:-1] + "of"
         await e.edit(t)
+
+@register(outgoing=True, pattern="^.admins?")
+async def admins(msg):
+    admins = await msg.client.get_participants(msg.chat, filter=ChannelParticipantsAdmins)
+    admins = map(lambda x: x if not x.bot else None, admins)
+    admins = [i for i in list(admins) if i]
+    mentions = map(make_mention, admins)
+    response = ' '.join(mentions)
+
+    reply_message = await msg.get_reply_message()
+
+    await msg.client.send_message(msg.chat, response, reply_to=reply_message)
+    await msg.delete()
 
 @register(outgoing=True, pattern="^.lfy(?: |$)(.*)",)
 async def let_me_google_that_for_you(lmgtfy):
@@ -94,6 +114,14 @@ async def repo_is_here(wannasee):
     """ For .repo command, just returns the repo URL. """
     await wannasee.edit("https://github.com/watzon/tg_userbot/")
 
+def make_mention(user):
+    if user.username:
+        return f"@{user.username}"
+    else:
+        names = [user.first_name, user.last_name]
+        names = [i for i in list(names) if i]
+        full_name = ' '.join(names)
+        return f"[{full_name}](tg://user?id={user.id})"
 
 CMD_HELP.update({
     'random':
