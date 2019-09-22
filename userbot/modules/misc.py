@@ -129,6 +129,10 @@ def make_mention(user):
         full_name = ' '.join(names)
         return f"[{full_name}](tg://user?id={user.id})"
 
+CMD_HELP.update({"linux": "Show some linux copypasta"})
+CMD_HELP.update({"lfy": "Here, let me google that for you"})
+CMD_HELP.update({"admins": "Tag all admins"})
+
 CMD_HELP.update({
     'random':
     ".random <item1> <item2> ... <itemN>"

@@ -94,7 +94,9 @@ async def pingme(pong):
     duration = (end - start).microseconds / 1000
     await pong.edit("`Pong!\n%sms`" % (duration))
 
-
+CMD_HELP.update(
+    {"dig": ".dig"
+     "\nUsage: Returns dns info for a domain."})
 CMD_HELP.update(
     {"speed": ".speed"
      "\nUsage: Conduct a speedtest and show the results."})

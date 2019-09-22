@@ -486,6 +486,12 @@ CMD_HELP.update({
     "downloaded. Will send the link if the video is larger than 50 MB."
 })
 CMD_HELP.update({
+    'yt_mp3':
+    ".yt_mp3 <url>"
+    "\nUsage: Download audio from YouTube. "
+    "First fetches the video then converts it to an mp3. Might take some time."
+})
+CMD_HELP.update({
     'cr':
     ".cr <from> <to>"
     "\nUsage: Currency converter, converts <from> to <to>."
