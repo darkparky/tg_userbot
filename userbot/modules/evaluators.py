@@ -17,12 +17,15 @@ from userbot.events import register
 @register(outgoing=True, pattern="^.eval(?: |$)(.*)")
 async def evaluate(query):
     """ For .eval command, evaluates the given Python expression. """
+    reply_message = await query.get_reply_message()
     if query.is_channel and not query.is_group:
         await query.edit("`Eval isn't permitted on channels`")
         return
 
     if query.pattern_match.group(1):
         expression = query.pattern_match.group(1)
+    elif reply_message:
+        expression = reply_message.text
     else:
         await query.edit("``` Give an expression to evaluate. ```")
         return
@@ -71,15 +74,20 @@ async def evaluate(query):
 @register(outgoing=True, pattern=r"^.exec(?: |$)([\s\S]*)")
 async def run(run_q):
     """ For .exec command, which executes the dynamically created program """
-    code = run_q.pattern_match.group(1)
+    reply_message = await run_q.get_reply_message()
+    
+    if run_q.pattern_match.group(1):
+        code = code = run_q.pattern_match.group(1)
+    elif reply_message:
+        code = reply_message.text
+    else:
+        await run_q.edit("``` At least a variable is required to \
+execute. Use .help exec for an example.```")
+        return
+
 
     if run_q.is_channel and not run_q.is_group:
         await run_q.edit("`Exec isn't permitted on channels!`")
-        return
-
-    if not code:
-        await run_q.edit("``` At least a variable is required to \
-execute. Use .help exec for an example.```")
         return
 
     if code in ("userbot.session", "config.env"):

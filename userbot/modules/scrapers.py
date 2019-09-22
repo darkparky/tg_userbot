@@ -7,13 +7,17 @@
 
 import os
 import shutil
+import tempfile
+import imageio
 from asyncio import create_subprocess_shell as asyncsh
 from asyncio.subprocess import PIPE as asyncsh_PIPE
 from html import unescape
 from re import findall
 from urllib import parse
 from urllib.error import HTTPError
+from urllib.parse import urlsplit, parse_qs
 
+import moviepy.editor as mp
 from emoji import get_emoji_regexp
 from google_images_download import google_images_download
 from googleapiclient.discovery import build
@@ -388,6 +392,35 @@ async def download_video(v_url):
     os.remove(f"{safe_filename(video.title)}.mp4")
     os.remove('thumbnail.jpg')
     await v_url.delete()
+
+@register(outgoing=True, pattern="^.yt_mp3 (\S*)")
+async def youtube_mp3(yt):
+    reply_message = await yt.get_reply_message()
+    url = yt.pattern_match.group(1)
+
+    await yt.edit("**Processing...**")
+
+    video = YouTube(url)
+    stream = video.streams.filter(progressive=True,
+                                            subtype="mp4").first()
+
+    await yt.edit("**Downloading video...**")
+    stream.download(filename='video')
+
+    await yt.edit("**Converting video...**")
+    clip = mp.VideoFileClip('video.mp4')
+    clip.audio.write_audiofile(f'{safe_filename(video.title)}.mp3')
+
+    await yt.edit("**Sending mp3...**")
+    await yt.client.send_file(yt.chat.id,
+                        f'{safe_filename(video.title)}.mp3',
+                        caption=f"{video.title}",
+                        reply_to=reply_message)
+    
+    await yt.delete()
+
+    os.remove('video.mp4')
+    os.remove(f'{safe_filename(video.title)}.mp3')
 
 
 @register(outgoing=True, pattern=r"^.cr (\S*) ?(\S*) ?(\S*)")

@@ -3,6 +3,7 @@ FROM baalajimaestro/userbot_python:latest
 ENV PATH="/app/bin:$PATH"
 WORKDIR /app
 
+RUN apk add ffmpeg
 RUN git clone https://github.com/watzon/tg_userbot.git -b master /app
 
 #

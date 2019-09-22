@@ -13,7 +13,7 @@ gtts>=2.0.1
 hachoir
 pybase64>=0.4.0
 python-dotenv
-pytube>=9.5.1
+git+https://github.com/bigg215/pytube.git
 pytz
 requests>=2.18.4
 speedtest-cli>=2.0.2
@@ -33,3 +33,5 @@ PyDrive
 psutil
 pylast
 deeppyer >= 1.0.1
+moviepy
+imageio-ffmpeg

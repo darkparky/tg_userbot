@@ -9,6 +9,8 @@
 from datetime import datetime
 
 import speedtest
+import requests
+import uncurl
 from dns.resolver import Resolver
 from telethon import functions
 
@@ -35,7 +37,6 @@ async def dig_dns(dig):
     response = response + '\n'.join(map(str, additionals))
 
     await dig.edit(response)
-
 
 @register(outgoing=True, pattern="^.speed$")
 async def speedtst(spd):
