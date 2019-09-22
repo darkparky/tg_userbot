@@ -10,7 +10,6 @@ from datetime import datetime
 
 import speedtest
 import requests
-import uncurl
 from dns.resolver import Resolver
 from telethon import functions
 
