@@ -13,9 +13,11 @@ import time
 import base64
 import tempfile
 import math
+import time
 from io import BytesIO
 
 from cowpy import cow
+from telethon import errors
 from PIL import Image, ImageChops, ImageOps, ImageEnhance
 from userbot.modules.thonkify_dict import thonkifydict
 from userbot.modules.deepfryer import deepfry
@@ -552,7 +554,12 @@ async def thonkify(thonk):
         image.save(buffer, 'PNG')
         buffer.seek(0)
         await thonk.delete()
-        await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
+
+        try:
+            await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
+        except errors.FloodWaitError as e:
+            time.sleep(e.seconds)
+            await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
 
 @register(outgoing=True, pattern="^.fry")
 async def fry(message):
@@ -576,7 +583,11 @@ async def fry(message):
         image.save(temp.name)
 
         await message.delete()
-        await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
+        
+        try:
+            await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
+        except errors.FloodWaitError as e:
+            await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
 
 async def resize_photo(photo):
     """ Resize the given photo to 512x512 """
