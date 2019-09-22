@@ -5,6 +5,7 @@ WORKDIR /app
 
 RUN apk add ffmpeg
 RUN git clone https://github.com/watzon/tg_userbot.git -b master /app
+RUN pip install -r ./requirements.txt
 
 #
 # Copies session and config(if it exists)
