@@ -6,17 +6,21 @@
 """ Userbot module containing commands related to the \
     Information Superhighway(yes, Internet). """
 
+
+import re
+import urllib
 from datetime import datetime
 
-import speedtest
 import requests
+import speedtest
+from requests import ConnectionError
 from dns.resolver import Resolver
 from telethon import functions
 
 from userbot import CMD_HELP
 from userbot.events import register
 
-@register(outgoing=True, pattern="^.dig (\S+)")
+@register(outgoing=True, pattern=r"^.dig (\S+)")
 async def dig_dns(dig):
     resolver = Resolver()
     host = dig.pattern_match.group(1)
@@ -36,6 +40,39 @@ async def dig_dns(dig):
     response = response + '\n'.join(map(str, additionals))
 
     await dig.edit(response)
+
+@register(outgoing=True, pattern=r"^.f(?:ollow)?(?: |$)(.*)?")
+async def follow_url(event):
+    reply_message = await event.get_reply_message()
+    message_text = event.pattern_match.group(1)
+
+    await event.edit("Fetching links...")
+
+    urls = []
+    if message_text:
+        matches = re.findall(r'(https?://\S+)', message_text)
+        urls.extend(list(matches))
+    elif reply_message:
+        matches = re.findall(r'(https?://\S+)', reply_message.text)
+        urls.extend(list(matches))
+    else:
+        await event.edit("No URLs found :(")
+        return
+
+    base_domain = not '.full' in str(message_text)
+    await event.edit("Following links...")
+
+    follows = []
+    for url in urls:
+        followed = await resolve_url(url, base_domain)
+        follows.append((url, followed))
+
+    message = []
+    for follow in follows:
+        message.append(f"**Original URL:** {follow[0]} \n**Followed URL:** {follow[1]}")
+    
+    message = '\n \n'.join(message)
+    await event.edit(message, link_preview=False)
 
 @register(outgoing=True, pattern="^.speed$")
 async def speedtst(spd):
@@ -93,6 +130,29 @@ async def pingme(pong):
     end = datetime.now()
     duration = (end - start).microseconds / 1000
     await pong.edit("`Pong!\n%sms`" % (duration))
+
+async def resolve_url(url: str, base_domain: bool = True) -> str:
+    """Follow all redirects and return the base domain
+    Args:
+        url: The url
+    Returns:
+        The base comain as given by urllib.parse
+    """
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
+    if not url.startswith('http'):
+        url = f'http://{url}'
+    try:
+        req = requests.get(url, headers=headers)
+        url = req.url
+    except ConnectionError:
+        pass
+    netloc = urllib.parse.urlparse(url).netloc
+    # split up the result to only get the base domain
+    # www.sitischu.com => sitischu.com
+    _base_domain = netloc.split('.', maxsplit=netloc.count('.') - 1)[-1]
+    if _base_domain and base_domain:
+        url = _base_domain
+    return url
 
 CMD_HELP.update(
     {"dig": ".dig"
