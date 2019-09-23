@@ -19,7 +19,7 @@ from traceback import format_exc
 from telethon import events
 from telethon.errors.rpcbaseerrors import FloodError
 
-from userbot import bot, BRAIN_CHECKER, BOTLOG, BOTLOG_CHATID
+from userbot import bot, BOTLOG, BOTLOG_CHATID
 from telethon.tl.types import ChannelParticipantsAdmins
 
 
@@ -63,20 +63,7 @@ def register(**args):
             if incoming_func and not check.out:
                 await func(check)
                 return
-            # Check if the sudo is an admin already, if yes, we can avoid acting to his command.
-            #If his admin was limited, its his problem.
 
-            if not check.out and check.sender_id in BRAIN_CHECKER and permit_sudo:
-                async for user in check.client.iter_participants(
-                        check.chat_id, filter=ChannelParticipantsAdmins):
-                    if user.id in BRAIN_CHECKER:
-                        return
-            # Avoid non-sudos from triggering the command
-            elif not check.out and check.sender_id not in BRAIN_CHECKER:
-                return
-            # Announce that you are handling the request
-            elif not check.out and check.sender_id in BRAIN_CHECKER and permit_sudo:
-                await check.respond("`Processing Sudo Request!`")
             try:
                 await func(check)
             # This is a gay exception and must be passed out. So that it doesnt spam chats

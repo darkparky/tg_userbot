@@ -1,7 +1,5 @@
 config.env
 __pycache__/*
-brains.check
-learning-data-root.check
 userbot.db
 userbot.session
 userbot.session-journal
