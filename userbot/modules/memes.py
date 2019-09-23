@@ -560,13 +560,16 @@ async def thonkify(thonk):
 async def fry(message):
     """ For .fry command, fries stickers or creates new ones. """
     reply_message = await message.get_reply_message()
+    
     photo = BytesIO()
     if message.media:
+        await message.edit("Frying...")
         await message.download_media(photo)
     elif reply_message.media:
+        await message.edit("Frying...")
         await reply_message.download_media(photo)
     else:
-        await message.edit("`Can't deepfry nothing`")
+        await message.edit("Can't deepfry nothing")
         return
 
     if photo:    
