@@ -690,38 +690,47 @@ async def get_user_from_id(user, event):
 
 CMD_HELP.update(
     {"promote": "Usage: Reply to message with .promote to promote them."})
+
 CMD_HELP.update({"ban": "Usage: Reply to message with .ban to ban them."})
+
 CMD_HELP.update({
     "demote":
     "Usage: Reply to message with"
     ".demote to revoke their admin permissions."
 })
+
 CMD_HELP.update({
     "unban":
     "Usage: Reply to message with .unban to unban them in this chat."
 })
+
 CMD_HELP.update({
     "mute":
     "Usage: Reply tomessage with .mute "
     "to mute them, works on admins too"
 })
+
 CMD_HELP.update({
     "unmute":
     "Usage: Reply to message with .unmute "
     "to remove them from muted list."
 })
+
 CMD_HELP.update({
     "gmute":
     "Usage: Reply to message with .gmute to mute them in all "
     "groups you have in common with them."
 })
+
 CMD_HELP.update({
     "ungmute":
     "Usage: Reply message with .ungmute "
     "to remove them from the gmuted list."
 })
+
 CMD_HELP.update(
     {"delusers": "Usage: Searches for deleted accounts in a group."})
+
 CMD_HELP.update({
     "delusers clean":
     "Usage: Searches and removes "
