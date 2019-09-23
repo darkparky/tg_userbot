@@ -60,7 +60,7 @@ async def welcome_mute(chat):
         # Not an admin, so we'll just warn the admins
         else:
             # For now we're going to disable auto-mentioning of admins
-            # mentions = map(make_mention, admins(chat))
+            # mentions = map(make_mention, await admins(chat))
             message = f"""There's a good chance this person is a spammer/bot"""
             await chat.reply(message)
 
