@@ -50,10 +50,16 @@ async def add_new_filter(event):
 
     msg = "`Filter` **{}** `{} successfully`"
 
-    if await add_filter(event.chat_id, keyword, string) is True:
-        await event.edit(msg.format(keyword, 'added'))
-    else:
-        await event.edit(msg.format(keyword, 'updated'))
+    if BOTLOG:
+        if await add_filter(event.chat_id, keyword, string) is True:
+            await event.client.send_message(
+                BOTLOG_CHATID,
+                msg.format(keyword, 'added'))
+        else:
+            await event.client.send_message(
+                BOTLOG_CHATID,
+                msg.format(keyword, 'updated'))
+    event.delete()
 
 
 @register(outgoing=True, pattern="^.stop\\s.*")
@@ -64,12 +70,16 @@ async def remove_filter(event):
         return
     filt = event.text[6:]
 
-    if not await delete_filter(event.chat_id, filt):
-        await event.edit("`Filter` **{}** `doesn't exist.`".format(filt))
-    else:
-        await event.edit(
-            "`Filter` **{}** `was deleted successfully`".format(filt))
-
+    if BOTLOG:
+        if not await delete_filter(event.chat_id, filt):
+            await event.client.send_message(
+                BOTLOG_CHATID,
+                "`Filter` **{}** `doesn't exist.`".format(filt))
+        else:
+            await event.client.send_message(
+                BOTLOG_CHATID,
+                "`Filter` **{}** `was deleted successfully`".format(filt))
+    await event.delete()
 
 @register(outgoing=True, pattern="^.rmfilters (.*)")
 async def kick_marie_filter(event):
