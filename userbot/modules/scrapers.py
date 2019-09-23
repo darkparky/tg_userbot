@@ -39,25 +39,20 @@ from userbot.events import register
 LANG = "en"
 
 
-@register(outgoing=True, pattern="^.img (.*)")
+@register(outgoing=True, pattern="^.img\s+(?:lim=([0-9]+)\s?)?(?:fmt=([a-z]{3})\s?)?(.*)")
 async def img_sampler(event):
     """ For .img command, search and return images matching the query. """
     await event.edit("Processing...")
-    query = event.pattern_match.group(1)
-    lim = findall(r"lim=\d+", query)
-    try:
-        lim = lim[0]
-        lim = lim.replace("lim=", "")
-        query = query.replace("lim=" + lim[0], "")
-    except IndexError:
-        lim = 2
+    lim = event.pattern_match.group(1) or 3
+    fmt = event.pattern_match.group(2) or 'jpg'
+    query = event.pattern_match.group(3)
     response = google_images_download.googleimagesdownload()
 
     # creating list of arguments
     arguments = {
         "keywords": query,
         "limit": lim,
-        "format": "jpg",
+        "format": fmt,
         "no_directory": "no_directory"
     }
 
