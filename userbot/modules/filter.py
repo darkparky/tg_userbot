@@ -26,6 +26,7 @@ async def filter_incoming_handler(handler):
             if not filters:
                 return
             for trigger in filters:
+                print(trigger)
                 pro = re.fullmatch(trigger["keyword"],
                                     incoming_message,
                                     flags=re.IGNORECASE)
