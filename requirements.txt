@@ -36,3 +36,4 @@ moviepy
 imageio
 imageio-ffmpeg
 antispam
+pycrypto

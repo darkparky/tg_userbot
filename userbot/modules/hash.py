@@ -5,67 +5,58 @@
 #
 """ Userbot module containing hash and encode/decode commands. """
 
-from subprocess import PIPE
-from subprocess import run as runapp
+import re
+from importlib import import_module
 
 import pybase64
+from Crypto.Hash import MD5
 
 from userbot import CMD_HELP
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.hash (.*)")
+@register(outgoing=True, pattern="^.hash ([a-zA-z0-9]+)(?:\s+(.*))?")
 async def gethash(hash_q):
     """ For .hash command, find the md5,
         sha1, sha256, sha512 of the string. """
-    hashtxt_ = hash_q.pattern_match.group(1)
-    hashtxt = open("hashdis.txt", "w+")
-    hashtxt.write(hashtxt_)
-    hashtxt.close()
-    md5 = runapp(["md5sum", "hashdis.txt"], stdout=PIPE)
-    md5 = md5.stdout.decode()
-    sha1 = runapp(["sha1sum", "hashdis.txt"], stdout=PIPE)
-    sha1 = sha1.stdout.decode()
-    sha256 = runapp(["sha256sum", "hashdis.txt"], stdout=PIPE)
-    sha256 = sha256.stdout.decode()
-    sha512 = runapp(["sha512sum", "hashdis.txt"], stdout=PIPE)
-    runapp(["rm", "hashdis.txt"], stdout=PIPE)
-    sha512 = sha512.stdout.decode()
-    ans = ("Text: `" + hashtxt_ + "`\nMD5: `" + md5 + "`SHA1: `" + sha1 +
-           "`SHA256: `" + sha256 + "`SHA512: `" + sha512[:-1] + "`")
-    if len(ans) > 4096:
-        hashfile = open("hashes.txt", "w+")
-        hashfile.write(ans)
-        hashfile.close()
-        await hash_q.client.send_file(
-            hash_q.chat_id,
-            "hashes.txt",
-            reply_to=hash_q.id,
-            caption="`It's too big, sending a text file instead. `")
-        runapp(["rm", "hashes.txt"], stdout=PIPE)
+    reply_message = await hash_q.get_reply_message()
+    algo_name = hash_q.pattern_match.group(1)
+    hashtxt = hash_q.pattern_match.group(2) or reply_message.text
+
+    if not re.match(r"(md[245]|sha1|sha256|ripemd)", algo_name):
+        await hash_q.reply(f"Unknown hashing function `{algo_name}`. See `.help hash` for info.")
+        return
     else:
-        await hash_q.reply(ans)
+        algo_name = algo_name.upper()
 
+    algo = import_module('Crypto.Hash.' + algo_name).new()
+    algo.update(hashtxt.encode('utf-8'))
+    output = algo.hexdigest()
 
-@register(outgoing=True, pattern="^.base64 (en|de) (.*)")
+    await hash_q.reply(f'{algo_name}: `{output}`')
+
+@register(outgoing=True, pattern="^.b64 (en|de)(?:\s+(.*))?")
 async def endecrypt(query):
-    """ For .base64 command, find the base64 encoding of the given string. """
+    """ For .b64 command, find the base64 encoding of the given string. """
+    reply_message = await query.get_reply_message()
+    text = query.pattern_match.group(2) or reply_message.text
     if query.pattern_match.group(1) == "en":
-        lething = str(
-            pybase64.b64encode(bytes(query.pattern_match.group(2),
-                                     "utf-8")))[2:]
+        lething = str(pybase64.b64encode(bytes(text, "utf-8")))[2:]
         await query.reply("Encoded: `" + lething[:-1] + "`")
     else:
-        lething = str(
-            pybase64.b64decode(bytes(query.pattern_match.group(2), "utf-8"),
-                               validate=True))[2:]
+        lething = str( pybase64.b64decode(bytes(text, "utf-8"), validate=True))[2:]
         await query.reply("Decoded: `" + lething[:-1] + "`")
 
 
-CMD_HELP.update({"base64": "Find the base64 encoding of the given string"})
+CMD_HELP.update({
+    "b64": 
+    "Find the base64 encoding of the given string or replied message. \n"
+    "Usage: `b64 (en|de) (text)?`"
+    })
 
 CMD_HELP.update({
     "hash":
-    "Find the md5, sha1, sha256, "
-    "sha512 of the string when written into a txt file."
+    "Hash a string using one of the following algorithms: "
+    "md2, md4, md5, sha1, sha256, ripemd \n"
+    "Usage: 1hash (algo) (text)?`"
 })

@@ -193,8 +193,12 @@ async def set_default_city(city):
 
 CMD_HELP.update({
     "weather":
-    ".weather <city> or .weather <city>, <country name/code>"
-    "\nUsage: Gets the weather of a city.\n"
-    "\n.setcity <city> or .setcity <city>, <country name/code>"
-    "\nUsage: Sets your default city so you can just use .weather."
+    "Gets the weather of a city. \n"
+    "Usage: `.weather (city/zip)` or `.weather (city), (country name/code)`"
+})
+
+CMD_HELP.update({
+    "setcity":
+    "Sets your default city so you can just use .weather. \n"
+    "Usage: `.setcity (city/zip)` or `.setcity (city), (country name/code)`"
 })

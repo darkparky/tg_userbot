@@ -130,25 +130,31 @@ async def remove_profilepic(delpfp):
 
 CMD_HELP.update({
     "username":
-    ".username <new_username>"
-    "\nUsage: Change your Telegram username."
+    "Change your Telegram username. \n"
+    "Usage: `.username (new_username)"
 })
+
 CMD_HELP.update({
     "name":
-    ".name <firstname> or .name <firstname> <lastname>"
-    "\nUsage: Chane your Telegram name."
-    "\n(First and last name will get split by the first space)"
+    "Usage: Chane your Telegram name. \n"
+    "Usage: `.name (firstname)` or `.name (firstname) (lastname)` \n"
+    "(First and last name will get split by the first space)"
 })
+
 CMD_HELP.update({
     "profilepic":
-    ".profilepic"
-    "\nUsage: Change your Telegram avatar with the replied photo."
+    "Change your Telegram avatar with the replied photo. \n"
+    "Usage: `.profilepic`"
 })
+
 CMD_HELP.update(
-    {"setbio": ".setbio <new_bio>"
-     "\nUsage: Change your Telegram bio."})
+    {"setbio":
+     "Change your Telegram bio. \n"
+     "Usage: `.setbio (new bio)`"
+})
+
 CMD_HELP.update({
     "delpfp":
-    ".delpfp or .delpfp <number>/<all>"
-    "\nUsage: Delete your Telegram profile avatar(s)."
+    "Delete your Telegram profile avatar(s). \n"
+    "Usage: `.delpfp` or `.delpfp (number|all)`"
 })
