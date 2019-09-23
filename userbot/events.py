@@ -98,10 +98,6 @@ def register(**args):
 
                 if not disable_errors:
                     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                    new = {
-                        'error': str(sys.exc_info()[1]),
-                        'date': datetime.datetime.now()
-                    }
 
                     text = "**Sorry, I encountered a error!**\n"
                     link = "[https://t.me/userbot_support](Userbot Support Chat)"
