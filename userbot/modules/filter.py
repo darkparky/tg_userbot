@@ -21,18 +21,17 @@ async def filter_incoming_handler(handler):
             if not is_mongo_alive() or not is_redis_alive():
                 await handler.edit("`Database connections failing!`")
                 return
-            listes = handler.text.split(" ")
+            incoming_message = handler.text
             filters = await get_filters(handler.chat_id)
             if not filters:
                 return
             for trigger in filters:
-                for item in listes:
-                    pro = re.fullmatch(trigger["keyword"],
-                                       item,
-                                       flags=re.IGNORECASE)
-                    if pro:
-                        await handler.reply(trigger["msg"])
-                        return
+                pro = re.fullmatch(trigger["keyword"],
+                                    incoming_message,
+                                    flags=re.IGNORECASE)
+                if pro:
+                    await handler.reply(trigger["msg"])
+                    return
     except AttributeError:
         pass
 
