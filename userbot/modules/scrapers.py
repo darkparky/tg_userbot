@@ -43,7 +43,7 @@ LANG = "en"
 async def img_sampler(event):
     """ For .img command, search and return images matching the query. """
     await event.edit("Processing...")
-    lim = event.pattern_match.group(1) or 3
+    lim = event.pattern_match.group(1) or '3'
     fmt = event.pattern_match.group(2) or 'jpg'
     query = event.pattern_match.group(3)
     response = google_images_download.googleimagesdownload()
