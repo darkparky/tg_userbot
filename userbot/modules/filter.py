@@ -13,29 +13,25 @@ from userbot.events import register
 from userbot.modules.dbhelper import add_filter, delete_filter, get_filters
 
 
-@register(incoming=True, disable_edited=True, disable_errors=True)
+@register(incoming=True, disable_edited=True)
 async def filter_incoming_handler(handler):
     """ Checks if the incoming message contains handler of a filter """
-    try:
-        if not (await handler.get_sender()).bot:
-            if not is_mongo_alive() or not is_redis_alive():
-                await handler.edit("`Database connections failing!`")
+    if not (await handler.get_sender()).bot:
+        if not is_mongo_alive() or not is_redis_alive():
+            await handler.edit("`Database connections failing!`")
+            return
+        incoming_message = handler.text
+        filters = await get_filters(handler.chat_id)
+        if not filters:
+            print("No filters")
+            return
+        for trigger in filters:
+            pro = re.fullmatch(trigger["keyword"],
+                                incoming_message,
+                                flags=re.IGNORECASE)
+            if pro:
+                await handler.reply(trigger["msg"])
                 return
-            incoming_message = handler.text
-            filters = await get_filters(handler.chat_id)
-            if not filters:
-                print("No filters")
-                return
-            for trigger in filters:
-                pro = re.fullmatch(trigger["keyword"],
-                                    incoming_message,
-                                    flags=re.IGNORECASE)
-                if pro:
-                    await handler.reply(trigger["msg"])
-                    return
-    except AttributeError as er:
-        print(er)
-        pass
 
 
 @register(outgoing=True, pattern=r'^.filter\s+(?:"(.*)")?(\S+)?\s+(.*)')
