@@ -37,27 +37,25 @@ async def filter_incoming_handler(handler):
         pass
 
 
-@register(outgoing=True, pattern="^.filter\\s.*")
+@register(outgoing=True, pattern=r'^.filter\s+(?:"(.*)")?(\S+)?\s+(.*)')
 async def add_new_filter(event):
     """ Command for adding a new filter """
     if not is_mongo_alive() or not is_redis_alive():
         await event.edit("`Database connections failing!`")
         return
     message = event.text
-    keyword = message.split()
-    string = ""
-    for i in range(2, len(keyword)):
-        string = string + " " + str(keyword[i])
+    keyword = message.pattern_match.group(1) or message.pattern_match.group(2)
+    string = message.pattern_match.group(3)
 
     if event.reply_to_msg_id:
         string = " " + (await event.get_reply_message()).text
 
     msg = "`Filter` **{}** `{} successfully`"
 
-    if await add_filter(event.chat_id, keyword[1], string[1:]) is True:
-        await event.edit(msg.format(keyword[1], 'added'))
+    if await add_filter(event.chat_id, keyword, string) is True:
+        await event.edit(msg.format(keyword, 'added'))
     else:
-        await event.edit(msg.format(keyword[1], 'updated'))
+        await event.edit(msg.format(keyword, 'updated'))
 
 
 @register(outgoing=True, pattern="^.stop\\s.*")
