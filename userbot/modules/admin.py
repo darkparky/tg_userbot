@@ -559,28 +559,6 @@ async def rm_deletedacc(show):
 
     await show.edit(del_status)
 
-
-@register(outgoing=True, group_only=True, pattern="^.adminlist$")
-async def get_admin(show):
-    """ For .adminlist command, list all of the admins of the chat. """
-    info = await show.client.get_entity(show.chat_id)
-    title = info.title if info.title else "this chat"
-    mentions = f'<b>Admins in {title}:</b> \n'
-    try:
-        async for user in show.client.iter_participants(
-                show.chat_id, filter=ChannelParticipantsAdmins):
-            if not user.deleted:
-                link_unf = "<a href=\"tg://user?id={}\">{}</a>"
-                link = link_unf.format(user.id, user.first_name)
-                userid = f"<code>{user.id}</code>"
-                mentions += f"\n{link} {userid}"
-            else:
-                mentions += f"\nDeleted Account <code>{user.id}</code>"
-    except ChatAdminRequiredError as err:
-        mentions += " " + str(err) + "\n"
-    await show.edit(mentions, parse_mode="html")
-
-
 @register(permit_sudo=True, group_only=True, pattern="^.pin(?: |$)(.*)")
 async def pin(msg):
     # Admin or creator check
@@ -749,4 +727,3 @@ CMD_HELP.update({
     "Usage: Searches and removes "
     "deleted accounts from the group"
 })
-CMD_HELP.update({"adminlist": "Usage: Retrieves all admins in the chat."})
