@@ -20,11 +20,12 @@ async def help(event):
             await event.edit("Please specify a valid module name.")
     else:
         await event.edit("Please specify which module do you want help for!")
-        categories = list(CMD_HELP.keys())
+        categories = list(CMD_HELP.keys()).sort()
         message_parts = []
 
         for cat in categories:
             message =  f"**{cat}**"
+            message_parts.append(message)
 
         message = '\n \n'.join(message_parts)
         await event.reply(message)
