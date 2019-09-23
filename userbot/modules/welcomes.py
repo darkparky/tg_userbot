@@ -12,8 +12,8 @@ from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins, Message
 
+from userbot.modules.admin import MUTE_RIGHTS
 from userbot.modules.misc import admins, make_mention
-from userbot.modules.admin import spider as mute
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, WELCOME_MUTE, bot
 from userbot.modules.admin import KICK_RIGHTS
 
@@ -23,7 +23,7 @@ RED_FLAG_WORDS = [
 ]
 
 @bot.on(ChatAction)
-async def welcome_mute(chat):
+async def welcome_mute(event):
     """ Checks if a new user matches any of a number of conditions.
     If the user appears to be a spammer/bot does one of two things.
     
@@ -36,38 +36,44 @@ async def welcome_mute(chat):
     if not WELCOME_MUTE:
         return
 
-    user = await chat.get_user()
-    user = await chat.client(GetFullUserRequest(user.id))
-    full_name = ' '.join(list(filter(None, [user.first_name, user.last_name])))
+    # Only run on joins and adds
+    if not (event.user_joined or event.user_added):
+        return
+
+    message = event.action_message
+
+    user = await event.get_user()
+    user_full = await event.client(GetFullUserRequest(user.id))
+    names = [str(user.first_name).lower(), str(user.last_name).lower()]
+    
     spam = False
 
     # Check the user's name for some red-flag words
-    if any(flag in full_name for flag in RED_FLAG_WORDS):
+    if any(i in names for i in RED_FLAG_WORDS):
         spam = True
     
     # Now check their bio
-    elif any(flag in user.about for flag in RED_FLAG_WORDS):
+    if any(flag in RED_FLAG_WORDS for flag in str(user_full.about)):
         spam = True
     
+    print(f"Spam: {spam}")
+
     # Potential spam/bot user detected
     if spam:
         # If we're an admin in this chat go ahead and mute
-        if chat.admin_rights or chat.creator:
-            message = f"""There's a good chance this person is a spammer/bot.
-            Muting just in case."""
-            await chat.reply(message)
-            await mute(chat)
+        if message.chat.admin_rights or message.chat.creator:
+            response = "There's a good chance this person is a spammer/bot"
+            await message.reply(response)
         
         # Not an admin, so we'll just warn the admins
         else:
             # For now we're going to disable auto-mentioning of admins
             # mentions = map(make_mention, await admins(chat))
-            message = f"""There's a good chance this person is a spammer/bot"""
-            await chat.reply(message)
+            response = "There's a good chance this person is a spammer/bot"
+            await message.reply(response)
 
-        if BOTLOG:
-            user_mention = make_mention(user)
-            chat_mention = make_mention(chat)
-            chat.client.send_message(
-                BOTLOG_CHATID,
-                f"Possible bot/spammer {user_mention} muted in {chat_mention}")
+        # if BOTLOG:
+        #     user_mention = make_mention(user)
+        #     await message.client.send_message(
+        #         BOTLOG_CHATID,
+        #         f"Possible bot/spammer {user_mention} muted")

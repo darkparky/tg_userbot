@@ -36,9 +36,8 @@ async def linux_interjection(msg):
     await msg.delete()
 
 @register(outgoing=True, pattern="^.admins?")
-async def admins(msg):
-    admins = await admins(msg)
-    mentions = map(make_mention, admins)
+async def notif_admins(msg):
+    mentions = map(make_mention, await admins(msg))
     response = ' '.join(mentions)
 
     reply_message = await msg.get_reply_message()
