@@ -19,6 +19,7 @@ from telethon import functions
 
 from userbot import CMD_HELP
 from userbot.events import register
+from userbot.utils.helpers import parse_arguments
 
 @register(outgoing=True, pattern=r"^.d(?:ig)? (\S+)")
 async def dig_dns(dig):
@@ -45,6 +46,7 @@ async def dig_dns(dig):
 async def follow_url(event):
     reply_message = await event.get_reply_message()
     message_text = event.pattern_match.group(1)
+    opts, message_text = parse_arguments(message_text)
 
     await event.edit("Fetching links...")
 
@@ -59,7 +61,7 @@ async def follow_url(event):
         await event.edit("No URLs found :(")
         return
 
-    base_domain = not '.full' in str(message_text)
+    base_domain = opts.get('full', False)
     await event.edit("Following links...")
 
     follows = []
