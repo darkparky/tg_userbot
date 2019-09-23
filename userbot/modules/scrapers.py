@@ -476,7 +476,7 @@ CMD_HELP.update({
 CMD_HELP.update({
     'tts':
     "Translates text to speech. \n"
-    ".tts [lang:str]? [slow:bool]? (message)?"
+    "Usage: `.tts [lang:str]? [slow:bool]? (message)?`"
 })
 
 CMD_HELP.update({
