@@ -8,129 +8,58 @@
 from asyncio import sleep
 
 from telethon.events import ChatAction
-from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.functions.channels import EditBannedRequest, GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins, Message
 
+from userbot.modules.misc import admins, make_mention
+from userbot.modules.admin import spider as mute
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, WELCOME_MUTE, bot
 from userbot.modules.admin import KICK_RIGHTS
 
+RED_FLAG_WORDS = [
+    'bitcoin', 'bitfenix', 'crypto', 'bitmex',
+    'promotion', 'announce'
+]
 
 @bot.on(ChatAction)
-async def welcome_mute(welcm):
-    try:
-        ''' Ban a recently joined user if it
-           matches the spammer checking algorithm. '''
-        if not WELCOME_MUTE:
-            return
-        if welcm.user_joined or welcm.user_added:
-            adder = None
-            ignore = None
-            spambot = False
-            users = None
+async def welcome_mute(chat):
+    """ Checks if a new user matches any of a number of conditions.
+    If the user appears to be a spammer/bot does one of two things.
+    
+    1) If the current user is an admin, mutes the user immediately
+       and notifies admins.
+    2) If the current user is not an admin, notifies admins in the
+       current chat of the potential bot."""
 
-            if welcm.user_added:
-                ignore = False
-                adder = welcm.action_message.from_id
+    # Make sure the welcome mute function is turned on
+    if not WELCOME_MUTE:
+        return
 
-            async for admin in bot.iter_participants(
-                    welcm.chat_id, filter=ChannelParticipantsAdmins):
-                if admin.id == adder:
-                    ignore = True
-                    break
+    user = await chat.get_user()
+    user = await chat.client(GetFullUserRequest(user.id))
+    full_name = ' '.join(list(filter(None, [user.first_name, user.last_name])))
+    spam = False
 
-            if ignore:
-                return
-            elif welcm.user_joined:
-                users_list = hasattr(welcm.action_message.action, "users")
-                if users_list:
-                    users = welcm.action_message.action.users
-                else:
-                    users = [welcm.action_message.from_id]
-            await sleep(5)
-
-            for user_id in users:
-                async for message in bot.iter_messages(welcm.chat_id,
-                                                       from_user=user_id):
-                    correct_type = isinstance(message, Message)
-                    if not message or not correct_type:
-                        break
-
-                    join_time = welcm.action_message.date
-                    message_date = message.date
-
-                    if message_date < join_time:
-                        continue  # The message was sent before the user joined, thus ignore it
-
-                    # DEBUGGING. LEAVING IT HERE FOR SOME TIME ###
-                    print(f"User Joined: {join_time}")
-                    print(f"Message Sent: {message_date}")
-                    #
-
-                    user = await welcm.client.get_entity(user_id)
-                    if "http://" in message.text:
-                        spambot = True
-                    elif "t.me" in message.text:
-                        spambot = True
-                    elif message.fwd_from:
-                        spambot = True
-                    elif "https://" in message.text:
-                        spambot = True
-                    else:
-                        if user.first_name in ("Bitmex", "Promotion",
-                                               "Information", "Dex",
-                                               "Announcements", "Info"):
-                            if user.last_name == "Bot":
-                                spambot = True
-
-                    if spambot:
-                        print(f"Potential Spam Message: {message.text}")
-                        await message.delete()
-                        break
-
-                    continue  # Check the next messsage
-
-            if spambot:
-
-                chat = await welcm.get_chat()
-                admin = chat.admin_rights
-                creator = chat.creator
-                if not admin and not creator:
-                    await welcm.reply(
-                        "@admins\n"
-                        "`ANTI SPAMBOT DETECTOR!\n"
-                        "THIS USER MATCHES MY ALGORITHMS AS A SPAMBOT!`")
-                else:
-                    try:
-                        await welcm.reply(
-                            "`Potential Spambot Detected! Kicking away! "
-                            "Will log the ID for further purposes!\n"
-                            f"USER:` [{user.first_name}](tg://user?id={user.id})"
-                        )
-
-                        await welcm.client(
-                            EditBannedRequest(welcm.chat_id, user.id,
-                                              KICK_RIGHTS))
-
-                        await sleep(1)
-
-                    except BaseException:
-                        await welcm.reply(
-                            "@admins\n"
-                            "`ANTI SPAMBOT DETECTOR!\n"
-                            "THIS USER MATCHES MY ALGORITHMS AS A SPAMBOT!`")
-
-                if BOTLOG:
-                    await welcm.client.send_message(
-                        BOTLOG_CHATID, "#SPAMBOT-KICK\n"
-                        f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                        f"CHAT: {welcm.chat.title}(`{welcm.chat_id}`)")
-    except ValueError:
-        pass
-
-
-CMD_HELP.update({
-    'welcome_mute':
-    "If enabled in config.env or env var, "
-    "this module will ban(or inform the admins about) the "
-    "spammer(s) if they match the userbot's algorithm"
-})
+    # Check the user's name for some red-flag words
+    if any(flag in full_name for flag in RED_FLAG_WORDS):
+        spam = True
+    
+    # Now check their bio
+    elif any(flag in user.about for flag in RED_FLAG_WORDS):
+        spam = True
+    
+    # Potential spam/bot user detected
+    if spam:
+        # If we're an admin in this chat go ahead and mute
+        if chat.admin_rights or chat.creator:
+            message = f"""There's a good chance this person is a spammer/bot.
+            Muting just in case."""
+            await chat.reply(message)
+            await mute(chat)
+        
+        # Not an admin, so we'll just warn the admins
+        else:
+            # For now we're going to disable auto-mentioning of admins
+            # mentions = map(make_mention, admins(chat))
+            message = f"""There's a good chance this person is a spammer/bot"""
+            await chat.reply(message)

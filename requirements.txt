@@ -35,3 +35,4 @@ pylast
 moviepy
 imageio
 imageio-ffmpeg
+antispam

@@ -37,9 +37,7 @@ async def linux_interjection(msg):
 
 @register(outgoing=True, pattern="^.admins?")
 async def admins(msg):
-    admins = await msg.client.get_participants(msg.chat, filter=ChannelParticipantsAdmins)
-    admins = map(lambda x: x if not x.bot else None, admins)
-    admins = [i for i in list(admins) if i]
+    admins = admins(msg)
     mentions = map(make_mention, admins)
     response = ' '.join(mentions)
 
@@ -119,6 +117,12 @@ async def knocksomesense(event):
 async def repo_is_here(wannasee):
     """ For .repo command, just returns the repo URL. """
     await wannasee.edit("https://github.com/watzon/tg_userbot/")
+
+def admins(msg):
+    admins = await msg.client.get_participants(msg.chat, filter=ChannelParticipantsAdmins)
+    admins = map(lambda x: x if not x.bot else None, admins)
+    admins = [i for i in list(admins) if i]
+    return admins
 
 def make_mention(user):
     if user.username:
