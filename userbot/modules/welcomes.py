@@ -63,3 +63,10 @@ async def welcome_mute(chat):
             # mentions = map(make_mention, admins(chat))
             message = f"""There's a good chance this person is a spammer/bot"""
             await chat.reply(message)
+
+        if BOTLOG:
+            user_mention = make_mention(user)
+            chat_mention = make_mention(chat)
+            chat.client.send_message(
+                BOTLOG_CHATID,
+                f"Possible bot/spammer {user_mention} muted in {chat_mention}")
