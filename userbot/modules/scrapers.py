@@ -12,7 +12,7 @@ import imageio
 from asyncio import create_subprocess_shell as asyncsh
 from asyncio.subprocess import PIPE as asyncsh_PIPE
 from html import unescape
-from re import findall
+from re import findall, sub
 from urllib import parse
 from urllib.error import HTTPError
 from urllib.parse import urlsplit, parse_qs
@@ -183,8 +183,14 @@ async def text_to_speech(query):
                          "message for Text-to-Speech!`")
         return
 
+    lang = findall(r".lang:([a-z]{2})", message)
+    lang = lang[0] if lang else LANG
+
+    slow = True if ".slow" in message else False
+    message = sub(r"\.[a-z]+(:[a-z]+)", '', message)
+
     try:
-        gTTS(message, LANG)
+        gTTS(message, lang, slow)
     except AssertionError:
         await query.edit('The text is empty.\n'
                          'Nothing left to speak after pre-precessing, '
@@ -199,13 +205,13 @@ async def text_to_speech(query):
     
     await query.delete()
 
-    tts = gTTS(message, LANG)
+    tts = gTTS(message, lang, slow)
     tts.save("k.mp3")
     with open("k.mp3", "rb") as audio:
         linelist = list(audio)
         linecount = len(linelist)
     if linecount == 1:
-        tts = gTTS(message, LANG)
+        tts = gTTS(message, lang, slow)
         tts.save("k.mp3")
     with open("k.mp3", "r"):
         await query.client.send_file(query.chat_id, "k.mp3", voice_note=True, reply_to=textx)
