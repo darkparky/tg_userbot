@@ -3,7 +3,7 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 #
-# The entire source code is OSSRPL except 'screencapture' which is MPL
+# The entire source code is OSSRPL except 'screencap' which is MPL
 # License: MPL and OSSRPL
 """ Userbot module for ScreenshotLayer API """
 
@@ -14,10 +14,10 @@ from requests import get
 from userbot import CMD_HELP, SCREENSHOT_LAYER_ACCESS_KEY
 from userbot.events import register
 
-
-@register(pattern=r"^.screencapture (.*)", outgoing=True)
+# Todo: Replace this with a marionette implementation
+@register(pattern=r"^.screencap (.*)", outgoing=True)
 async def capture(url):
-    """ For .screencapture command, capture a website and send the photo. """
+    """ For .screencap command, capture a website and send the photo. """
     if SCREENSHOT_LAYER_ACCESS_KEY is None:
         await url.edit(
             "Need to get an API key from https://screenshotlayer.com\
@@ -34,7 +34,7 @@ async def capture(url):
     )
     content_type = response_api.headers["content-type"]
     if "image" in content_type:
-        temp_file_name = "screencapture.png"
+        temp_file_name = "screencap.png"
         with open(temp_file_name, "wb") as file:
             for chunk in response_api.iter_content(chunk_size=128):
                 file.write(chunk)
@@ -55,7 +55,7 @@ async def capture(url):
 
 
 CMD_HELP.update({
-    "screencapture":
-    ".screencapture <url>"
-    "\nUsage: Take a screenshot of a website and send the screenshot."
+    "screencap":
+    "Take a screenshot of a website and send the screenshot. \n"
+    "Usage `.screencap (url)`"
 })

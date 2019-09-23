@@ -11,6 +11,7 @@ from sys import argv
 from telethon.errors.rpcerrorlist import PhoneNumberInvalidError
 
 from userbot import LOGS, bot
+from userbot.utils import ALL_UTILS
 from userbot.modules import ALL_MODULES
 
 INVALID_PH = '\nERROR: The Phone No. entered is INVALID' \
@@ -22,6 +23,9 @@ try:
 except PhoneNumberInvalidError:
     print(INVALID_PH)
     exit(1)
+
+for module_name in ALL_UTILS:
+    imported_module = import_module("userbot.utils." + module_name)
 
 for module_name in ALL_MODULES:
     imported_module = import_module("userbot.modules." + module_name)

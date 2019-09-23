@@ -7,14 +7,10 @@
  One of the main components of the userbot. """
 
 import asyncio
-import datetime
-import math
-import subprocess
 import sys
 import traceback
 from os import remove
 from time import gmtime, strftime, sleep
-from traceback import format_exc
 
 from telethon import events
 from telethon.errors.rpcbaseerrors import FloodError

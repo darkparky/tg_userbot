@@ -7,15 +7,9 @@
 
 import os
 import shutil
-import tempfile
 import imageio
-from asyncio import create_subprocess_shell as asyncsh
-from asyncio.subprocess import PIPE as asyncsh_PIPE
 from html import unescape
-from re import findall, sub
-from urllib import parse
 from urllib.error import HTTPError
-from urllib.parse import urlsplit, parse_qs
 
 import moviepy.editor as mp
 from emoji import get_emoji_regexp
@@ -35,30 +29,35 @@ from wikipedia.exceptions import DisambiguationError, PageError
 from userbot import (BOTLOG, BOTLOG_CHATID, CMD_HELP, CURRENCY_API,
                      YOUTUBE_API_KEY, bot)
 from userbot.events import register
+from userbot.utils.helpers import parse_arguments
 
 LANG = "en"
 
 
-@register(outgoing=True, pattern="^.img\s+(?:lim=([0-9]+)\s?)?(?:fmt=([a-z]{3})\s?)?(.*)")
+@register(outgoing=True, pattern=r"^.img (.*)")
 async def img_sampler(event):
     """ For .img command, search and return images matching the query. """
-    await event.edit("Processing...")
-    lim = event.pattern_match.group(1) or 3
-    fmt = event.pattern_match.group(2) or 'jpg'
-    query = event.pattern_match.group(3)
+    await event.edit("Processing query...")
+
+    query = event.pattern_match.group(1)
+    opts, query = parse_arguments(query)
+
     response = google_images_download.googleimagesdownload()
 
     # creating list of arguments
     arguments = {
         "keywords": query,
-        "limit": int(lim),
-        "format": fmt,
+        "limit": opts.get('limit', 3),
+        "format": opts.get('format', 'jpg'),
         "no_directory": "no_directory"
     }
 
     # passing the arguments to the function
+    await event.edit("Downloading images...")
     paths = response.download(arguments)
     lst = paths[0][query]
+
+    await event.edit("Sending images...")
     await event.client.send_file(
         await event.client.get_input_entity(event.chat_id), lst)
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
@@ -68,33 +67,31 @@ async def img_sampler(event):
 @register(outgoing=True, pattern=r"^.google (.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
-    match = q_event.pattern_match.group(1)
-    page = findall(r"page=\d+", match)
-    try:
-        page = page[0]
-        page = page.replace("page=", "")
-        match = match.replace("page=" + page[0], "")
-    except IndexError:
-        page = 1
-    search_args = (str(match), int(page))
+    query = q_event.pattern_match.group(1)
+    opts, query = parse_arguments(query)
+
+    page = opts.get('page', 1)
     gsearch = GoogleSearch()
-    gresults = gsearch.search(*search_args)
+    gresults = gsearch.search(query, page)
+    
     msg = ""
-    for i in range(10):
+    limit = opts.get('limit', 5)
+    for i in range(limit):
         try:
             title = gresults["titles"][i]
             link = gresults["links"][i]
             desc = gresults["descriptions"][i]
-            msg += f"{i}. [{title}]({link})\n`{desc}`\n\n"
+            msg += f"**[{title}]({link})** \n"
+            msg += f"`{desc}`\n\n"
         except IndexError:
             break
-    await q_event.edit("**Search Query:**\n`" + match + "`\n\n**Results:**\n" +
+    await q_event.edit("**Search Query:**\n`" + query + "`\n\n**Results:**\n" +
                        msg,
                        link_preview=False)
     if BOTLOG:
         await q_event.client.send_message(
             BOTLOG_CHATID,
-            "Google Search query `" + match + "` was executed successfully",
+            "Google Search query `" + query + "` was executed successfully",
         )
 
 
@@ -183,11 +180,9 @@ async def text_to_speech(query):
                          "message for Text-to-Speech!`")
         return
 
-    lang = findall(r".lang:([a-z]{2})", message)
-    lang = lang[0] if lang else LANG
-
-    slow = True if ".slow" in message else False
-    message = sub(r"\.[a-z]+(:[a-z]+)", '', message)
+    opts, message = parse_arguments(message)
+    lang = opts.get('lang', LANG)
+    slow = opts.get('slow', False)
 
     try:
         gTTS(message, lang, slow)
@@ -220,13 +215,12 @@ async def text_to_speech(query):
             await query.client.send_message(
                 BOTLOG_CHATID, "tts of " + message + " executed successfully!")
 
-@register(outgoing=True, pattern=r"^.trt(?: |$)(?:to=([\S]{2})\s?)?([\s\S]*)")
+@register(outgoing=True, pattern=r"^.trt(?: |$)(.*)")
 async def translateme(trans):
     """ For .trt command, translate the given text using Google Translate. """
     translator = Translator()
     textx = await trans.get_reply_message()
-    dest_lang = trans.pattern_match.group(1) or LANG
-    message = trans.pattern_match.group(2)
+    message = trans.pattern_match.group(1)
     if message:
         pass
     elif textx:
@@ -236,8 +230,12 @@ async def translateme(trans):
                          "to a message to translate!`")
         return
 
+    opts, message = parse_arguments(message)
+    dest_lang = opts.get('to', LANG)
+    src_lang = opts.get('from', 'auto')
+
     try:
-        reply_text = translator.translate(deEmojify(message), dest=dest_lang)
+        reply_text = translator.translate(deEmojify(message), dest=dest_lang, src=src_lang)
     except ValueError:
         await trans.edit("Invalid destination language.")
         return
@@ -279,9 +277,12 @@ async def yt_search(video_q):
             Add it to environment vars or config.env.`")
         return
 
-    await video_q.edit("```Processing...```")
+    opts, query = parse_arguments(query)
+    limit = opts.get('limit', 5)
 
-    full_response = youtube_search(query)
+    await video_q.edit("Processing search query...")
+
+    full_response = youtube_search(query, limit)
     videos_json = full_response[1]
 
     for video in videos_json:
@@ -297,6 +298,7 @@ async def yt_search(video_q):
 
 def youtube_search(query,
                    order="relevance",
+                   limit=5,
                    token=None,
                    location=None,
                    location_radius=None):
@@ -311,7 +313,7 @@ def youtube_search(query,
         pageToken=token,
         order=order,
         part="id,snippet",
-        maxResults=10,
+        maxResults=limit,
         location=location,
         locationRadius=location_radius).execute()
 
@@ -331,11 +333,12 @@ def youtube_search(query,
         return (nexttok, videos)
 
 
-@register(outgoing=True, pattern=r"^.yt_dl (\S*) ?(\S*)")
+@register(outgoing=True, pattern=r"^.ytdl (.*)")
 async def download_video(v_url):
-    """ For .yt_dl command, download videos from YouTube. """
-    url = v_url.pattern_match.group(1)
-    quality = v_url.pattern_match.group(2)
+    """ For .ytdl command, download videos from YouTube. """
+    query = v_url.pattern_match.group(1)
+    opts, url = parse_arguments(query)
+    quality = opts.get('res', None)
 
     await v_url.edit("**Fetching...**")
 
@@ -395,7 +398,7 @@ async def download_video(v_url):
     os.remove('thumbnail.jpg')
     await v_url.delete()
 
-@register(outgoing=True, pattern="^.yt_mp3 (\S*)")
+@register(outgoing=True, pattern="^.ytmp3 (\S*)")
 async def youtube_mp3(yt):
     reply_message = await yt.get_reply_message()
     url = yt.pattern_match.group(1)
@@ -448,53 +451,71 @@ def deEmojify(inputString):
 
 CMD_HELP.update({
     'img':
-    ".img <search_query>"
-    "\nUsage: Does an image search on Google and shows two images."
+    "Does an image search on Google and sends the results. \n"
+    "Usage `.img [limit:int]? [format:str]? (search_query)`"
 })
-CMD_HELP.update(
-    {'google': ".google <search_query>"
-     "\nUsage: Does a search on Google."})
-CMD_HELP.update(
-    {'wiki': ".wiki <search_query>"
-     "\nUsage: Does a Wikipedia search."})
-CMD_HELP.update(
-    {'ud': ".ud <search_query>"
-     "\nUsage: Does a search on Urban Dictionary."})
+
+CMD_HELP.update({
+    'google':
+     "Does a search on Google. \n"
+     "Usage `.google [limit:int]? [page:int]? (search_query)`"
+})
+
+CMD_HELP.update({
+    'wiki':
+     "Does a Wikipedia search. \n"
+     "Usage: `.wiki (search_query)`"
+})
+
+CMD_HELP.update({
+    'ud':
+     "Does a search on Urban Dictionary. \n"
+    "Usage: `.ud (search_query)`"
+})
+
 CMD_HELP.update({
     'tts':
-    ".tts <text> or reply to someones text with .trt"
-    "\nUsage: Translates text to speech for the default language which is set."
+    "Translates text to speech. \n"
+    ".tts [lang:str]? [slow:bool]? (message)?"
 })
+
 CMD_HELP.update({
     'trt':
-    ".trt <text> or reply to someones text with .trt"
-    "\nUsage: Translates text to the default language which is set."
+    "Translates text using Google Translate. \n"
+    "Usage: `.trt [to:str]? [from:str]? (message)?`"
 })
+
 CMD_HELP.update({
     'lang':
-    ".lang <lang>"
-    "\nUsage: Changes the default language of"
+    "Changes the default language of"
     "userbot scrapers used for Google TRT, "
-    "TTS may not work."
+    "TTS may not work. \n"
+    "Usage: `.lang (lang)`"
 })
-CMD_HELP.update(
-    {'yt': ".yt <search_query>"
-     "\nUsage: Does a YouTube search. "})
+
 CMD_HELP.update({
-    'yt_dl':
-    ".yt_dl <url> <quality>(optional)"
-    "\nUsage: Download videos from YouTube. "
-    "If no quality is specified, the highest downloadable quality is "
-    "downloaded. Will send the link if the video is larger than 50 MB."
+    'yt':
+    "Does a YouTube search. \n"
+    "Usage: `.yt (search query)`"
 })
+
 CMD_HELP.update({
-    'yt_mp3':
-    ".yt_mp3 <url>"
-    "\nUsage: Download audio from YouTube. "
-    "First fetches the video then converts it to an mp3. Might take some time."
+    'ytdl':
+    "Download videos from YouTube. "
+    "If no resolution is specified, the highest downloadable quality is "
+    "downloaded. Will send the link if the video is larger than 50 MB. \n"
+    "Usage: `.ytdl [res:str]? (url)`"
 })
+
+CMD_HELP.update({
+    'ytmp3':
+    "Download audio from YouTube. "
+    "First fetches the video then converts it to an mp3. Might take some time. \n"
+    "Usage: `.ytmp3 (url)`"
+})
+
 CMD_HELP.update({
     'cr':
-    ".cr <from> <to>"
-    "\nUsage: Currency converter, converts <from> to <to>."
+    "Currency converter, converts <from> to <to>. \n"
+    "Usage: `.cr (amount) (from) (to)`"
 })

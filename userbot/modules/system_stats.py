@@ -8,17 +8,13 @@
 from asyncio import create_subprocess_shell as asyncrunapp
 from asyncio.subprocess import PIPE as asyncPIPE
 from os import remove
-from platform import python_version, uname
+from platform import python_version
 from shutil import which
 
 from telethon import version
 
-from userbot import CMD_HELP, is_mongo_alive, is_redis_alive
+from userbot import CMD_HELP, is_mongo_alive, is_redis_alive, bot
 from userbot.events import register
-
-# ================= CONSTANT =================
-DEFAULTUSER = uname().node
-# ============================================
 
 
 @register(outgoing=True, pattern="^.sysd$")
@@ -134,51 +130,36 @@ async def amireallyalive(e):
         db = "Redis Cache seems to be failing!"
     else:
         db = "Databases functioning normally!"
+    
+    username = (await bot.get_me()).username
     await e.edit("`"
                  "Your bot is running \n\n"
                  f"Telethon version: {version.__version__} \n"
                  f"Python: {python_version()} \n"
-                 f"User: {DEFAULTUSER} \n"
+                 f"User: @{username} \n"
                  f"Database Status: {db}"
                  "`")
 
 
-@register(outgoing=True, pattern="^.aliveu")
-async def amireallyaliveuser(username):
-    """ For .aliveu command, change the username in the .alive command. """
-    if not username.text[0].isalpha() and username.text[0] not in ("/", "#",
-                                                                   "@", "!"):
-        message = username.text
-        output = '.aliveu [new user without brackets] nor can it be empty'
-        if not (message == '.aliveu' or message[7:8] != ' '):
-            newuser = message[8:]
-            global DEFAULTUSER
-            DEFAULTUSER = newuser
-            output = 'Successfully changed user to ' + newuser + '!'
-        await username.edit("`" f"{output}" "`")
+CMD_HELP.update({
+    "sysd":
+    "Show system information using neofetch. \n"
+    "Usage: `.sysd`"
+})
 
+CMD_HELP.update({
+    "botver":
+    "Show the userbot version. \n"
+    "Usage: `.botver`"
+})
 
-@register(outgoing=True, pattern="^.resetalive$")
-async def amireallyalivereset(ureset):
-    """ For .resetalive command, reset the username in the .alive command. """
-    if not ureset.text[0].isalpha() and ureset.text[0] not in ("/", "#", "@",
-                                                               "!"):
-        global DEFAULTUSER
-        DEFAULTUSER = uname().node
-        await ureset.edit("`" "Successfully reset user for alive!" "`")
-
-
-CMD_HELP.update(
-    {"sysd": ".sysd"
-     "\nUsage: Show system information using neofetch."})
-CMD_HELP.update({"botver": ".botver" "\nUsage: Show the userbot version."})
-CMD_HELP.update(
-    {"pip": ".pip <module(s)>"
-     "\nUsage: Search module(s) in PyPi."})
+CMD_HELP.update({
+    "pip":
+     "Search module(s) in PyPi. \n"
+     "Usage: `.pip (module[s])`"
+})
 CMD_HELP.update({
     "alive":
-    ".alive"
-    "\nUsage: Check if your bot is working or not. "
-    "Use .aliveu <new_user> to change user name, or .resetalive "
-    "to reset it to default."
+    "Check if your bot is working or not. \n"
+    "Usage: `.alive`"
 })

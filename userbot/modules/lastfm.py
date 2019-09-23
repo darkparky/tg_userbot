@@ -53,7 +53,6 @@ async def last_fm(lastFM):
                          lastfm).get_now_playing().get_cover_image()
         except IndexError:
             image = None
-            pass
         tags = gettags(isNowPlaying=True, playing=playing)
         rectrack = parse.quote_plus(f"{playing}")
         rectrack = sub("^", "https://www.youtube.com/results?search_query=",

@@ -9,13 +9,13 @@
     about any user on Telegram(including you!). """
 
 import os
-import re
 
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
 from userbot import CMD_HELP
 from userbot.events import register
+from userbot.utils.helpers import parse_arguments
 
 TMP_DOWNLOAD_DIRECTORY = "./"
 
@@ -39,17 +39,6 @@ async def who(event):
         message_id_to_reply = None
 
     await event.edit(caption, parse_mode="markdown")
-
-def parse_arguments(args):
-    options = {}
-    for opt in ["mention", "id", "general", "bot", "misc", "all"]:
-        if f".{opt}" in args:
-            args = args.replace(f'.{opt}', '')
-            options[opt] = True
-        elif f"!{opt}" in args:
-            args = args.replace(f'!{opt}', '')
-            options[opt] = False
-    return (options, args.strip())
 
 async def get_user(event, user):
     """ Get the user from argument or replied message. """

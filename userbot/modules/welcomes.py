@@ -5,7 +5,6 @@
 #
 ''' A module for helping ban group join spammers. '''
 
-from asyncio import sleep
 
 from telethon.events import ChatAction
 from telethon.tl.functions.channels import EditBannedRequest

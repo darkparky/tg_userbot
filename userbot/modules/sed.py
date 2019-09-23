@@ -102,7 +102,7 @@ async def sed(command):
 
 CMD_HELP.update({
     "sed":
-    "sed<delimiter><old word(s)><delimiter><new word(s)>"
-    "\nUsage: Replaces a word or words using sed."
-    "\nDelimiters: `/, :, |, _`"
+    "Replaces a word or words using sed. \n"
+    "Usage: `sed<delimiter>(pattern)<delimiter>(replacement)` \n"
+    "Delimiters: `/, :, |, _`"
 })

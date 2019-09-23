@@ -52,7 +52,7 @@ async def get_tz(con):
 async def time_func(tdata):
     """ For .time command, return the time of
         1. The country passed as an argument,
-        2. The default userbot country(set it by using .settime),
+        2. The default userbot country(set it by using .locale),
         3. The server where the userbot runs.
     """
     con = tdata.pattern_match.group(1).title()
@@ -121,7 +121,7 @@ async def time_func(tdata):
 async def date_func(dat):
     """ For .date command, return the date of
         1. The country passed as an argument,
-        2. The default userbot country(set it by using .settime),
+        2. The default userbot country(set it by using .locale),
         3. The server where the userbot runs.
     """
     con = dat.pattern_match.group(1).title()
@@ -186,9 +186,9 @@ async def date_func(dat):
                    )
 
 
-@register(outgoing=True, pattern="^.settime (.*)(?<![0-9])(?: |$)([0-9]+)?")
+@register(outgoing=True, pattern="^.locale (.*)(?<![0-9])(?: |$)([0-9]+)?")
 async def set_time_country(loc):
-    """ For .settime command, change the default userbot
+    """ For .locale command, change the default userbot
         country for date and time commands. """
     if not is_mongo_alive() or not is_redis_alive():
         await loc.edit(DB_FAILED)
@@ -224,7 +224,7 @@ async def set_time_country(loc):
 
             return_str += "Choose one by typing the number "
             return_str += "in the command. Example:\n"
-            return_str += f".settime {c_name} 2"
+            return_str += f".locale {c_name} 2"
 
             await loc.edit(return_str)
             return
@@ -243,22 +243,22 @@ async def set_time_country(loc):
 
 CMD_HELP.update({
     "time":
-    ".time <country name/code> <timezone number>"
-    "\nUsage: Get the time of a country. If a country has "
-    "multiple timezones, Paperplane will list all of them "
-    "and let you select one."
+    "Get the time of a country. If a country has "
+    "multiple timezones, we'll list all of them "
+    "and let you select one. \n"
+    "Usage: `.time (country name/code) (timezone number)`"
 })
 CMD_HELP.update({
     "date":
-    ".date <country name/code> <timezone number>"
-    "\nUsage: Get the date of a country. If a country has "
-    "multiple timezones, Paperplane will list all of them "
-    "and let you select one."
+    "Get the date of a country. If a country has "
+    "multiple timezones, we'll list all of them "
+    "and let you select one. \n"
+    "Usage: `.date (country name/code) (timezone number)`"
 })
 CMD_HELP.update({
-    "settime":
-    ".settime <country name/code> <timezone number>"
-    "\nUsage: Set the default country for .time and .date "
-    "command. If a country has multiple timezones, Paperpl"
-    "ane will list all of them and let you select one."
+    "locale":
+    "Set the default country for .time and .date "
+    "command. If a country has multiple timezones, we'll"
+    "list all of them and let you select one. \n"
+    "Usage `.locale (country name/code) (timezone number)`"
 })
