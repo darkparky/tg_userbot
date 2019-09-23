@@ -8,7 +8,8 @@
 from asyncio import sleep
 
 from telethon.events import ChatAction
-from telethon.tl.functions.channels import EditBannedRequest, GetFullUserRequest
+from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import ChannelParticipantsAdmins, Message
 
 from userbot.modules.misc import admins, make_mention
