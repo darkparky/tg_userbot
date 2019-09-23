@@ -24,16 +24,17 @@ async def filter_incoming_handler(handler):
             incoming_message = handler.text
             filters = await get_filters(handler.chat_id)
             if not filters:
+                print("No filters")
                 return
             for trigger in filters:
-                print(trigger)
                 pro = re.fullmatch(trigger["keyword"],
                                     incoming_message,
                                     flags=re.IGNORECASE)
                 if pro:
                     await handler.reply(trigger["msg"])
                     return
-    except AttributeError:
+    except AttributeError as er:
+        print(er)
         pass
 
 
