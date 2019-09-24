@@ -57,10 +57,10 @@ async def let_me_google_that_for_you(lmgtfy):
         reply_text = 'Hmm... [Let Me Google That For You](http://lmgtfy.com/?s=g&iie=1&q=' + query.replace(" ", "+") + ")"
         await lmgtfy.edit(reply_text)
 
-@register(outgoing=True, pattern="^.random")
+@register(outgoing=True, pattern="^.rand(?:om)? (.*)")
 async def randomise(items):
     """ For .random command, get a random item from the list of items. """
-    itemo = (items.text[8:]).split()
+    itemo = items.pattern_match.group(1).split()
 
     if len(itemo) < 2:
         await items.edit("`2 or more items are required! Check "
@@ -134,22 +134,25 @@ def make_mention(user):
 CMD_HELP.update({"linux": "Show some linux copypasta"})
 
 CMD_HELP["General"].update({
-    "admins": "Tag all admins",
-    "lfy": "Here, let me google that for you",
+    "admins": 
+        "Tag all admins. \n"
+        "Usage: `.admins`",
+    "lfy":
+        "Here, let me google that for you \n"
+        "Usage: `.lfy (query)?",
     'sleep':
-        '.sleep 10'
-        '\nUsage: Userbots get tired too. Let yours snooze for a few seconds.',
+        'Userbots get tired too. Let yours snooze for a few seconds. \n'
+        'Usage: `.sleep (seconds)`',
     "shutdown":
-        ".shutdown"
-        '\nUsage: Sometimes you need to restart your bot. Sometimes you just hope to'
-        "hear Windows XP shutdown sound... but you don't.",
+        "Shuts the bot down."
+        "Usage: `.shutdown`",
     'repo':
-        '.repo'
-        '\nUsage: If you are curious what makes Paperplane work, this is what you need.'
+        'Show a link to the github repo for this bot. \n'
+        'Usage: `.repo`'
 })
 
 CMD_HELP.update({
     'random':
-    ".random <item1> <item2> ... <itemN>"
-    "\nUsage: Get a random item from the list of items."
+        "Usage: Get a random item from the list of items. \n"
+        "Usage: `.random (item1) (item2) ... (itemN)`"
 })

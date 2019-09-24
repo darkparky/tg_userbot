@@ -36,7 +36,7 @@ async def filter_incoming_handler(handler):
         pass
 
 
-@register(outgoing=True, pattern=r'^.filter\s+(?:"(.*)")?(\S+)?\s+(.*)')
+@register(outgoing=True, pattern=r'^.filter\s+(?:"(.*)")?(\S+)?\s+([\S\s]+)')
 async def add_new_filter(event):
     """ Command for adding a new filter """
     if not is_mongo_alive() or not is_redis_alive():
