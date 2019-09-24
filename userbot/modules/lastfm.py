@@ -212,10 +212,13 @@ async def lastlog(lstlog):
 
 CMD_HELP.update({
     'lastfm':
-    ".lastfm"
-    "\nUsage: Shows currently scrobbling track or most recent scrobbles if nothing is playing."
-    "\n'lastbio': .lastbio <on/off>"
-    "\nUsage: Enable/Disable last.fm bio updating"
-    "\n'lastlog': .lastlog <on/off>"
-    "\nUsage: Enable/Disable last.fm bio logging"
+        "Shows currently scrobbling track or most recent "
+        "scrobbles if nothing is playing. \n"
+        "Usage: `.lastfm`",
+    'lastbio': 
+        "Enable/Disable last.fm bio updating \n"
+        "Usage: `.lastbio (on|off)",
+    'lastlog':
+        "Enable/Disable last.fm bio logging \n"
+        "Usage: `.lastlog (on|off)`"
 })

@@ -96,13 +96,9 @@ size=200x200&charset-source=UTF-8&charset-target=UTF-8\
 
 CMD_HELP.update({
     'getqr':
-    ".getqr"
-    "\nUsage: Get the QR Code content from the replied QR Code."
-})
-
-CMD_HELP.update({
+        "Get the QR Code content from the replied QR Code. \n"
+        "Usage: `.getqr`",
     'makeqr':
-    ".makeqr <content>)"
-    "\nUsage: Make a QR Code from the given content."
-    "\nExample: .makeqr www.google.com"
+        "Make a QR Code from the given content. \n"
+        "Usage: `.makeqr (content)`"
 })

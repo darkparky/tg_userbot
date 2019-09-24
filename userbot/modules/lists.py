@@ -23,7 +23,7 @@ LIST_HEADER = "[Paperplane-List] List **{}({})**\n\n"
 
 # =================================================
 
-
+# TODO: Make some major changes in here
 @register(outgoing=True, pattern="^.lists$")
 async def lists_active(event):
     """ For .lists command, list all of the lists saved in a chat. """

@@ -120,7 +120,7 @@ async def auto_accept(event):
                         )
 
 
-@register(outgoing=True, pattern="^.notifoff$")
+@register(outgoing=True, pattern="^.pm notifoff$")
 async def notifoff(noff_event):
     """ For .notifoff command, stop getting
         notifications from unapproved PMs. """
@@ -130,7 +130,7 @@ async def notifoff(noff_event):
         return await noff_event.edit("`Notifications silenced!`")
 
 
-@register(outgoing=True, pattern="^.notifon$")
+@register(outgoing=True, pattern="^.pm notifon$")
 async def notifon(non_event):
     """ For .notifoff command, get notifications from unapproved PMs. """
     if await notif_on() is False:
@@ -139,7 +139,7 @@ async def notifon(non_event):
         return await non_event.edit("`Notifications unmuted!`")
 
 
-@register(outgoing=True, pattern="^.approve$")
+@register(outgoing=True, pattern="^.pm approve$")
 async def approvepm(apprvpm):
     """ For .approve command, give someone the permissions to PM you. """
     if not is_mongo_alive() or not is_redis_alive():
@@ -228,16 +228,20 @@ async def unblockpm(unblock):
         )
 
 
-CMD_HELP.update({
-    "pmpermit":
-    ".approve"
-    "\nUsage: Approve the mentioned/replied person to PM."
-    "\n\n.block"
-    "\nUsage: Block the person from PMing you."
-    "\n\n.unblock"
-    "\nUsage: Unblock the person so they can PM you."
-    "\n\n.notifoff"
-    "\nUsage: Clear any notifications of unapproved PMs."
-    "\n\n.notifon"
-    "\nUsage: Allow notifications for unapproved PMs."
+CMD_HELP["General"].update({
+    "pm approve":
+        "Approve the mentioned/replied person to PM. \n"
+        "Usage: `.pm approve`",
+    "block":
+        "Block the person from PMing you. \n"
+        "Usage: `.pm block`",
+    "unblock":
+        "Unblock the person so they can PM you. \n"
+        "Usage: `.pm unblock`",
+    "pm notifoff":
+        "Clear any notifications of unapproved PMs. \n"
+        "Usage: `.pm notifoff`",
+    "pm notifon":
+        "Allow notifications for unapproved PMs. \n"
+        "Usage: `.pm notifon`"
 })
