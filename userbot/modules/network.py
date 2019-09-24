@@ -61,7 +61,7 @@ async def follow_url(event):
         await event.edit("No URLs found :(")
         return
 
-    base_domain = opts.get('full', False)
+    base_domain = not opts.get('full', False)
     await event.edit("Following links...")
 
     follows = []
