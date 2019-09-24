@@ -450,72 +450,44 @@ def deEmojify(inputString):
 
 
 CMD_HELP.update({
-    'img':
-    "Does an image search on Google and sends the results. \n"
-    "Usage `.img [limit:int]? [format:str]? (search_query)`"
-})
-
-CMD_HELP.update({
-    'google':
-     "Does a search on Google. \n"
-     "Usage `.google [limit:int]? [page:int]? (search_query)`"
-})
-
-CMD_HELP.update({
-    'wiki':
-     "Does a Wikipedia search. \n"
-     "Usage: `.wiki (search_query)`"
-})
-
-CMD_HELP.update({
-    'ud':
-     "Does a search on Urban Dictionary. \n"
-    "Usage: `.ud (search_query)`"
-})
-
-CMD_HELP.update({
-    'tts':
-    "Translates text to speech. \n"
-    "Usage: `.tts [lang:str]? [slow:bool]? (message)?`"
-})
-
-CMD_HELP.update({
-    'trt':
-    "Translates text using Google Translate. \n"
-    "Usage: `.trt [to:str]? [from:str]? (message)?`"
-})
-
-CMD_HELP.update({
-    'lang':
-    "Changes the default language of"
-    "userbot scrapers used for Google TRT, "
-    "TTS may not work. \n"
-    "Usage: `.lang (lang)`"
-})
-
-CMD_HELP.update({
-    'yt':
-    "Does a YouTube search. \n"
-    "Usage: `.yt (search query)`"
-})
-
-CMD_HELP.update({
-    'ytdl':
-    "Download videos from YouTube. "
-    "If no resolution is specified, the highest downloadable quality is "
-    "downloaded. Will send the link if the video is larger than 50 MB. \n"
-    "Usage: `.ytdl [res:str]? (url)`"
-})
-
-CMD_HELP.update({
-    'ytmp3':
-    "Download audio from YouTube. "
-    "First fetches the video then converts it to an mp3. Might take some time. \n"
-    "Usage: `.ytmp3 (url)`"
-})
-
-CMD_HELP.update({
-    'cr':
-    "Currency converter, converts <from> to <to>. \n"
-    "Usage: `.cr (amount) (from) (to)`"
+    "Scraping": {
+        'img':
+            "Does an image search on Google and sends the results. \n"
+            "Usage `.img [limit:int]? [format:str]? (search_query)`",
+        'google':
+            "Does a search on Google. \n"
+            "Usage `.google [limit:int]? [page:int]? (search_query)`",
+        'wiki':
+            "Does a Wikipedia search. \n"
+            "Usage: `.wiki (search_query)`",
+        'ud':
+            "Does a search on Urban Dictionary. \n"
+            "Usage: `.ud (search_query)`",
+        'tts':
+            "Translates text to speech. \n"
+            "Usage: `.tts [lang:str]? [slow:bool]? (message)?`",
+        'trt':
+            "Translates text using Google Translate. \n"
+            "Usage: `.trt [to:str]? [from:str]? (message)?`",
+        'lang':
+            "Changes the default language of"
+            "userbot scrapers used for Google TRT, "
+            "TTS may not work. \n"
+            "Usage: `.lang (lang)`",
+        'yt':
+            "Does a YouTube search. \n"
+            "Usage: `.yt (search query)`",
+        'ytdl':
+            "Download videos from YouTube. "
+            "If no resolution is specified, the highest downloadable quality is "
+            "downloaded. Will send the link if the video is larger than 50 MB. \n"
+            "Usage: `.ytdl [res:str]? (url)`",
+        'ytmp3':
+            "Download audio from YouTube. "
+            "First fetches the video then converts it to an mp3. Might take some time. \n"
+            "Usage: `.ytmp3 (url)`",
+        'cr':
+            "Currency converter, converts <from> to <to>. \n"
+            "Usage: `.cr (amount) (from) (to)`"
+    }
 })

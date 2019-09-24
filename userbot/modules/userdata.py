@@ -127,34 +127,23 @@ async def remove_profilepic(delpfp):
     await delpfp.edit(
         f"`Successfully deleted {len(input_photos)} profile picture(s).`")
 
-
 CMD_HELP.update({
-    "username":
-    "Change your Telegram username. \n"
-    "Usage: `.username (new_username)"
-})
-
-CMD_HELP.update({
-    "name":
-    "Usage: Chane your Telegram name. \n"
-    "Usage: `.name (firstname)` or `.name (firstname) (lastname)` \n"
-    "(First and last name will get split by the first space)"
-})
-
-CMD_HELP.update({
-    "profilepic":
-    "Change your Telegram avatar with the replied photo. \n"
-    "Usage: `.profilepic`"
-})
-
-CMD_HELP.update(
-    {"setbio":
-     "Change your Telegram bio. \n"
-     "Usage: `.setbio (new bio)`"
-})
-
-CMD_HELP.update({
-    "delpfp":
-    "Delete your Telegram profile avatar(s). \n"
-    "Usage: `.delpfp` or `.delpfp (number|all)`"
+    "Me": {
+        "username":
+            "Change your Telegram username. \n"
+            "Usage: `.username (new_username)",
+        "name":
+            "Usage: Chane your Telegram name. \n"
+            "Usage: `.name (firstname)` or `.name (firstname) (lastname)` \n"
+            "(First and last name will get split by the first space)",
+        "profilepic":
+            "Change your Telegram avatar with the replied photo. \n"
+            "Usage: `.profilepic`",
+        "setbio":
+            "Change your Telegram bio. \n"
+            "Usage: `.setbio (new bio)`",
+        "delpfp":
+            "Delete your Telegram profile avatar(s). \n"
+            "Usage: `.delpfp` or `.delpfp (number|all)`"
+    }
 })

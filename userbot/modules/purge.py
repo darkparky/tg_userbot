@@ -126,27 +126,19 @@ async def selfdestruct(destroy):
                                           "sd query done successfully")
 
 
-CMD_HELP.update(
-    {'purge': '.purge'
-     '\nUsage: Purge all messages starting from the reply.'})
-
-CMD_HELP.update({
+CMD_HELP["General"].update({
+    'purge': '.purge'
+        '\nUsage: Purge all messages starting from the reply.',
     'purgeme':
-    '.purgeme <x>'
-    '\nUsage: Delete x amount of your latest messages.'
-})
-
-CMD_HELP.update({"del": ".del" "\nUsage: Delete the message you replied to."})
-
-CMD_HELP.update({
+        '.purgeme <x>'
+        '\nUsage: Delete x amount of your latest messages.',
+    "del":
+        ".del" "\nUsage: Delete the message you replied to.",
     'editme':
-    ".editme <newmessage>"
-    "\nUsage: Edit the text you replied to with newtext."
-})
-
-CMD_HELP.update({
+        ".editme <newmessage>"
+        "\nUsage: Edit the text you replied to with newtext.",
     'sd':
-    '.sd <x> <message>'
-    "\nUsage: Create a message that self-destructs in x seconds."
-    '\nKeep the seconds under 100 since it puts your bot to sleep.'
+        '.sd <x> <message>'
+        "\nUsage: Create a message that self-destructs in x seconds."
+        '\nKeep the seconds under 100 since it puts your bot to sleep.'
 })

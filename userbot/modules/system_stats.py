@@ -142,24 +142,18 @@ async def amireallyalive(e):
 
 
 CMD_HELP.update({
-    "sysd":
-    "Show system information using neofetch. \n"
-    "Usage: `.sysd`"
-})
-
-CMD_HELP.update({
-    "botver":
-    "Show the userbot version. \n"
-    "Usage: `.botver`"
-})
-
-CMD_HELP.update({
-    "pip":
-     "Search module(s) in PyPi. \n"
-     "Usage: `.pip (module[s])`"
-})
-CMD_HELP.update({
-    "alive":
-    "Check if your bot is working or not. \n"
-    "Usage: `.alive`"
+    "System": {
+        "sysd":
+            "Show system information using neofetch. \n"
+            "Usage: `.sysd`",
+        "botver":
+            "Show the userbot version. \n"
+            "Usage: `.botver`",
+        "pip":
+            "Search module(s) in PyPi. \n"
+            "Usage: `.pip (module[s])`",
+        "alive":
+            "Check if your bot is working or not. \n"
+            "Usage: `.alive`"
+    }
 })

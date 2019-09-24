@@ -163,7 +163,15 @@ USERS = {}
 COUNT_PM = {}
 LASTMSG = {}
 ENABLE_KILLME = True
-CMD_HELP = {}
+CMD_HELP = {
+    "Admin": {},
+    "General": {},
+    "Me": {},
+    "Meme": {},
+    "Network": {},
+    "Scraping": {},
+    "System": {}
+}
 AFKREASON = "no reason"
 ZALG_LIST = [[
     "̖",

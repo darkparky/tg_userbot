@@ -156,26 +156,22 @@ async def resolve_url(url: str, base_domain: bool = True) -> str:
         url = _base_domain
     return url
 
-CMD_HELP.update(
-    {"dig":
-     "Returns dns info for a domain. \n"
-     "Usage: `.d(ig) (domain)`"})
-
-CMD_HELP.update(
-    {"follow":
-     "Follows a short url and returns it's destination. \n"
-     "Usage: `.f(ollow) (url)?`"})
-
-CMD_HELP.update(
-    {"speed":
-     "Conduct a speed test and show the results. \n"
-     "Usage: `.speed`"})
 CMD_HELP.update({
-    "dc":
-     "Find the nearest datacenter from your server. \n"
-    "Usage:`.dc`"
+    "Network": {
+        "dig":
+            "Returns dns info for a domain. \n"
+            "Usage: `.d(ig) (domain)`",
+        "follow":
+            "Follows a short url and returns it's destination. \n"
+            "Usage: `.f(ollow) (url)?`",
+        "speed":
+            "Conduct a speed test and show the results. \n"
+            "Usage: `.speed`",
+        "dc":
+            "Find the nearest datacenter from your server. \n"
+            "Usage:`.dc`",
+        "ping":
+            "Show how long it takes to ping your bot. \n"
+            "Usage: `.ping`"
+    }
 })
-CMD_HELP.update(
-    {"ping":
-     "Show how long it takes to ping your bot. \n"
-     "Usage: `.ping`"})

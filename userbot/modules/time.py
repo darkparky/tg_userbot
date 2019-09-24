@@ -243,22 +243,22 @@ async def set_time_country(loc):
 
 CMD_HELP.update({
     "time":
-    "Get the time of a country. If a country has "
-    "multiple timezones, we'll list all of them "
-    "and let you select one. \n"
-    "Usage: `.time (country name/code) (timezone number)`"
+        "Get the time of a country. If a country has "
+        "multiple timezones, we'll list all of them "
+        "and let you select one. \n"
+        "Usage: `.time (country name/code) (timezone number)`"
 })
 CMD_HELP.update({
     "date":
-    "Get the date of a country. If a country has "
-    "multiple timezones, we'll list all of them "
-    "and let you select one. \n"
-    "Usage: `.date (country name/code) (timezone number)`"
+        "Get the date of a country. If a country has "
+        "multiple timezones, we'll list all of them "
+        "and let you select one. \n"
+        "Usage: `.date (country name/code) (timezone number)`"
 })
 CMD_HELP.update({
     "locale":
-    "Set the default country for .time and .date "
-    "command. If a country has multiple timezones, we'll"
-    "list all of them and let you select one. \n"
-    "Usage `.locale (country name/code) (timezone number)`"
+        "Set the default country for .time and .date "
+        "command. If a country has multiple timezones, we'll"
+        "list all of them and let you select one. \n"
+        "Usage `.locale (country name/code) (timezone number)`"
 })

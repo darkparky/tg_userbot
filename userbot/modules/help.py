@@ -22,12 +22,19 @@ async def help(event):
         await event.edit("Please specify which module do you want help for!")
         categories = list(CMD_HELP.keys())
         categories.sort()
-        
-        message_parts = []
+
+        categorized = []
+        misc = []
 
         for cat in categories:
-            message =  f"**{cat}**"
-            message_parts.append(message)
+            if type(CMD_HELP[cat]) == dict:
+                items = ', '.join(CMD_HELP[cat].keys())
+                message = f"**{cat}** \n"
+                message += items
+                categorized.append(message)
+            else:
+                misc.append(cat)
 
-        message = '\n \n'.join(message_parts)
+        message = '\n \n'.join(categorized)
+        message += "\n \n **Misc** \n" + ', '.join(misc)
         await event.reply(message)

@@ -607,7 +607,7 @@ async def resize_photo(photo):
 
     return image
 
-CMD_HELP.update({
+CMD_HELP["Meme"].update({
     "cowsay": "Returns a cowsay with the included text. Also works with several other 'says'",
     "cp": "Copypasta, the famous meme",
     "vapor": "Vaporize everything!",

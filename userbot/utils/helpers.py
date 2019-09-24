@@ -20,3 +20,10 @@ def parse_arguments(message):
         message = message.replace(':'.join(opt), '')
 
     return (options, message.strip())
+
+def freeze(d):
+    if isinstance(d, dict):
+        return frozenset((key, freeze(value)) for key, value in d.items())
+    elif isinstance(d, list):
+        return tuple(freeze(value) for value in d)
+    return d

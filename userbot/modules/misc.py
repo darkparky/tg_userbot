@@ -133,35 +133,23 @@ def make_mention(user):
 
 CMD_HELP.update({"linux": "Show some linux copypasta"})
 
-CMD_HELP.update({"lfy": "Here, let me google that for you"})
-
-CMD_HELP.update({"admins": "Tag all admins"})
+CMD_HELP["General"].update({
+    "admins": "Tag all admins",
+    "lfy": "Here, let me google that for you",
+    'sleep':
+        '.sleep 10'
+        '\nUsage: Userbots get tired too. Let yours snooze for a few seconds.',
+    "shutdown":
+        ".shutdown"
+        '\nUsage: Sometimes you need to restart your bot. Sometimes you just hope to'
+        "hear Windows XP shutdown sound... but you don't.",
+    'repo':
+        '.repo'
+        '\nUsage: If you are curious what makes Paperplane work, this is what you need.'
+})
 
 CMD_HELP.update({
     'random':
     ".random <item1> <item2> ... <itemN>"
     "\nUsage: Get a random item from the list of items."
-})
-
-CMD_HELP.update({
-    'sleep':
-    '.sleep 10'
-    '\nUsage: Userbots get tired too. Let yours snooze for a few seconds.'
-})
-
-CMD_HELP.update({
-    "shutdown":
-    ".shutdown"
-    '\nUsage: Sometimes you need to restart your bot. Sometimes you just hope to'
-    "hear Windows XP shutdown sound... but you don't."
-})
-
-CMD_HELP.update(
-    {'support': ".support"
-     "\nUsage: If you need help, use this command."})
-
-CMD_HELP.update({
-    'repo':
-    '.repo'
-    '\nUsage: If you are curious what makes Paperplane work, this is what you need.'
 })

@@ -132,15 +132,15 @@ async def fetch_info(replied_user, **kwargs):
     return caption
 
 
-CMD_HELP.update({
+CMD_HELP["General"].update({
     "user":
-    "Get info about a user. \n"
-    "Usage: `.u(ser) [options] (username|id)?` \n"
-    "Options: (`.` prefix means true, `!` means false) \n"
-    "  `.id`: Show only the user's ID (default: `False`) \n"
-    "  `.general`: Show general user info (default: `True`) \n"
-    "  `.bot`: Show bot related info (default: `False`) \n"
-    "  `.misc`: Show miscelanious info (default: `False`) \n"
-    "  `.all`: Show all info (overrides other options) (default: `False`) \n"
-    "  `.mention`: Inline mention the user (default: `False`)"
+        "Get info about a user. \n"
+        "Usage: `.u(ser) [options] (username|id)?` \n"
+        "Options: (`.` prefix means true, `!` means false) \n"
+        "  `.id`: Show only the user's ID (default: `False`) \n"
+        "  `.general`: Show general user info (default: `True`) \n"
+        "  `.bot`: Show bot related info (default: `False`) \n"
+        "  `.misc`: Show miscelanious info (default: `False`) \n"
+        "  `.all`: Show all info (overrides other options) (default: `False`) \n"
+        "  `.mention`: Inline mention the user (default: `False`)"
 })
