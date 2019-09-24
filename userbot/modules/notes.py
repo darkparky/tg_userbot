@@ -74,7 +74,8 @@ async def add_filter(event):
 async def note(event):
     """ Notes logic. """
     try:
-        if not (await event.get_sender()).bot:
+        me = await event.client.get_me()
+        if not (await event.get_sender()).bot and (event.from_id == me.id):
             if not is_mongo_alive() or not is_redis_alive():
                 return
 
