@@ -10,11 +10,11 @@ from getpass import getuser
 from os import remove
 from sys import executable
 
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.eval(?: |$)(.*)")
+@register(outgoing=True, pattern="^.eval(?: |$)([\S\s]+)")
 async def evaluate(query):
     """ For .eval command, evaluates the given Python expression. """
     reply_message = await query.get_reply_message()
@@ -72,26 +72,26 @@ async def evaluate(query):
 
 
 @register(outgoing=True, pattern=r"^.exec(?: |$)([\s\S]*)")
-async def run(run_q):
+async def run(event):
     """ For .exec command, which executes the dynamically created program """
-    reply_message = await run_q.get_reply_message()
+    reply_message = await event.get_reply_message()
     
-    if run_q.pattern_match.group(1):
-        code = code = run_q.pattern_match.group(1)
+    if event.pattern_match.group(1):
+        code = code = event.pattern_match.group(1)
     elif reply_message:
         code = reply_message.text
     else:
-        await run_q.edit("``` At least a variable is required to \
+        await event.edit("``` At least a variable is required to \
 execute. Use .help exec for an example.```")
         return
 
 
-    if run_q.is_channel and not run_q.is_group:
-        await run_q.edit("`Exec isn't permitted on channels!`")
+    if event.is_channel and not event.is_group:
+        await event.edit("`Exec isn't permitted on channels!`")
         return
 
     if code in ("userbot.session", "config.env"):
-        await run_q.edit("`That's a dangerous operation! Not Permitted!`")
+        await event.edit("`That's a dangerous operation! Not Permitted!`")
         return
 
     if len(code.splitlines()) <= 5:
@@ -117,26 +117,26 @@ execute. Use .help exec for an example.```")
             file = open("output.txt", "w+")
             file.write(result)
             file.close()
-            await run_q.client.send_file(
-                run_q.chat_id,
+            await event.client.send_file(
+                event.chat_id,
                 "output.txt",
-                reply_to=run_q.id,
+                reply_to=event.id,
                 caption="`Output too large, sending as file`",
             )
             remove("output.txt")
             return
-        await run_q.edit("**Query: **\n`"
+        await event.edit("**Query: **\n`"
                          f"{codepre}"
                          "`\n**Result: **\n`"
                          f"{result}"
                          "`")
     else:
-        await run_q.edit("**Query: **\n`"
+        await event.edit("**Query: **\n`"
                          f"{codepre}"
                          "`\n**Result: **\n`No Result Returned/False`")
 
     if BOTLOG:
-        await run_q.client.send_message(
+        await event.client.send_message(
             BOTLOG_CHATID,
             "Exec query " + codepre + " was executed successfully")
 
