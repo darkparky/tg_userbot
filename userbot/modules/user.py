@@ -49,7 +49,9 @@ async def who(event: NewMessage.Event):
 async def get_user(event: NewMessage.Event, **kwargs):
     """ Get the user from argument or replied message. """
     reply_msg: Message = await event.get_reply_message()
-    if kwargs['user']:
+    user = kwargs.get('user', None)
+    
+    if user:
         # First check for a user id
         if user.isnumeric():
             user = int(user)
