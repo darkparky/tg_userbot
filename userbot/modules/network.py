@@ -42,7 +42,7 @@ async def dig_dns(dig):
 
     await dig.edit(response)
 
-@register(outgoing=True, pattern=r"^.f(?:ollow)?(?: |$)(.*)?")
+@register(outgoing=True, pattern=r"^.f(?:ollow)?(?: |$)([\S\s]+)?")
 async def follow_url(event):
     reply_message = await event.get_reply_message()
     message_text = event.pattern_match.group(1)
