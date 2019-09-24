@@ -218,7 +218,7 @@ async def text_to_speech(query):
             await query.client.send_message(
                 BOTLOG_CHATID, "tts of " + message + " executed successfully!")
 
-@register(outgoing=True, pattern=r"^.trt(?: |$)([\s\S]+)")
+@register(outgoing=True, pattern=r"^.trt(?: |$)([\s\S]+)?")
 async def translateme(trans):
     """ For .trt command, translate the given text using Google Translate. """
     translator = Translator()
