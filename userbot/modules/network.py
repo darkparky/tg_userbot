@@ -45,17 +45,17 @@ async def dig_dns(dig):
 @register(outgoing=True, pattern=r"^.f(?:ollow)?(?: |$)([\S\s]+)?")
 async def follow_url(event):
     reply_message = await event.get_reply_message()
-    message_text = event.pattern_match.group(1)
+    message_text = event.pattern_match.group(1) or ""
     opts, message_text = parse_arguments(message_text)
 
     await event.edit("Fetching links...")
 
     urls = []
     if message_text:
-        matches = re.findall(r'(https?://\S+)', message_text)
+        matches = re.findall(r'(https?://\S+)', str(message_text))
         urls.extend(list(matches))
     elif reply_message:
-        matches = re.findall(r'(https?://\S+)', reply_message.text)
+        matches = re.findall(r'(https?://\S+)', str(reply_message.text))
         urls.extend(list(matches))
     else:
         await event.edit("No URLs found :(")
