@@ -58,17 +58,6 @@ def register(**args):
 
             try:
                 await func(check)
-            # This is a gay exception and must be passed out. So that it doesnt spam chats
-
-            except FloodError:
-                errored = True
-                while errored:
-                    sleep(2)
-                    try:
-                        await func(check)
-                        errored = False
-                    except:
-                        pass
             except KeyboardInterrupt:
                 pass
             except BaseException:

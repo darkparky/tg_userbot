@@ -10,6 +10,8 @@
 
 import os
 
+from telethon.events import NewMessage
+from telethon.tl.custom import Message
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
@@ -21,7 +23,7 @@ TMP_DOWNLOAD_DIRECTORY = "./"
 
 
 @register(pattern="^.u(?:ser)?(?: |$)(.*)", outgoing=True)
-async def who(event):
+async def who(event: NewMessage.Event):
     """ For .user command, get info about a user. """
     if event.fwd_from:
         return
@@ -30,7 +32,11 @@ async def who(event):
         os.makedirs(TMP_DOWNLOAD_DIRECTORY)
 
     args, user = parse_arguments(event.pattern_match.group(1))
-    replied_user = await get_user(event, user)
+    
+    args['forward'] = args.get('forward', True)
+    args['user'] = user
+
+    replied_user = await get_user(event, **args)
     caption = await fetch_info(replied_user, **args)
 
     message_id_to_reply = event.message.reply_to_msg_id
@@ -40,21 +46,16 @@ async def who(event):
 
     await event.edit(caption, parse_mode="markdown")
 
-async def get_user(event, user):
+async def get_user(event: NewMessage.Event, **kwargs):
     """ Get the user from argument or replied message. """
-    if event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-        replied_user = await event.client(
-            GetFullUserRequest(previous_message.from_id))
-    else:
+    reply_msg: Message = await event.get_reply_message()
+    if kwargs['user']:
+        # First check for a user id
         if user.isnumeric():
             user = int(user)
-
-        if not user:
-            self_user = await event.client.get_me()
-            user = self_user.id
-
-        if event.message.entities is not None:
+    
+        # Then check for a user mention (@username)
+        elif event.message.entities is not None:
             probable_user_mention_entity = event.message.entities[0]
 
             if isinstance(probable_user_mention_entity,
@@ -69,6 +70,23 @@ async def get_user(event, user):
         except (TypeError, ValueError) as err:
             await event.edit(str(err))
             return None
+    
+    # Check for a forwarded message
+    elif reply_msg and reply_msg.forward and kwargs['forward']:
+        forward = reply_msg.forward
+        replied_user = await event.client(
+            GetFullUserRequest(forward.sender_id))
+    
+    # Check for a replied to message
+    elif event.reply_to_msg_id:
+        previous_message = await event.get_reply_message()
+        replied_user = await event.client(
+            GetFullUserRequest(previous_message.from_id))
+    
+    # Last case scenario is to get the current user
+    else:
+        self_user = await event.client.get_me()
+        replied_user = await event.client(GetFullUserRequest(self_user.id))
 
     return replied_user
 
@@ -142,5 +160,6 @@ CMD_HELP["General"].update({
         "  `.bot`: Show bot related info (default: `False`) \n"
         "  `.misc`: Show miscelanious info (default: `False`) \n"
         "  `.all`: Show all info (overrides other options) (default: `False`) \n"
-        "  `.mention`: Inline mention the user (default: `False`)"
+        "  `.mention`: Inline mention the user (default: `False`) \n"
+        "  `.forward`: Follow forwarded message (default: `True`)"
 })
