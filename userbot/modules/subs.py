@@ -97,3 +97,17 @@ async def note(event):
                     break
     except BaseException:
         pass
+
+CMD_HELP["General"].update({
+    "sub":
+        "Subscribes to a pattern in the current "
+        "chat or globally. \n"
+        "Usage: `.sub [global:bool]? (pattern)`",
+    "rmsub":
+        "Removes a sub by ID. \n"
+        "Usage: `.rmsub (id)`",
+    "subs":
+        "List all subs for the current chat "
+        "(including globals). \n"
+        "Usage: `.subs`"
+})

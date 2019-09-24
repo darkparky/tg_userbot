@@ -45,6 +45,9 @@ async def remove_notes(event):
     else:
         return await event.edit(
             "`Successfully deleted note:` **{}**".format(notename))
+    
+    sleep(1)
+    await event.delete()
 
 
 @register(outgoing=True, pattern=r'^.addnote (\w[\w\d_]+)\s?([\S\s]+)?')
@@ -66,6 +69,9 @@ async def add_filter(event):
         return await event.edit(msg.format('updated', notename))
     else:
         return await event.edit(msg.format('added', notename))
+    
+    sleep(1)
+    await event.delete()
 
 @register(pattern=r"#\w*",
           disable_edited=True,
