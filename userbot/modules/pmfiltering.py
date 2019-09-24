@@ -28,8 +28,8 @@ UNAPPROVED_MSG = (
 
 @register(incoming=True, disable_edited=True, disable_errors=True)
 async def permitpm(event):
-    """ Permits people from PMing you without approval. \
-        Will block retarded nibbas automatically. """
+    """ Prevents people from PMing you without approval. \
+        Will block idiot spammers automatically. """
     if PM_AUTO_BAN:
         if event.is_private and not (await event.get_sender()).bot:
             if not is_mongo_alive() or not is_redis_alive():
@@ -66,9 +66,9 @@ async def permitpm(event):
                     COUNT_PM[event.chat_id] = COUNT_PM[event.chat_id] + 1
 
                 if COUNT_PM[event.chat_id] > 4:
-                    await event.respond("`You were spamming my master's PM, "
+                    await event.respond("`You're spamming my PM, "
                                         " which I don't like.`"
-                                        " `I'mma Report Spam.`")
+                                        " `Reporting as spam.`")
 
                     try:
                         del COUNT_PM[event.chat_id]
@@ -77,10 +77,10 @@ async def permitpm(event):
                         if BOTLOG:
                             await event.client.send_message(
                                 BOTLOG_CHATID,
-                                "Count PM is seemingly going retard, "
-                                "plis restart bot!",
+                                "Count PM is fucking up, "
+                                "please restart the bot!",
                             )
-                        LOGS.info("CountPM wen't rarted boi")
+                        LOGS.info("CountPM fucked up")
                         return
 
                     await event.client(BlockRequest(event.chat_id))
@@ -93,7 +93,7 @@ async def permitpm(event):
                             BOTLOG_CHATID,
                             "[" + name0 + "](tg://user?id=" +
                             str(event.chat_id) + ")" +
-                            " was just another retarded nibba",
+                            " was just another idiot",
                         )
 
 

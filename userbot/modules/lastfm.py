@@ -210,7 +210,7 @@ async def lastlog(lstlog):
         await lstlog.edit(LFM_LOG_ERR)
 
 
-CMD_HELP.update({
+CMD_HELP["Me"].update({
     'lastfm':
         "Shows currently scrobbling track or most recent "
         "scrobbles if nothing is playing. \n"

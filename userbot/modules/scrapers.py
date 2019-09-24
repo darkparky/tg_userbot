@@ -64,14 +64,17 @@ async def img_sampler(event):
     await event.delete()
 
 
-@register(outgoing=True, pattern=r"^.google (.*)")
+@register(outgoing=True, pattern=r"^.google(?: |$)(.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
+    reply_message = await q_event.get_reply_message()
     query = q_event.pattern_match.group(1)
     opts, query = parse_arguments(query)
 
     page = opts.get('page', 1)
     gsearch = GoogleSearch()
+
+    query = query or reply_message.text
     gresults = gsearch.search(query, page)
     
     msg = ""

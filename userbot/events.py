@@ -27,7 +27,6 @@ def register(**args):
     unsafe_pattern = r'^[^/!#@\$A-Za-z]'
     group_only = args.get('group_only', False)
     disable_errors = args.get('disable_errors', False)
-    permit_sudo = args.get('permit_sudo', False)
     incoming_func = args.get('incoming', True)
     if pattern is not None and not pattern.startswith('(?i)'):
         args['pattern'] = '(?i)' + pattern
@@ -43,9 +42,6 @@ def register(**args):
 
     if "disable_errors" in args:
         del args['disable_errors']
-
-    if "permit_sudo" in args:
-        del args['permit_sudo']
 
     if pattern:
         if not ignore_unsafe:

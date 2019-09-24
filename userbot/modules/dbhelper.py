@@ -1,3 +1,6 @@
+import random
+import string
+
 from userbot import MONGO, REDIS
 
 
@@ -454,3 +457,43 @@ async def set_weather(city):
             }})
     else:
         MONGO.misc.insert_one({'weather_city': city})
+
+# Subscriptions
+async def get_subs(chatid):
+    return MONGO.subs.find({'$or': [{'chat_id': chatid}, {'global': True}]})
+
+
+async def get_sub(chatid, pattern):
+    return MONGO.subs.find_one({'chat_id': chatid, 'pattern': pattern})
+
+
+async def add_sub(chatid, pattern, gbl=False):
+    to_check = await get_sub(chatid, pattern)
+
+    if not to_check:
+        short_id = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(5)])
+        MONGO.subs.insert_one({'id': short_id, 'chat_id': chatid, 'pattern': pattern, 'global': gbl})
+
+        return True
+    else:
+        MONGO.subs.update_one(
+            {
+                '_id': to_check["_id"],
+                'chat_id': to_check["chat_id"],
+            }, {"$set": {
+                'pattern': pattern,
+                'global': gbl
+            }})
+
+        return False
+
+
+async def delete_sub(sub_id):
+    to_check = MONGO.subs.find({'id': sub_id})
+
+    if not to_check:
+        return False
+    else:
+        MONGO.subs.delete_one({
+            'id': sub_id
+        })

@@ -40,8 +40,6 @@ async def welcome_mute(event):
         return
 
     message = event.action_message
-
-
     user = await event.get_user()
     user_full = await event.client(GetFullUserRequest(user.id))
     names = [str(user.first_name).lower(), str(user.last_name).lower()]
