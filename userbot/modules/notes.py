@@ -40,14 +40,11 @@ async def remove_notes(event):
         return
     notename = event.pattern_match.group(1)
     if await delete_note(event.chat_id, notename) is False:
-        return await event.edit("`Couldn't find note:` **{}**".format(notename)
-                                )
+        message = "`Couldn't find note:` **{}**".format(notename)
+        return await event.client.edit_message_sd(event.message, 3, message)
     else:
-        return await event.edit(
-            "`Successfully deleted note:` **{}**".format(notename))
-    
-    sleep(1)
-    await event.delete()
+        message = "`Successfully deleted note:` **{}**".format(notename)
+        return await event.client.edit_message_sd(event.message, 3, message)
 
 
 @register(outgoing=True, pattern=r'^.addnote (\w[\w\d_]+)\s?([\S\s]+)?')
@@ -63,15 +60,14 @@ async def add_filter(event):
     if event.reply_to_msg_id:
         string = (await event.get_reply_message()).text
 
-    msg = "`Note {} successfully. Use` #{} `to get it`"
+    msg = "`{} note #{}`"
 
     if await add_note(event.chat_id, notename, string) is False:
-        return await event.edit(msg.format('updated', notename))
+        message = msg.format('Updated', notename)
+        return await event.edit(message, delete_in=3)
     else:
-        return await event.edit(msg.format('added', notename))
-    
-    sleep(1)
-    await event.delete()
+        message = msg.format('Added', notename)
+        return await event.edit(message, delete_in=3)
 
 @register(pattern=r"#\w*",
           disable_edited=True,

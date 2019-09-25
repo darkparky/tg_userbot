@@ -18,6 +18,8 @@ from pymongo import MongoClient
 from requests import get
 from telethon import TelegramClient
 
+from userbot.client import UserBot
+
 load_dotenv("config.env")
 
 # Bot Logs setup:
@@ -94,8 +96,7 @@ CURRENCY_API = os.environ.get("CURRENCY_API", None)
 GDRIVE_FOLDER = os.environ.get("GDRIVE_FOLDER", None)
 
 # pylint: disable=invalid-name
-bot = TelegramClient("userbot", API_KEY, API_HASH)
-
+bot = UserBot("userbot", API_KEY, API_HASH)
 
 async def check_botlog_chatid():
     if not BOTLOG:

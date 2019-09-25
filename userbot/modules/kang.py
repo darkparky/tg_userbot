@@ -8,6 +8,7 @@
 import io
 import math
 import urllib.request
+from asyncio import sleep
 
 from PIL import Image
 from telethon.tl.types import DocumentAttributeFilename, MessageMediaPhoto
@@ -19,22 +20,27 @@ PACK_FULL = "Whoa! That's probably enough stickers for one pack, give it a break
 A pack can't have more than 120 stickers at the moment."
 
 
-@register(outgoing=True, pattern="^.kang")
+@register(outgoing=True, pattern="^.kang(.*)?")
 async def kang(args):
     """ For .kang command, kangs stickers or creates new ones. """
     user = await bot.get_me()
     if not user.username:
         user.username = user.first_name
+    
     message = await args.get_reply_message()
     photo = None
     emojibypass = False
     is_anim = False
-    emoji = ""
+    emoji = args.pattern_match.group(1)
+    
     await args.edit("`Kanging..........`")
     if message and message.media:
+        # Check if a photo was sent with the kang request
         if isinstance(message.media, MessageMediaPhoto):
             photo = io.BytesIO()
             photo = await bot.download_media(message.photo, photo)
+        
+        # Check if the photo was sent as a file
         elif "image" in message.media.document.mime_type.split('/'):
             photo = io.BytesIO()
             await bot.download_file(message.media.document, photo)
@@ -42,6 +48,8 @@ async def kang(args):
                     message.media.document.attributes):
                 emoji = message.media.document.attributes[1].alt
                 emojibypass = True
+        
+        # Check for an animated sticker format
         elif (DocumentAttributeFilename(file_name='AnimatedSticker.tgs') in
               message.media.document.attributes):
             emoji = message.media.document.attributes[0].alt
@@ -49,10 +57,10 @@ async def kang(args):
             is_anim = True
             photo = 1
         else:
-            await args.edit("`Unsupported File!`")
+            await args.edit("`Unsupported File!`", delete_in=3)
             return
     else:
-        await args.edit("`Reply to photo to kang it bruh`")
+        await args.edit("`Reply to the photo you want to kang`", delete_in=3)
         return
 
     if photo:
@@ -147,7 +155,7 @@ async def kang(args):
                         await bot.send_read_acknowledge(conv.chat_id)
                         await args.edit(
                             f"Sticker added in a Different Pack! This Pack is Newly created! Your pack can be found [here](t.me/addstickers/{packname})",
-                            parse_mode='md')
+                            parse_mode='md', delete_in=10)
                         return
                 if is_anim:
                     await bot.forward_messages('Stickers', [message.id],
@@ -207,7 +215,7 @@ doesn't exist! Making a new one!")
 
         await args.edit(
             f"Sticker added! Your pack can be found [here](t.me/addstickers/{packname})",
-            parse_mode='md')
+            parse_mode='md', delete_in=10)
 
 
 async def resize_photo(photo):

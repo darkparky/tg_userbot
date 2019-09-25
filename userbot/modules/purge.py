@@ -31,48 +31,57 @@ async def fastpurger(purg):
 
     if msgs:
         await purg.client.delete_messages(chat, msgs)
-    done = await purg.client.send_message(
-        purg.chat_id,
+    await purg.respond(
         "`Fast purge complete!\n`Purged " + str(count) +
         " messages. **This auto-generated message " +
         "  shall be self destructed in 2 seconds.**",
+        delete_in=2
     )
 
     if BOTLOG:
         await purg.client.send_message(
             BOTLOG_CHATID,
             "Purge of " + str(count) + " messages done successfully.")
-    await sleep(2)
-    await done.delete()
 
 
-@register(outgoing=True, pattern="^.purgeme")
+@register(outgoing=True, pattern=r"^.purgeme\s?([0-9]+|all)?")
 async def purgeme(delme):
     """ For .purgeme, delete x count of your latest message."""
     message = delme.text
-    count = int(message[9:])
+    count = delme.pattern_match.group(1)
+    delall = False
     i = 1
+
+    if count.lower() == 'all':
+        delall = True
+    elif count.isnumeric():
+        count = int(count)
+    else:
+        await delme.respond(
+            "First argument to `.purgeme` must be "
+            "a number or `all`.",
+            delete_in=2
+        )
 
     async for message in delme.client.iter_messages(delme.chat_id,
                                                     from_user='me'):
-        if i > count + 1:
+        if not delall and (i > count + 1):
             break
+
         i = i + 1
         await message.delete()
 
-    smsg = await delme.client.send_message(
-        delme.chat_id,
+    await delme.respond(
         "`Purge complete!` Purged " + str(count) +
         " messages. **This auto-generated message " +
         " shall be self destructed in 2 seconds.**",
+        delete_in=2
     )
+    
     if BOTLOG:
         await delme.client.send_message(
             BOTLOG_CHATID,
             "Purge of " + str(count) + " messages done successfully.")
-    await sleep(2)
-    i = 1
-    await smsg.delete()
 
 
 @register(outgoing=True, pattern="^.del$")
@@ -111,19 +120,12 @@ async def editer(edit):
                                        "Edit query was executed successfully")
 
 
-@register(outgoing=True, pattern="^.sd")
+@register(outgoing=True, pattern=r"^.sd ([0-9]+) ([\S\s]+)")
 async def selfdestruct(destroy):
-    """ For .sd command, make seflf-destructable messages. """
-    message = destroy.text
-    counter = int(message[4:6])
-    text = str(destroy.text[6:])
-    await destroy.delete()
-    smsg = await destroy.client.send_message(destroy.chat_id, text)
-    await sleep(counter)
-    await smsg.delete()
-    if BOTLOG:
-        await destroy.client.send_message(BOTLOG_CHATID,
-                                          "sd query done successfully")
+    """ For .sd command, make self-destructable messages. """
+    seconds = int(destroy.pattern_match.group(1))
+    text = str(destroy.pattern_match.group(2))
+    await destroy.edit(text, delete_in=seconds)
 
 
 CMD_HELP["General"].update({
