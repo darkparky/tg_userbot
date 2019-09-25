@@ -19,10 +19,12 @@ from userbot.modules.dbhelper import (approval, approve, block_pm, notif_off,
 
 # ========================= CONSTANTS ============================
 UNAPPROVED_MSG = (
-    "`Bleep blop! This is a bot. Don't fret.\n\n`"
-    "`My master hasn't approved you to PM.`"
-    "`Please wait for my master to look in, he mostly approves PMs.\n\n`"
-    "`As far as I know, he doesn't usually approve idiots though.`")
+    "`Hey there stranger. If you're seeing this message it `"
+    "`means I haven't approved you for PMs yet. If I know `"
+    "`you this doesn't pose a problem, just wait a bit for `"
+    "`me to check my messages and approve you. If I don't `"
+    "`know you please go back to whatever group you found me `"
+    "`in and remove yourself before I report you 😁`.")
 # =================================================================
 
 
@@ -67,8 +69,7 @@ async def permitpm(event):
 
                 if COUNT_PM[event.chat_id] > 4:
                     await event.respond("`You're spamming my PM, "
-                                        " which I don't like.`"
-                                        " `Reporting as spam.`")
+                                        " which I don't like. Reporting as spam.`")
 
                     try:
                         del COUNT_PM[event.chat_id]
@@ -171,9 +172,9 @@ async def approvepm(apprvpm):
             )
 
 
-@register(outgoing=True, pattern="^.block$")
+@register(outgoing=True, pattern="^.pm block$")
 async def blockpm(block):
-    """ For .block command, block people from PMing you! """
+    """ For .pm block command, block people from PMing you! """
     if not is_mongo_alive() or not is_redis_alive():
         await block.edit("`Database connections failing!`")
         return
@@ -206,9 +207,9 @@ async def blockpm(block):
             )
 
 
-@register(outgoing=True, pattern="^.unblock$")
+@register(outgoing=True, pattern="^.pm unblock$")
 async def unblockpm(unblock):
-    """ For .unblock command, let people PMing you again! """
+    """ For .pm unblock command, let people PMing you again! """
     if unblock.reply_to_msg_id:
         reply = await unblock.get_reply_message()
         replied_user = await unblock.client(GetFullUserRequest(reply.from_id))
@@ -232,10 +233,10 @@ CMD_HELP["General"].update({
     "pm approve":
         "Approve the mentioned/replied person to PM. \n"
         "Usage: `.pm approve`",
-    "block":
+    "pm block":
         "Block the person from PMing you. \n"
         "Usage: `.pm block`",
-    "unblock":
+    "pm unblock":
         "Unblock the person so they can PM you. \n"
         "Usage: `.pm unblock`",
     "pm notifoff":

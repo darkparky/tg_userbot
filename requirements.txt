@@ -37,3 +37,4 @@ imageio
 imageio-ffmpeg
 antispam
 pycrypto
+PyGithub

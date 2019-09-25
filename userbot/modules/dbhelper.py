@@ -3,7 +3,6 @@ import string
 
 from userbot import MONGO, REDIS
 
-
 # Mutes
 async def mute(chatid, userid):
     if await is_muted(chatid, userid) is True:

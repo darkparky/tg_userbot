@@ -19,7 +19,7 @@ from telethon import functions
 
 from userbot import CMD_HELP
 from userbot.events import register
-from userbot.utils.helpers import parse_arguments
+from userbot.utils.helpers import parse_arguments, extract_urls
 
 @register(outgoing=True, pattern=r"^.d(?:ig)? (\S+)")
 async def dig_dns(dig):
@@ -52,11 +52,9 @@ async def follow_url(event):
 
     urls = []
     if message_text:
-        matches = re.findall(r'(https?://\S+)', str(message_text))
-        urls.extend(list(matches))
+        urls.extend(extract_urls(message_text))
     elif reply_message:
-        matches = re.findall(r'(https?://\S+)', str(reply_message.text))
-        urls.extend(list(matches))
+        urls.extend(extract_urls(reply_message.text))
     else:
         await event.edit("No URLs found :(")
         return

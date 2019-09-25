@@ -12,6 +12,7 @@ from sys import version_info
 
 import pylast
 import redis
+from github import Github
 from dotenv import load_dotenv
 from pyDownload import Downloader
 from pymongo import MongoClient
@@ -83,13 +84,21 @@ LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
 LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
 LASTFM_PASSWORD_PLAIN = os.environ.get("LASTFM_PASSWORD", None)
 LASTFM_PASS = pylast.md5(LASTFM_PASSWORD_PLAIN)
-if not LASTFM_USERNAME == "None":
+if LASTFM_USERNAME:
     lastfm = pylast.LastFMNetwork(api_key=LASTFM_API,
                                   api_secret=LASTFM_SECRET,
                                   username=LASTFM_USERNAME,
                                   password_hash=LASTFM_PASS)
 else:
     lastfm = None
+
+
+GITHUB_USERNAME = os.environ.get("GITHUB_USERNAME", None)
+GITHUB_PASSWORD = os.environ.get("GITHUB_PASSWORD", None)
+if GITHUB_USERNAME and GITHUB_PASSWORD:
+    github = Github(GITHUB_USERNAME, GITHUB_PASSWORD)
+else:
+    github = None
 
 CURRENCY_API = os.environ.get("CURRENCY_API", None)
 

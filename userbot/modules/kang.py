@@ -243,13 +243,10 @@ async def resize_photo(photo):
     return image
 
 
-CMD_HELP.update({
+CMD_HELP["General"].update({
     "kang":
-    ".kang"
-    "\nUsage: Reply .kang to a sticker or an image to kang it to your userbot pack."
-    "\n\n.kang [emoji('s)]"
-    "\nUsage: Works just like .kang but uses the emoji('s) you picked."
-    "\n\n.kang [number]"
-    "\nUsage: Kang's the sticker/image to the specified pack but uses 🤔 as emoji."
-    "\n\n\nPlease kang this."
+    "Add a sticker or image to your userbot sticker pack."
+    "Usage: `.kang [emoji('s)]`"
+    "Works just like .kang but uses the emoji('s) you picked."
+    "Usage: `.kang [number]`"
 })

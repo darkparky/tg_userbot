@@ -27,3 +27,7 @@ def freeze(d):
     elif isinstance(d, list):
         return tuple(freeze(value) for value in d)
     return d
+
+def extract_urls(message):
+    matches = findall(r'(https?://\S+)', str(message))
+    return list(matches)

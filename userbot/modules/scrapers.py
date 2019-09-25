@@ -237,6 +237,7 @@ async def translateme(trans):
     dest_lang = opts.get('to', LANG)
     src_lang = opts.get('from', 'auto')
 
+    trans.edit("Translating...")
     try:
         reply_text = translator.translate(deEmojify(message), dest=dest_lang, src=src_lang)
     except ValueError:
