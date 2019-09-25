@@ -14,22 +14,22 @@ from userbot.events import register
 DOGBIN_URL = "https://del.dog/"
 
 
-@register(outgoing=True, pattern=r"^.paste(?: |$)([\s\S]*)")
+@register(outgoing=True, pattern=r"^.paste(?: |$)([\s\S]*)?")
 async def paste(pstl):
     """ For .paste command, allows using
         dogbin functionality with the command. """
     dogbin_final_url = ""
 
-    match = pstl.pattern_match.group(1).strip()
-    reply_id = pstl.reply_to_msg_id
-    if not match and not reply_id:
+    match = pstl.pattern_match.group(1)
+    reply_message = await pstl.get_reply_message()
+    if not match and not reply_message:
         await pstl.edit("There's nothing to paste.")
         return
 
     if match:
-        message = match
-    elif reply_id:
-        message = (await pstl.get_reply_message()).message
+        message = match.strip()
+    elif reply_message:
+        message = reply_message.message.strip()
 
     # Dogbin
     await pstl.edit("`Pasting text . . .`")
