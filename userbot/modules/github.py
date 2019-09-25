@@ -17,18 +17,20 @@ async def github_info(e):
     if not github:
         await e.edit("Github information has not been set up", delete_in=3)
         return
-    
+
+    match = e.pattern_match.group(1)
     reply_message = await e.get_reply_message()
-    
-    repo = e.pattern_match.group(1)
-    if repo:
-        args, repo = parse_arguments(repo)
-        repo = repo.strip()
-    else:
+    if not match and not reply_message:
+        await e.edit("There's nothing to paste.")
+        return
+
+    if match:
+        message = match.strip()
+    elif reply_message:
+        message = reply_message.message.strip()
         args = {}
 
-    repo = repo or reply_message.text
-    repos = re.findall(GITHUB_REPO_RE, repo)
+    repos = re.findall(GITHUB_REPO_RE, message)
     if repos:
         await e.edit(f"Fetching information for {len(repos)} repo(s)...")
         message_parts = []
