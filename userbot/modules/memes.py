@@ -288,17 +288,16 @@ async def copypasta(cp_e):
     reply_text += random.choice(EMOJIS)
     await cp_e.edit(reply_text)
 
-@register(outgoing=True, pattern=r"^.penis\s?(.)?")
+@register(outgoing=True, pattern=r"^.(?:penis|dick)\s?(.)?")
 async def emoji_penis(e):
-    reply_message = await e.get_reply_message()
     emoji = e.pattern_match.group(1)
 
+    await e.edit("Dickifying...")
     message = PENIS_TEMPLATE
     if emoji:
         message = message.replace('🍆', emoji)
 
-    await e.delete()
-    await e.reply(message, reply_to=reply_message)
+    await e.edit(message)
 
 @register(outgoing=True, pattern="^.vapor(?: |$)(.*)")
 async def vapor(vpr):

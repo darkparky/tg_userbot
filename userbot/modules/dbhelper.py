@@ -4,16 +4,16 @@ import string
 from userbot import MONGO, REDIS
 
 # Mutes
-async def mute(chatid, userid):
-    if await is_muted(chatid, userid) is True:
+async def mute(chat_id, userid):
+    if await is_muted(chat_id, userid) is True:
         return False
     else:
-        MONGO.mutes.insert_one({'chat_id': chatid, 'user_id': userid})
+        MONGO.mutes.insert_one({'chat_id': chat_id, 'user_id': userid})
         return True
 
 
-async def is_muted(chatid, userid):
-    is_muted = MONGO.mutes.find_one({'chat_id': chatid, 'user_id': userid})
+async def is_muted(chat_id, userid):
+    is_muted = MONGO.mutes.find_one({'chat_id': chat_id, 'user_id': userid})
 
     if not is_muted:
         return False
@@ -21,16 +21,16 @@ async def is_muted(chatid, userid):
         return True
 
 
-async def unmute(chatid, userid):
-    if await is_muted(chatid, userid) is False:
+async def unmute(chat_id, userid):
+    if await is_muted(chat_id, userid) is False:
         return False
     else:
-        MONGO.mutes.delete_one({'chat_id': chatid, 'user_id': userid})
+        MONGO.mutes.delete_one({'chat_id': chat_id, 'user_id': userid})
         return True
 
 
-async def get_muted(chatid):
-    muted_db = MONGO.mutes.find({'chat_id': int(chatid)})
+async def get_muted(chat_id):
+    muted_db = MONGO.mutes.find({'chat_id': int(chat_id)})
 
     muted = []
     for user in muted_db:
@@ -76,20 +76,20 @@ async def get_gmuted():
 
 
 # Filters
-async def get_filters(chatid):
-    return MONGO.filters.find({'chat_id': chatid})
+async def get_filters(chat_id):
+    return MONGO.filters.find({'chat_id': chat_id})
 
 
-async def get_filter(chatid, keyword):
-    return MONGO.filters.find_one({'chat_id': chatid, 'keyword': keyword})
+async def get_filter(chat_id, keyword):
+    return MONGO.filters.find_one({'chat_id': chat_id, 'keyword': keyword})
 
 
-async def add_filter(chatid, keyword, msg):
-    to_check = await get_filter(chatid, keyword)
+async def add_filter(chat_id, keyword, msg):
+    to_check = await get_filter(chat_id, keyword)
 
     if not to_check:
         MONGO.filters.insert_one({
-            'chat_id': chatid,
+            'chat_id': chat_id,
             'keyword': keyword,
             'msg': msg
         })
@@ -107,8 +107,8 @@ async def add_filter(chatid, keyword, msg):
         return False
 
 
-async def delete_filter(chatid, keyword):
-    to_check = await get_filter(chatid, keyword)
+async def delete_filter(chat_id, keyword):
+    to_check = await get_filter(chat_id, keyword)
 
     if not to_check:
         return False
@@ -124,19 +124,19 @@ async def delete_filter(chatid, keyword):
 
 
 # Notes
-async def get_notes(chatid):
-    return MONGO.notes.find({'chat_id': chatid})
+async def get_notes(chat_id):
+    return MONGO.notes.find({'chat_id': chat_id})
 
 
-async def get_note(chatid, name):
-    return MONGO.notes.find_one({'chat_id': chatid, 'name': name})
+async def get_note(chat_id, name):
+    return MONGO.notes.find_one({'chat_id': chat_id, 'name': name})
 
 
-async def add_note(chatid, name, text):
-    to_check = await get_note(chatid, name)
+async def add_note(chat_id, name, text):
+    to_check = await get_note(chat_id, name)
 
     if not to_check:
-        MONGO.notes.insert_one({'chat_id': chatid, 'name': name, 'text': text})
+        MONGO.notes.insert_one({'chat_id': chat_id, 'name': name, 'text': text})
 
         return True
     else:
@@ -152,8 +152,8 @@ async def add_note(chatid, name, text):
         return False
 
 
-async def delete_note(chatid, name):
-    to_check = await get_note(chatid, name)
+async def delete_note(chat_id, name):
+    to_check = await get_note(chat_id, name)
 
     if not to_check:
         return False
@@ -167,14 +167,14 @@ async def delete_note(chatid, name):
 
 
 # Lists
-async def get_lists(chatid):
-    return MONGO.lists.find({'$or': [{'chat_id': chatid}, {'chat_id': 0}]})
+async def get_lists(chat_id):
+    return MONGO.lists.find({'$or': [{'chat_id': chat_id}, {'chat_id': 0}]})
 
 
-async def get_list(chatid, name):
+async def get_list(chat_id, name):
     return MONGO.lists.find_one({
         '$or': [{
-            'chat_id': chatid
+            'chat_id': chat_id
         }, {
             'chat_id': 0
         }],
@@ -182,12 +182,12 @@ async def get_list(chatid, name):
     })
 
 
-async def add_list(chatid, name, items):
-    to_check = await get_list(chatid, name)
+async def add_list(chat_id, name, items):
+    to_check = await get_list(chat_id, name)
 
     if not to_check:
         MONGO.lists.insert_one({
-            'chat_id': chatid,
+            'chat_id': chat_id,
             'name': name,
             'items': items
         })
@@ -206,8 +206,8 @@ async def add_list(chatid, name, items):
         return False
 
 
-async def delete_list(chatid, name):
-    to_check = await get_list(chatid, name)
+async def delete_list(chat_id, name):
+    to_check = await get_list(chat_id, name)
 
     if not to_check:
         return False
@@ -220,8 +220,8 @@ async def delete_list(chatid, name):
         })
 
 
-async def set_list(oldchatid, name, newchatid):
-    to_check = await get_list(oldchatid, name)
+async def set_list(oldchat_id, name, newchat_id):
+    to_check = await get_list(oldchat_id, name)
 
     if not to_check:
         return False
@@ -232,7 +232,7 @@ async def set_list(oldchatid, name, newchatid):
                 'name': to_check["name"],
                 'items': to_check["items"]
             }, {"$set": {
-                'chat_id': newchatid
+                'chat_id': newchat_id
             }})
 
         return True
@@ -356,23 +356,23 @@ async def get_fban():
     return MONGO.fban.find()
 
 
-async def add_chat_fban(chatid):
-    if await is_fban(chatid) is True:
+async def add_chat_fban(chat_id):
+    if await is_fban(chat_id) is True:
         return False
     else:
-        MONGO.fban.insert_one({'chatid': chatid})
+        MONGO.fban.insert_one({'chat_id': chat_id})
 
 
-async def remove_chat_fban(chatid):
-    if await is_fban(chatid) is False:
+async def remove_chat_fban(chat_id):
+    if await is_fban(chat_id) is False:
         return False
     else:
-        MONGO.fban.delete_one({'chatid': chatid})
+        MONGO.fban.delete_one({'chat_id': chat_id})
         return True
 
 
-async def is_fban(chatid):
-    if not MONGO.fban.find_one({"chatid": chatid}):
+async def is_fban(chat_id):
+    if not MONGO.fban.find_one({"chat_id": chat_id}):
         print("FAILED on fed")
         return False
     else:
@@ -386,24 +386,24 @@ async def get_gban():
     return MONGO.gban.find()
 
 
-async def add_chat_gban(chatid):
-    if await is_gban(chatid) is True:
+async def add_chat_gban(chat_id):
+    if await is_gban(chat_id) is True:
         print("FAILED")
         return False
     else:
-        MONGO.gban.insert_one({'chatid': chatid})
+        MONGO.gban.insert_one({'chat_id': chat_id})
 
 
-async def remove_chat_gban(chatid):
-    if await is_gban(chatid) is False:
+async def remove_chat_gban(chat_id):
+    if await is_gban(chat_id) is False:
         return False
     else:
-        MONGO.gban.delete_one({'chatid': chatid})
+        MONGO.gban.delete_one({'chat_id': chat_id})
         return True
 
 
-async def is_gban(chatid):
-    if not MONGO.gban.find_one({"chatid": chatid}):
+async def is_gban(chat_id):
+    if not MONGO.gban.find_one({"chat_id": chat_id}):
         return False
     else:
         return True
@@ -458,41 +458,40 @@ async def set_weather(city):
         MONGO.misc.insert_one({'weather_city': city})
 
 # Subscriptions
-async def get_subs(chatid):
-    return MONGO.subs.find({'$or': [{'chat_id': chatid}, {'global': True}]})
+async def get_subs(chat_id):
+    if not chat_id:
+        return MONGO.subs.find({'global': True})
+    else:
+        return MONGO.subs.find({'$or': [{'chat_id': chat_id}, {'global': True}]})
 
 
-async def get_sub(chatid, pattern):
-    return MONGO.subs.find_one({'chat_id': chatid, 'pattern': pattern})
+async def get_sub(name):
+    return MONGO.subs.find_one({'name': name})
 
 
-async def add_sub(chatid, pattern, gbl=False):
-    to_check = await get_sub(chatid, pattern)
+async def add_sub(chat_id, name, pattern, gbl=False):
+    to_check = await get_sub(name)
 
     if not to_check:
-        short_id = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(5)])
-        MONGO.subs.insert_one({'id': short_id, 'chat_id': chatid, 'pattern': pattern, 'global': gbl})
+        MONGO.subs.insert_one({
+            'chat_id': chat_id,
+            'name': name,
+            'pattern': pattern,
+            'global': gbl
+        })
 
         return True
-    else:
-        MONGO.subs.update_one(
-            {
-                '_id': to_check["_id"],
-                'chat_id': to_check["chat_id"],
-            }, {"$set": {
-                'pattern': pattern,
-                'global': gbl
-            }})
-
-        return False
+    return False
 
 
-async def delete_sub(sub_id):
-    to_check = MONGO.subs.find({'id': sub_id})
+async def delete_sub(name):
+    to_check = MONGO.subs.find({'name': name})
 
     if not to_check:
         return False
     else:
         MONGO.subs.delete_one({
-            'id': sub_id
+            'name': name
         })
+        
+        return True

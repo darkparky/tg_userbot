@@ -9,38 +9,54 @@ from userbot.modules.dbhelper import (
     get_sub, get_subs, add_sub, delete_sub)
 
 @register(outgoing=True, pattern=r".sub ([\S\s]+)")
-async def add_subscription(event):
+async def add_subscription(e):
     """ Add a subscription pattern. Whenever this pattern
     is matched in the current chat you will be notified """
-    pattern = event.pattern_match.group(1)
+    params = e.pattern_match.group(1)
 
     if not is_mongo_alive() or not is_redis_alive():
-        await event.edit("`Database connections failing!`")
+        await e.edit("`Database connections failing!`", delete_in=3)
         return
     
-    args, pattern = parse_arguments(pattern)
-    await event.edit(f"Subscribing to pattern `{pattern}`")
+    args, pattern = parse_arguments(params)
+    parts = pattern.split(' ')
+
+    if not len(parts) >= 2:
+        print(args)
+        print(pattern)
+        print(parts)
+        await e.edit("A name and pattern are required.", delete_in=3)
+        return
+
+    name = parts[0]
+    pattern = ' '.join(parts[1:])
+
+    await e.edit(f"Subscribing to pattern `{pattern}`")
     gbl = args.get('global', False)
 
-    existing = bool(await get_sub(event.chat_id, pattern))
-    if existing:
-        # This pattern already exists, so we'll ignore.
-        return
+    if await add_sub(e.chat_id, name, pattern, gbl=gbl) is True:
+        if not args.get('silent'):
+            await e.edit(f"Added subscription `{name}` for pattern `{pattern}`", delete_in=3)
+        else:
+            await e.edit("A subscription with that name already exists", delete_in=3)
 
-    if await add_sub(event.chat_id, pattern, gbl) is True:
-        await event.edit("Added subscription!")
-    
-    sleep(1)
-    await event.delete()
         
-@register(outgoing=True, pattern=r"^.subs$")
+@register(outgoing=True, pattern=r"^.subs\s?(.*)?$")
 async def list_subscriptions(event):
     if not is_mongo_alive() or not is_redis_alive():
-        await event.edit("`Database connections failing!`")
+        await event.edit("`Database connections failing!`", delete_in=3)
         return
 
+    params = event.pattern_match.group(1) or ""
+    args, _ = parse_arguments(params)
+
+    fetch_all = args.get('all', False)
+
     await event.edit("Fetching subscriptions...")
-    subs = list(await get_subs(event.chat_id))
+    if fetch_all:
+        subs = list(await get_subs(None))
+    else:    
+        subs = list(await get_subs(event.chat_id))
 
     message = "**Subscribed patterns** \n"
     if len(subs) < 1:
@@ -49,23 +65,22 @@ async def list_subscriptions(event):
         for sub in subs:
             pattern = sub['pattern']
             pattern = pattern[:25] + (pattern[25:] and '..')
-            message += f"`{sub['id']}`: `{pattern}` \n"
+            message += f"`{sub['name']}`: `{pattern}` \n"
 
     await event.edit(message.strip())
 
 @register(outgoing=True, pattern=r"^.rmsub ([\w\d]+)$")
 async def remove_subscription(event):
     if not is_mongo_alive() or not is_redis_alive():
-            await event.edit("`Database connections failing!`")
+            await event.edit("`Database connections failing!`", delete_in=3)
             return
 
-    sub_id = event.pattern_match.group(1)
+    name = event.pattern_match.group(1)
     await event.edit("Removing subscription...")
-    await delete_sub(sub_id)
-    await event.edit("Subscription removed!")
-    
-    sleep(1)
-    await event.delete()
+    if await delete_sub(name):
+        await event.edit("Subscription removed!", delete_in=3)
+    else:
+        await event.edit("A subscription with that name doesn't exist", delete_in=3)
 
 @register(pattern=r"([\S\s]+)",
           disable_edited=True,
@@ -87,13 +102,14 @@ async def note(event):
                         message_link = f"https://t.me/{event.chat.username}/{event.message.id}"
                         await event.client.send_message(
                             BOTLOG_CHATID,
-                            f"Sub `{sub['id']}` triggered. Here's a link. \n{message_link}",
-                            schedule=timedelta(seconds=3))
+                            f"Sub `{sub['name']}` triggered in chat `{event.chat_id}`. "
+                            f"Here's a link. \n{message_link}",
+                            schedule=timedelta(seconds=5))
                     else:
                         await event.client.send_message(
                             event.chat_id,
                             f"Mentioning myself @{me.username}. Don't mind me.",
-                            schedule=timedelta(seconds=3))
+                            schedule=timedelta(seconds=5))
                     break
     except BaseException:
         pass
