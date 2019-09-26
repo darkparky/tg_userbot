@@ -184,6 +184,24 @@ FACEREACTS = [
     r"¯\(°_o)/¯",
     "(｡◕‿◕｡)",
 ]
+
+PENIS_TEMPLATE = """
+🍆🍆
+🍆🍆🍆
+  🍆🍆🍆
+    🍆🍆🍆
+     🍆🍆🍆
+       🍆🍆🍆
+        🍆🍆🍆
+         🍆🍆🍆
+          🍆🍆🍆
+          🍆🍆🍆
+      🍆🍆🍆🍆
+ 🍆🍆🍆🍆🍆🍆
+ 🍆🍆🍆  🍆🍆🍆
+    🍆🍆       🍆🍆
+"""
+
 RUNSREACTS = [
     "Runs to Thanos",
     "Runs far, far away from earth",
@@ -197,6 +215,7 @@ RUNSREACTS = [
     "I am just walking off, coz me is too fat.",
     "I Fugged off!",
 ]
+
 DISABLE_RUN = False
 
 # ===========================================
@@ -269,6 +288,17 @@ async def copypasta(cp_e):
     reply_text += random.choice(EMOJIS)
     await cp_e.edit(reply_text)
 
+@register(outgoing=True, pattern=r"^.penis\s?(.)?")
+async def emoji_penis(e):
+    reply_message = await e.get_reply_message()
+    emoji = e.pattern_match.group(1)
+
+    message = PENIS_TEMPLATE
+    if emoji:
+        message = message.replace('🍆', emoji)
+
+    await e.delete()
+    await e.reply(message, reply_to=reply_message)
 
 @register(outgoing=True, pattern="^.vapor(?: |$)(.*)")
 async def vapor(vpr):
