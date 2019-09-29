@@ -10,7 +10,7 @@ RUN pip install -r ./requirements.txt
 #
 # Copies session and config(if it exists)
 #
-COPY ./userbot.session ./config.env* ./client_secrets.json* /app/
+COPY ./userbot.session ./config.env* ./client_secrets.json* ./secret.json* /app/
 
 #
 # Finalization
