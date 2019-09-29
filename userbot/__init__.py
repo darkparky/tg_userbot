@@ -74,6 +74,8 @@ YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", None)
 FACE_API_KEY = os.environ.get("FACE_API_KEY", None)
 FACE_API_URL = os.environ.get("FACE_API_URL", None)
 
+KUTT_IT_API_KEY = os.environ.get("KUTT_IT_API_KEY", None)
+
 SPOTIFY_USERNAME = os.environ.get("SPOTIFY_USERNAME", None)
 SPOTIFY_PASS = os.environ.get("SPOTIFY_PASS", None)
 BIO_PREFIX = os.environ.get("BIO_PREFIX", None)

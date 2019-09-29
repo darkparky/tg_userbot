@@ -9,7 +9,7 @@
 from telethon.events import ChatAction
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import ChannelParticipantsAdmins, Message
+from telethon.tl.types import ChannelParticipantsAdmins, Message, PeerUser
 
 from userbot.modules.admin import MUTE_RIGHTS
 from userbot.modules.misc import admins, make_mention
@@ -41,6 +41,10 @@ async def welcome_mute(event):
 
     message = event.action_message
     user = await event.get_user()
+
+    if isinstance(user, PeerUser):
+        return
+
     user_full = await event.client(GetFullUserRequest(user.id))
     names = [str(user.first_name).lower(), str(user.last_name).lower()]
     

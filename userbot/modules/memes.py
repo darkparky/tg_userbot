@@ -13,17 +13,20 @@ import time
 import base64
 import tempfile
 import math
+import cv2
+import numpy as np
 from io import BytesIO
 
 from cowpy import cow
 from PIL import Image, ImageChops, ImageOps, ImageEnhance
+from telethon.tl.types import MessageMediaPhoto
+
 from userbot.modules.thonkify_dict import thonkifydict
 from userbot.modules.deepfryer import deepfry
-
-
 from userbot import (CMD_HELP, ZALG_LIST, BOTLOG, BOTLOG_CHATID,
                         FACE_API_KEY, FACE_API_URL)
 from userbot.events import register
+from userbot.utils.helpers import parse_arguments
 
 # ================= CONSTANT =================
 METOOSTR = [
@@ -298,6 +301,54 @@ async def emoji_penis(e):
         message = message.replace('🍆', emoji)
 
     await e.edit(message)
+
+@register(outgoing=True, pattern=r".ascii\s?(.*)")
+async def img2ascii(e):
+    reply_message = await e.get_reply_message()
+    params = e.pattern_match.group(1) or ""
+    args, _ = parse_arguments(params)
+
+    photo = BytesIO()
+    if isinstance(reply_message.media, MessageMediaPhoto):
+        photo = await e.download_media(reply_message.photo, photo)
+    elif isinstance(e.media, MessageMediaPhoto):
+        photo = await e.download_media(e.photo, photo)
+    else:
+        await e.edit("This command requires a photo...", delete_in=3)
+        return
+
+    if args.get('simple', False) == "simple":
+        CHAR_LIST = '@%#*+=-:. '
+    else:
+        CHAR_LIST = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    
+    num_chars = len(CHAR_LIST)
+    num_cols = args.get('width', 38)
+    image = cv2.imread(photo)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    height, width = image.shape
+    cell_width = width / opt.num_cols
+    cell_height = 2 * cell_width
+    num_rows = int(height / cell_height)
+    if num_cols > width or num_rows > height:
+        print("Too many columns or rows. Use default setting")
+        cell_width = 6
+        cell_height = 12
+        num_cols = int(width / cell_width)
+        num_rows = int(height / cell_height)
+
+    output = ""
+    for i in range(num_rows):
+        for j in range(num_cols):
+            output = output + CHAR_LIST[min(
+                int(np.mean(
+                    image[int(i * cell_height):min(int((i + 1) * cell_height), height),
+                    int(j * cell_width):min(int((j + 1) * cell_width), width)]) * num_chars / 255),
+                    num_chars - 1)]
+        output= output + "\n"
+
+    print(output)
+
 
 @register(outgoing=True, pattern="^.vapor(?: |$)(.*)")
 async def vapor(vpr):

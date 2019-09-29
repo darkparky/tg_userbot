@@ -28,9 +28,6 @@ async def who(event: NewMessage.Event):
     if event.fwd_from:
         return
 
-    if not os.path.isdir(TMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TMP_DOWNLOAD_DIRECTORY)
-
     args, user = parse_arguments(event.pattern_match.group(1))
     
     args['forward'] = args.get('forward', True)

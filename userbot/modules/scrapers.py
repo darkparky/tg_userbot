@@ -41,14 +41,16 @@ async def img_sampler(event):
 
     query = event.pattern_match.group(1)
     opts, query = parse_arguments(query)
+    limit = opts.get('limit', 3)
+    fmt = opts.get('format', 'jpg')
 
     response = google_images_download.googleimagesdownload()
 
     # creating list of arguments
     arguments = {
         "keywords": query,
-        "limit": opts.get('limit', 3),
-        "format": opts.get('format', 'jpg'),
+        "limit": limit,
+        "format": fmt,
         "no_directory": "no_directory"
     }
 
@@ -57,9 +59,9 @@ async def img_sampler(event):
     paths = response.download(arguments)
     lst = paths[0][query]
 
-    await event.edit("Sending images...")
-    await event.client.send_file(
-        await event.client.get_input_entity(event.chat_id), lst)
+    await event.edit(f"Sending {limit} images...")
+    await event.client.send_file(event.chat_id, lst)
+
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
     await event.delete()
 

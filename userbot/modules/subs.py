@@ -22,9 +22,6 @@ async def add_subscription(e):
     parts = pattern.split(' ')
 
     if not len(parts) >= 2:
-        print(args)
-        print(pattern)
-        print(parts)
         await e.edit("A name and pattern are required.", delete_in=3)
         return
 
@@ -63,9 +60,10 @@ async def list_subscriptions(event):
         message += "No subscriptions yet."
     else:
         for sub in subs:
+            gbl = '(g)' if sub['global'] else ''
             pattern = sub['pattern']
             pattern = pattern[:25] + (pattern[25:] and '..')
-            message += f"`{sub['name']}`: `{pattern}` \n"
+            message += f"`{sub['name']}{gbl}`: `{pattern}` \n"
 
     await event.edit(message.strip())
 
@@ -98,17 +96,16 @@ async def note(event):
                     
             for sub in subs:
                 if match(sub['pattern'], event.text):
-                    if event.chat.username and BOTLOG:
+                    if event.chat.username:
                         message_link = f"https://t.me/{event.chat.username}/{event.message.id}"
-                        await event.client.send_message(
+                        
+                    else:
+                        message_link = f"https://t.me/c/{event.chat_id}/{event.message.id}"
+                    
+                    await event.client.send_message(
                             BOTLOG_CHATID,
                             f"Sub `{sub['name']}` triggered in chat `{event.chat_id}`. "
                             f"Here's a link. \n{message_link}",
-                            schedule=timedelta(seconds=5))
-                    else:
-                        await event.client.send_message(
-                            event.chat_id,
-                            f"Mentioning myself @{me.username}. Don't mind me.",
                             schedule=timedelta(seconds=5))
                     break
     except BaseException:

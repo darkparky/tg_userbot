@@ -30,6 +30,9 @@ async def paste(pstl):
         message = match.strip()
     elif reply_message:
         message = reply_message.message.strip()
+    else:
+        pstl.edit("Give me something to paste", delete_in=3)
+        return
 
     # Dogbin
     await pstl.edit("`Pasting text . . .`")
@@ -39,6 +42,8 @@ async def paste(pstl):
         response = resp.json()
         key = response['key']
         dogbin_final_url = DOGBIN_URL + key
+
+        print(response)
 
         if response['isUrl']:
             reply_text = ("`Pasted successfully!`\n\n"
@@ -62,8 +67,5 @@ async def paste(pstl):
 CMD_HELP["General"].update({
     "paste":
         "Create a paste or a shortened url using "
-        "dogbin (https://del.dog/)",
-    "pastestats":
-        "Get stats of a paste or shortened "
-        "url from dogbin (https://del.dog/)"
+        "dogbin (https://del.dog/)"
 })
