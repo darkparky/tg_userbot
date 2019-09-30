@@ -17,7 +17,7 @@ async def add_subscription(e):
         await e.edit("`Database connections failing!`", delete_in=3)
         return
 
-    args, pattern = parse_arguments(params)
+    args, pattern = parse_arguments(params, ['global'])
     parts = pattern.split(' ')
 
     if not len(parts) >= 2:

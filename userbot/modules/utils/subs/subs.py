@@ -11,7 +11,7 @@ async def list_subscriptions(event):
         return
 
     params = event.pattern_match.group(1) or ""
-    args, _ = parse_arguments(params)
+    args, _ = parse_arguments(params, ['all'])
 
     fetch_all = args.get('all', False)
 

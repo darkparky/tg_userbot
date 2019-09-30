@@ -13,7 +13,7 @@ API_ENDPOINT = "https://kutt.it/api/"
 async def kutt_it(e):
     reply_message = await e.get_reply_message()
     params = e.pattern_match.group(1) or ""
-    args, params = parse_arguments(params)
+    args, params = parse_arguments(params, ['reuse'])
 
     urls = extract_urls(params)
     urls.extend(extract_urls(reply_message.text or ""))

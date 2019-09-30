@@ -7,7 +7,7 @@ from userbot.utils import parse_arguments
 @register(outgoing=True, pattern="^.docs\s+(.*)")
 async def doc_search(e):
     params = e.pattern_match.group(1)
-    args, lib = parse_arguments(params)
+    args, lib = parse_arguments(params, ['version'])
     lib = lib.strip()
 
     version = int(args.get('version', 3))

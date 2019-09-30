@@ -6,7 +6,7 @@ from userbot.utils import parse_arguments, extract_urls
 async def follow_url(event):
     reply_message = await event.get_reply_message()
     message_text = event.pattern_match.group(1) or ""
-    opts, message_text = parse_arguments(message_text)
+    opts, message_text = parse_arguments(message_text, ['full'])
 
     await event.edit("Fetching links...")
 
