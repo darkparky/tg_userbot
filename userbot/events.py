@@ -10,13 +10,11 @@ import asyncio
 import sys
 import traceback
 from os import remove
-from time import gmtime, strftime, sleep
+from time import gmtime, strftime
 
 from telethon import events
-from telethon.errors.rpcbaseerrors import FloodError
 
 from userbot import bot, BOTLOG, BOTLOG_CHATID
-from telethon.tl.types import ChannelParticipantsAdmins
 
 
 def register(**args):

@@ -1,8 +1,8 @@
-import typing
 import asyncio
 
 from telethon import TelegramClient
 from telethon.tl.custom import Message
+
 
 class UserBot(TelegramClient):
     async def send_message_sd(

@@ -12,12 +12,9 @@ from sys import version_info
 
 import pylast
 import redis
-from github import Github
 from dotenv import load_dotenv
-from pyDownload import Downloader
+from github import Github
 from pymongo import MongoClient
-from requests import get
-from telethon import TelegramClient
 
 from userbot.client import UserBot
 
@@ -155,19 +152,6 @@ def is_redis_alive():
     except BaseException:
         return False
 
-
-# Download binaries for gen_direct_links module, give correct perms
-if not os.path.exists('bin'):
-    os.mkdir('bin')
-
-url1 = 'https://raw.githubusercontent.com/yshalsager/megadown/master/megadown'
-url2 = 'https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py'
-
-dl1 = Downloader(url=url1, filename="bin/megadown")
-dl1 = Downloader(url=url1, filename="bin/cmrudl")
-
-os.chmod('bin/megadown', 0o755)
-os.chmod('bin/cmrudl', 0o755)
 
 # Global Variables
 COUNT_MSG = 0

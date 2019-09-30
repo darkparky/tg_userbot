@@ -1,0 +1,5 @@
+DB_FAILED = "`Database connections failed!`"
+NO_LISTS = "`There are no saved lists in this chat or globally.`"
+CHK_HELP = "`Check `**.help lists**` for more info about Lists.`"
+LIST_NOT_FOUND = "`List {} not found!`"
+LIST_HEADER = "[Paperplane-List] List **{}({})**\n\n"

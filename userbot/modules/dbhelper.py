@@ -1,6 +1,3 @@
-import random
-import string
-
 from userbot import MONGO, REDIS
 
 # Mutes
