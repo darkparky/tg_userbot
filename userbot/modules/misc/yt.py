@@ -20,7 +20,7 @@ async def yt_search(video_q):
             Add it to environment vars or config.env.`")
         return
 
-    opts, query = parse_arguments(query)
+    opts, query = parse_arguments(query, ['limit'])
     limit = opts.get('limit', 5)
 
     await video_q.edit("Processing search query...")

@@ -22,7 +22,7 @@ async def text_to_speech(query):
                          "message for Text-to-Speech!`")
         return
 
-    opts, message = parse_arguments(message)
+    opts, message = parse_arguments(message, ['slow', 'lang'])
     lang = opts.get('lang', LANG)
     slow = opts.get('slow', False)
 

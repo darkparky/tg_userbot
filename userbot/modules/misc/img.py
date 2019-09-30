@@ -13,7 +13,7 @@ async def img_sampler(event):
     await event.edit("Processing query...")
 
     query = event.pattern_match.group(1)
-    opts, query = parse_arguments(query)
+    opts, query = parse_arguments(query, ['limit', 'format'])
     limit = opts.get('limit', 3)
     fmt = opts.get('format', 'jpg')
 

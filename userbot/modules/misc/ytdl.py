@@ -13,7 +13,7 @@ from userbot.utils import parse_arguments
 async def download_video(v_url):
     """ For .ytdl command, download videos from YouTube. """
     query = v_url.pattern_match.group(1)
-    opts, url = parse_arguments(query)
+    opts, url = parse_arguments(query, ['res'])
     quality = opts.get('res', None)
 
     await v_url.edit("**Fetching...**")

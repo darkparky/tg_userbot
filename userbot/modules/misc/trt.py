@@ -22,7 +22,7 @@ async def translateme(trans):
                          "to a message to translate!`")
         return
 
-    opts, message = parse_arguments(message)
+    opts, message = parse_arguments(message, ['to', 'from'])
     dest_lang = opts.get('to', LANG)
     src_lang = opts.get('from', 'auto')
 

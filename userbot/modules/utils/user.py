@@ -26,7 +26,9 @@ async def who(event: NewMessage.Event):
     if event.fwd_from:
         return
 
-    args, user = parse_arguments(event.pattern_match.group(1))
+    args, user = parse_arguments(event.pattern_match.group(1), [
+        'id', 'forward', 'general', 'bot', 'misc', 'all', 'mention'
+    ])
     
     args['forward'] = args.get('forward', True)
     args['user'] = user
