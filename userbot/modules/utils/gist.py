@@ -13,14 +13,14 @@ async def create_gist(e):
     filename = e.pattern_match.group(1)
     match = e.pattern_match.group(2)
     reply_message = await e.get_reply_message()
-    if not match and not reply_message:
-        await e.edit("There's nothing to paste.")
-        return
 
     if match:
         message = match.strip()
     elif reply_message:
         message = reply_message.message.strip()
+    else:
+        await e.edit("There's nothing to paste.")
+        return
 
     await e.edit("`Sending paste to Github...`")
 

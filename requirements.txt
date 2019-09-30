@@ -1,3 +1,6 @@
+googleapiclient
+github
+dotenv
 Pillow>=5.3.0
 aiohttp
 cowpy

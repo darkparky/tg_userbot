@@ -37,7 +37,7 @@ async def nothanos(unbon):
         if BOTLOG:
             await unbon.client.send_message(
                 BOTLOG_CHATID, "#UNBAN\n"
-                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                f"CHAT: {unbon.chat.title}(`{unbon.chat_id}`)")
+                               f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                               f"CHAT: {unbon.chat.title}(`{unbon.chat_id}`)")
     except UserIdInvalidError:
         await unbon.edit("`Uh oh my unban logic broke!`")

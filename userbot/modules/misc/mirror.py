@@ -28,6 +28,7 @@ from userbot.events import register
 
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./")
 
+
 @register(pattern=r"^.mirror(?: |$)([\s\S]*)", outgoing=True)
 async def gdrive_mirror(request):
     """ Download a file and upload to Google Drive """
@@ -89,6 +90,7 @@ async def download_from_tg(target_file) -> (str, BytesIO):
     """
     Download files from Telegram
     """
+
     async def dl_file(buffer: BytesIO) -> BytesIO:
         buffer = await target_file.client.download_media(
             reply_msg,
@@ -116,10 +118,10 @@ async def download_from_tg(target_file) -> (str, BytesIO):
             filen = reply_msg.media.document.attributes[0].file_name
         except AttributeError:
             if isinstance(reply_msg.media, MessageMediaPhoto):
-                filen = 'photo-' + str(datetime.today())\
+                filen = 'photo-' + str(datetime.today()) \
                     .split('.')[0].replace(' ', '-') + '.jpg'
             else:
-                filen = reply_msg.media.document.mime_type\
+                filen = reply_msg.media.document.mime_type \
                     .replace('/', '-' + str(datetime.today())
                              .split('.')[0].replace(' ', '-') + '.')
     end = datetime.now()

@@ -18,7 +18,6 @@ DOGBIN_URL = "https://del.dog/"
 async def paste(pstl):
     """ For .paste command, allows using
         dogbin functionality with the command. """
-    dogbin_final_url = ""
 
     match = pstl.pattern_match.group(1)
     reply_message = await pstl.get_reply_message()
@@ -54,7 +53,7 @@ async def paste(pstl):
             reply_text = ("`Pasted successfully!`\n\n"
                           f"`Dogbin URL`: {dogbin_final_url}")
     else:
-        reply_text = ("`Failed to reach Dogbin`")
+        reply_text = "`Failed to reach Dogbin`"
 
     await pstl.edit(reply_text)
     if BOTLOG:

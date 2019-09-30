@@ -154,7 +154,6 @@ async def approvepm(apprvpm):
             reply = await apprvpm.get_reply_message()
             replied_user = await apprvpm.client(
                 GetFullUserRequest(reply.from_id))
-            aname = replied_user.user.id
             name0 = str(replied_user.user.first_name)
             uid = replied_user.user.id
 
@@ -188,7 +187,6 @@ async def blockpm(block):
             reply = await block.get_reply_message()
             replied_user = await block.client(GetFullUserRequest(reply.from_id)
                                               )
-            aname = replied_user.user.id
             name0 = str(replied_user.user.first_name)
             await block.client(BlockRequest(replied_user.user.id))
             uid = replied_user.user.id
@@ -213,13 +211,11 @@ async def unblockpm(unblock):
     if unblock.reply_to_msg_id:
         reply = await unblock.get_reply_message()
         replied_user = await unblock.client(GetFullUserRequest(reply.from_id))
-        name0 = str(replied_user.user.first_name)
         if await approve(reply.from_id) is False:
-            return await unblock.edit("`You haven't blocked this user yet!`")
+            await unblock.edit("`You haven't blocked this user yet!`")
         else:
-            return await unblock.edit("`My Master has forgiven you to PM now`")
-
-        await unblock.client(UnblockRequest(replied_user.user.id))
+            await unblock.edit("`My Master has forgiven you to PM now`")
+            await unblock.client(UnblockRequest(replied_user.user.id))
 
     if BOTLOG:
         await unblock.client.send_message(

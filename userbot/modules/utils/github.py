@@ -6,6 +6,7 @@ from github.Repository import Repository
 
 from userbot import github
 from userbot.events import register
+from userbot.utils import parse_arguments
 
 GITHUB_REPO_RE = r"(?:github\.com\/|[\s]|^)([\w\d_\-.]+)\/([\w\d_\-.]+)"
 
@@ -16,17 +17,20 @@ async def github_info(e):
         await e.edit("Github information has not been set up", delete_in=3)
         return
 
-    match = e.pattern_match.group(1)
+    message = e.pattern_match.group(1)
     reply_message = await e.get_reply_message()
-    if not match and not reply_message:
+
+    if message:
+        message = message.strip()
+        args, message = parse_arguments(message)
+    else:
+        args = {}
+
+    if not message and reply_message:
+        message = reply_message.message.strip()
+    else:
         await e.edit("There's nothing to paste.")
         return
-
-    if match:
-        message = match.strip()
-    elif reply_message:
-        message = reply_message.message.strip()
-        args = {}
 
     repos = re.findall(GITHUB_REPO_RE, message)
     if repos:

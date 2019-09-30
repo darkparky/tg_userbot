@@ -9,10 +9,11 @@ from userbot.events import register
 @register(outgoing=True, pattern="^.term(?: |$)(.*)")
 async def terminal_runner(term):
     """ For .term command, runs bash commands and scripts on your server. """
+    from os import geteuid
+
     curruser = getuser()
     command = term.pattern_match.group(1)
     try:
-        from os import geteuid
         uid = geteuid()
     except ImportError:
         uid = "This ain't it chief!"
@@ -36,7 +37,7 @@ async def terminal_runner(term):
         stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await process.communicate()
     result = str(stdout.decode().strip()) \
-        + str(stderr.decode().strip())
+             + str(stderr.decode().strip())
 
     if len(result) > 4096:
         output = open("output.txt", "w+")

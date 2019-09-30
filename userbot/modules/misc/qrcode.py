@@ -61,7 +61,6 @@ async def make_qr(qrcode):
         if previous_message.media:
             downloaded_file_name = await qrcode.client.download_media(
                 previous_message, progress_callback=progress)
-            m_list = None
             with open(downloaded_file_name, "rb") as file:
                 m_list = file.readlines()
             message = ""

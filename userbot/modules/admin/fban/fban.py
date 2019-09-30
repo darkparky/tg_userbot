@@ -12,7 +12,10 @@ async def fedban_all(msg):
     if not is_mongo_alive() or not is_redis_alive():
         await msg.edit("`Database connections failing!`")
         return
+
     textx = await msg.get_reply_message()
+    spamwatch = False
+
     if textx:
         try:
             banreason = "[userbot] "
@@ -28,12 +31,9 @@ async def fedban_all(msg):
             banid = int(banid)
         else:
             # deal wid the usernames
-            if msg.message.entities is not None:
-                probable_user_mention_entity = msg.message.entities[0]
-
-            if isinstance(probable_user_mention_entity,
-                          MessageEntityMentionName):
-                ban_id = probable_user_mention_entity.user_id
+            if msg.message.entities is not None and isinstance(msg.message.entities[0],
+                                                               MessageEntityMentionName):
+                ban_id = msg.message.entities[0].user_id
         try:
             banreason = "[userbot] "
             banreason += banreason.join(msg.text.split(" ")[2:])
@@ -43,8 +43,6 @@ async def fedban_all(msg):
             banreason = "[userbot] fban"
         if "spam" in banreason:
             spamwatch = True
-        else:
-            spamwatch = False
     failed = dict()
     count = 1
     fbanlist = []

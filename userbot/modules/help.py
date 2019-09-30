@@ -10,7 +10,7 @@ from userbot.events import register
 
 
 @register(outgoing=True, pattern="^.help(?: |$)(.*)")
-async def help(event):
+async def show_help(event):
     """ For .help command,"""
     args = event.pattern_match.group(1)
     if args:

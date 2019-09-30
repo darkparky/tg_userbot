@@ -4,7 +4,7 @@ from importlib import import_module
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.hash ([a-zA-z0-9]+)(?:\s+(.*))?")
+@register(outgoing=True, pattern=r"^.hash ([a-zA-z0-9]+)(?:\s+(.*))?")
 async def gethash(hash_q):
     """ For .hash command, find the md5,
         sha1, sha256, sha512 of the string. """

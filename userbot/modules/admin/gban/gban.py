@@ -28,12 +28,9 @@ async def gban_all(msg):
             banid = int(banid)
         else:
             # deal wid the usernames
-            if msg.message.entities is not None:
-                probable_user_mention_entity = msg.message.entities[0]
-
-            if isinstance(probable_user_mention_entity,
-                          MessageEntityMentionName):
-                ban_id = probable_user_mention_entity.user_id
+            if msg.message.entities is not None and isinstance(msg.message.entities[0],
+                                                               MessageEntityMentionName):
+                ban_id = msg.message.entities[0].user_id
         try:
             banreason = "[userbot] "
             banreason += banreason.join(msg.text.split(" ")[2:])
@@ -58,7 +55,6 @@ async def gban_all(msg):
                 c = await msg.forward_to(banbot)
                 await c.reply("/id")
             await conv.send_message(f"/gban {banid} {banreason}")
-            resp = await conv.get_response()
             await bot.send_read_acknowledge(conv.chat_id)
             count += 1
             # We cant see if he actually Gbanned. Let this stay for now

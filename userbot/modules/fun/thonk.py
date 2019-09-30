@@ -23,7 +23,8 @@ async def thonkify(thonk):
     if len(message) > 39:
         await thonk.edit("Can't thonk messages over 39 characters -_-")
 
-    tracking = Image.open(BytesIO(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAYAAAOACAYAAAAZzQIQAAAALElEQVR4nO3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwZV4AAAfA8WFIAAAAASUVORK5CYII='))) # base64 encoded empty image(but longer)
+    tracking = Image.open(BytesIO(base64.b64decode(
+        'iVBORw0KGgoAAAANSUhEUgAAAAYAAAOACAYAAAAZzQIQAAAALElEQVR4nO3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwZV4AAAfA8WFIAAAAASUVORK5CYII=')))  # base64 encoded empty image(but longer)
 
     # remove characters thonkify can't parse
     for character in message:

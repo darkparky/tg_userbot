@@ -36,6 +36,8 @@ else:
 LASTFMCHECK = False
 RUNNING = False
 LastLog = False
+
+
 # ================================================
 
 
@@ -63,7 +65,6 @@ async def last_fm(lastFM):
             output = f"[{LASTFM_USERNAME}]({username}) __is now listening to:__\n\n• [{playing}]({rectrack})\n`{tags}`"
     else:
         recent = User(LASTFM_USERNAME, lastfm).get_recent_tracks(limit=3)
-        playing = User(LASTFM_USERNAME, lastfm).get_now_playing()
         output = f"[{LASTFM_USERNAME}]({username}) __was last listening to:__\n\n"
         for i, track in enumerate(recent):
             print(i)  # vscode hates the i being there so lets make it chill
@@ -110,8 +111,6 @@ async def get_curr_track(lfmbio):
     global LASTFMCHECK
     global RUNNING
     global USER_ID
-    oldartist = ""
-    oldsong = ""
     while LASTFMCHECK:
         try:
             if USER_ID == 0:
@@ -214,7 +213,7 @@ CMD_HELP["Me"].update({
         "Shows currently scrobbling track or most recent "
         "scrobbles if nothing is playing. \n"
         "Usage: `.lastfm`",
-    'lastbio': 
+    'lastbio':
         "Enable/Disable last.fm bio updating \n"
         "Usage: `.lastbio (on|off)",
     'lastlog':

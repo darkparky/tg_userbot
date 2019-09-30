@@ -8,7 +8,6 @@ from userbot.events import register
 async def stretch(stret):
     """ Stretch it."""
     textx = await stret.get_reply_message()
-    message = stret.text
     message = stret.pattern_match.group(1)
     if message:
         pass

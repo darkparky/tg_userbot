@@ -1,4 +1,5 @@
 from emoji import get_emoji_regexp
+# noinspection PyProtectedMember
 from googletrans import Translator, LANGUAGES
 
 from userbot import BOTLOG, BOTLOG_CHATID

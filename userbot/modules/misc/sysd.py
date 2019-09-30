@@ -17,7 +17,7 @@ async def sysdetails(sysd):
 
             stdout, stderr = await fetch.communicate()
             result = str(stdout.decode().strip()) \
-                + str(stderr.decode().strip())
+                     + str(stderr.decode().strip())
 
             await sysd.edit("`" + result + "`")
         except FileNotFoundError:

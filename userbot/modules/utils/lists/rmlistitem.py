@@ -16,7 +16,6 @@ async def rmlistitems(event):
     await event.edit("`Removing...`")
 
     textx = await event.get_reply_message()
-    listname = None
 
     if textx:
         x = re.search(r"\[Paperplane-List] List \*\*(\w*)", textx.text)

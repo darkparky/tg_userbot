@@ -7,7 +7,7 @@ from pytube.helpers import safe_filename
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.ytmp3 (\S*)")
+@register(outgoing=True, pattern=r"^.ytmp3 (\S*)")
 async def youtube_mp3(yt):
     reply_message = await yt.get_reply_message()
     url = yt.pattern_match.group(1)
@@ -16,7 +16,7 @@ async def youtube_mp3(yt):
 
     video = YouTube(url)
     stream = video.streams.filter(progressive=True,
-                                            subtype="mp4").first()
+                                  subtype="mp4").first()
 
     await yt.edit("**Downloading video...**")
     stream.download(filename='video')
@@ -27,9 +27,9 @@ async def youtube_mp3(yt):
 
     await yt.edit("**Sending mp3...**")
     await yt.client.send_file(yt.chat.id,
-                        f'{safe_filename(video.title)}.mp3',
-                        caption=f"{video.title}",
-                        reply_to=reply_message)
+                              f'{safe_filename(video.title)}.mp3',
+                              caption=f"{video.title}",
+                              reply_to=reply_message)
 
     await yt.delete()
 

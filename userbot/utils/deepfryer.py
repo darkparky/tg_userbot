@@ -22,7 +22,8 @@ class Colours:
 
 
 # TODO: Replace face recognition API with something like OpenCV.
-async def deepfry(img: Image, *, token: str=None, api_url: str=None, session: aiohttp.ClientSession=None, type=DeepfryTypes.RED) -> Image:
+async def deepfry(img: Image, *, token: str = None, api_url: str = None, session: aiohttp.ClientSession = None,
+                  kind=DeepfryTypes.RED) -> Image:
     """
     Deepfry an image.
     img: PIL.Image - Image to deepfry.
@@ -33,11 +34,11 @@ async def deepfry(img: Image, *, token: str=None, api_url: str=None, session: ai
     """
     img = img.copy().convert('RGB')
 
-    if type not in DeepfryTypes:
-        raise ValueError(f'Unknown deepfry type "{type}", expected a value from deeppyer.DeepfryTypes')
+    if kind not in DeepfryTypes:
+        raise ValueError(f'Unknown deepfry type "{kind}", expected a value from deeppyer.DeepfryTypes')
 
     if token and api_url:
-        req_url = f'{api_url}/detect?returnFaceId=false&returnFaceLandmarks=true' # WHY THE FUCK IS THIS SO LONG
+        req_url = f'{api_url}/detect?returnFaceId=false&returnFaceLandmarks=true'  # WHY THE FUCK IS THIS SO LONG
         headers = {
             'Content-Type': 'application/octet-stream',
             'Ocp-Apim-Subscription-Key': token,
@@ -63,24 +64,6 @@ async def deepfry(img: Image, *, token: str=None, api_url: str=None, session: ai
 
             raise Exception(f'Error with Microsoft Face Recognition API\n{code}: {msg}')
 
-        if face_data:
-            landmarks = face_data[0]['faceLandmarks']
-
-            # Get size and positions of eyes, and generate sizes for the flares
-            eye_left_width = math.ceil(landmarks['eyeLeftInner']['x'] - landmarks['eyeLeftOuter']['x'])
-            eye_left_height = math.ceil(landmarks['eyeLeftBottom']['y'] - landmarks['eyeLeftTop']['y'])
-            eye_left_corner = (landmarks['eyeLeftOuter']['x'], landmarks['eyeLeftTop']['y'])
-            flare_left_size = eye_left_height if eye_left_height > eye_left_width else eye_left_width
-            flare_left_size *= 4
-            eye_left_corner = tuple(math.floor(x - flare_left_size / 2.5 + 5) for x in eye_left_corner)
-
-            eye_right_width = math.ceil(landmarks['eyeRightOuter']['x'] - landmarks['eyeRightInner']['x'])
-            eye_right_height = math.ceil(landmarks['eyeRightBottom']['y'] - landmarks['eyeRightTop']['y'])
-            eye_right_corner = (landmarks['eyeRightInner']['x'], landmarks['eyeRightTop']['y'])
-            flare_right_size = eye_right_height if eye_right_height > eye_right_width else eye_right_width
-            flare_right_size *= 4
-            eye_right_corner = tuple(math.floor(x - flare_right_size / 2.5 + 5) for x in eye_right_corner)
-
     # Crush image to hell and back
     img = img.convert('RGB')
     width, height = img.width, img.height
@@ -95,9 +78,9 @@ async def deepfry(img: Image, *, token: str=None, api_url: str=None, session: ai
     r = ImageEnhance.Contrast(r).enhance(2.0)
     r = ImageEnhance.Brightness(r).enhance(1.5)
 
-    if type == DeepfryTypes.RED:
+    if kind == DeepfryTypes.RED:
         r = ImageOps.colorize(r, Colours.RED, Colours.YELLOW)
-    elif type == DeepfryTypes.BLUE:
+    elif kind == DeepfryTypes.BLUE:
         r = ImageOps.colorize(r, Colours.BLUE, Colours.WHITE)
 
     # Overlay red and yellow onto main image and sharpen the hell out of it
@@ -105,6 +88,23 @@ async def deepfry(img: Image, *, token: str=None, api_url: str=None, session: ai
     img = ImageEnhance.Sharpness(img).enhance(100.0)
 
     if token and face_data:
+        landmarks = face_data[0]['faceLandmarks']
+
+        # Get size and positions of eyes, and generate sizes for the flares
+        eye_left_width = math.ceil(landmarks['eyeLeftInner']['x'] - landmarks['eyeLeftOuter']['x'])
+        eye_left_height = math.ceil(landmarks['eyeLeftBottom']['y'] - landmarks['eyeLeftTop']['y'])
+        eye_left_corner = (landmarks['eyeLeftOuter']['x'], landmarks['eyeLeftTop']['y'])
+        flare_left_size = eye_left_height if eye_left_height > eye_left_width else eye_left_width
+        flare_left_size *= 4
+        eye_left_corner = tuple(math.floor(x - flare_left_size / 2.5 + 5) for x in eye_left_corner)
+
+        eye_right_width = math.ceil(landmarks['eyeRightOuter']['x'] - landmarks['eyeRightInner']['x'])
+        eye_right_height = math.ceil(landmarks['eyeRightBottom']['y'] - landmarks['eyeRightTop']['y'])
+        eye_right_corner = (landmarks['eyeRightInner']['x'], landmarks['eyeRightTop']['y'])
+        flare_right_size = eye_right_height if eye_right_height > eye_right_width else eye_right_width
+        flare_right_size *= 4
+        eye_right_corner = tuple(math.floor(x - flare_right_size / 2.5 + 5) for x in eye_right_corner)
+
         # Copy and resize flares
         flare = Image.open('flare.png')
         flare_left = flare.copy().resize((flare_left_size,) * 2, resample=Image.BILINEAR)

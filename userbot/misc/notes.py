@@ -51,7 +51,7 @@ async def add_filter(event):
     if not is_mongo_alive() or not is_redis_alive():
         await event.edit("`Database connections failing!`")
         return
-        
+
     notename = event.pattern_match.group(1)
     string = event.pattern_match.group(2)
 
@@ -66,6 +66,7 @@ async def add_filter(event):
     else:
         message = msg.format('Added', notename)
         return await event.edit(message, delete_in=3)
+
 
 @register(pattern=r"#\w*",
           disable_edited=True,
@@ -86,9 +87,10 @@ async def note(event):
     except BaseException:
         pass
 
+
 CMD_HELP["General"].update({
     "addnote":
-        "Adds a note by name. \n" 
+        "Adds a note by name. \n"
         "Usage: `.addnote (note name) (note content)`",
     "delnote":
         "Deletes a note by name. \n"

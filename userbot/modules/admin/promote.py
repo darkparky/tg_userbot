@@ -53,5 +53,5 @@ async def promote(promt):
     if BOTLOG:
         await promt.client.send_message(
             BOTLOG_CHATID, "#PROMOTE\n"
-            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-            f"CHAT: {promt.chat.title}(`{promt.chat_id}`)")
+                           f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                           f"CHAT: {promt.chat.title}(`{promt.chat_id}`)")

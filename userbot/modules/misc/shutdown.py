@@ -8,5 +8,5 @@ async def killdabot(event):
     await event.edit("`Goodbye *Windows XP shutdown sound*....`")
     if BOTLOG:
         await event.client.send_message(BOTLOG_CHATID, "#SHUTDOWN \n"
-                                        "Bot shut down")
+                                                       "Bot shut down")
     await event.client.disconnect()

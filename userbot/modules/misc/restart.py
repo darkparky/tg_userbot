@@ -10,7 +10,7 @@ async def knocksomesense(event):
     await event.edit("`Hold tight! I just need a second to be back up....`")
     if BOTLOG:
         await event.client.send_message(BOTLOG_CHATID, "#RESTART \n"
-                                        "Bot Restarted")
+                                                       "Bot Restarted")
     await event.client.disconnect()
     # Spin a new instance of bot
     execl(sys.executable, sys.executable, *sys.argv)

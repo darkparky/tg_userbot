@@ -1,3 +1,7 @@
+import urllib.parse
+
+import requests
+
 from userbot.events import register
 from userbot.utils import parse_arguments, extract_urls
 
@@ -41,8 +45,11 @@ async def resolve_url(url: str, base_domain: bool = True) -> str:
         url: The url
     Returns:
         The base comain as given by urllib.parse
+        :param url: the url to resolve
+        :param base_domain: if True only returns the host
     """
-    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
     if not url.startswith('http'):
         url = f'http://{url}'
     try:

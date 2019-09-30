@@ -56,8 +56,8 @@ async def spider(spdr):
             if BOTLOG:
                 await spdr.client.send_message(
                     BOTLOG_CHATID, "#MUTE\n"
-                    f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                    f"CHAT: {spdr.chat.title}(`{spdr.chat_id}`)")
+                                   f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                                   f"CHAT: {spdr.chat.title}(`{spdr.chat_id}`)")
         except UserIdInvalidError:
             return await spdr.edit("`Uh oh my unmute logic broke!`")
 

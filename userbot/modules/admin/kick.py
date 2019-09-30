@@ -46,5 +46,5 @@ async def kick(usr):
     if BOTLOG:
         await usr.client.send_message(
             BOTLOG_CHATID, "#KICK\n"
-            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-            f"CHAT: {usr.chat.title}(`{usr.chat_id}`)\n")
+                           f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                           f"CHAT: {usr.chat.title}(`{usr.chat_id}`)\n")

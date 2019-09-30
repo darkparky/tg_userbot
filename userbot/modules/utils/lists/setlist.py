@@ -22,7 +22,6 @@ async def setliststate(event):
         changeToGlobal = False
 
     textx = await event.get_reply_message()
-    listname = None
 
     if textx:
         x = re.search(r"\[Paperplane-List] List \*\*(\w*)", textx.text)

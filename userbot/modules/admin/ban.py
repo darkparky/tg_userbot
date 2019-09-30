@@ -54,5 +54,5 @@ async def ban(bon):
     if BOTLOG:
         await bon.client.send_message(
             BOTLOG_CHATID, "#BAN\n"
-            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-            f"CHAT: {bon.chat.title}(`{bon.chat_id}`)")
+                           f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                           f"CHAT: {bon.chat.title}(`{bon.chat_id}`)")

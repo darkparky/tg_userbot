@@ -45,7 +45,6 @@ async def fastpurger(purg):
 @register(outgoing=True, pattern=r"^.purgeme\s?([0-9]+|all)?")
 async def purgeme(delme):
     """ For .purgeme, delete x count of your latest message."""
-    message = delme.text
     count = delme.pattern_match.group(1)
     delall = False
     i = 1
@@ -75,7 +74,7 @@ async def purgeme(delme):
         " shall be self destructed in 2 seconds.**",
         delete_in=2
     )
-    
+
     if BOTLOG:
         await delme.client.send_message(
             BOTLOG_CHATID,
@@ -128,7 +127,7 @@ async def selfdestruct(destroy):
 
 CMD_HELP["General"].update({
     'purge': '.purge'
-        '\nUsage: Purge all messages starting from the reply.',
+             '\nUsage: Purge all messages starting from the reply.',
     'purgeme':
         '.purgeme <x>'
         '\nUsage: Delete x amount of your latest messages.',

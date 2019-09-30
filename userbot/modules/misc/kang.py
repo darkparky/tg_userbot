@@ -20,7 +20,6 @@ async def kang(args):
         user.username = user.first_name
 
     message = await args.get_reply_message()
-    photo = None
     emojibypass = False
     is_anim = False
     emoji = args.pattern_match.group(1)

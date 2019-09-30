@@ -157,11 +157,11 @@ async def faces(owo):
         await owo.edit("` UwU no text given! `")
         return
 
-    reply_text = re.sub(r"(r|l)", "w", message)
-    reply_text = re.sub(r"(R|L)", "W", reply_text)
+    reply_text = re.sub(r"([rl])", "w", message)
+    reply_text = re.sub(r"([RL])", "W", reply_text)
     reply_text = re.sub(r"n([aeiou])", r"ny\1", reply_text)
     reply_text = re.sub(r"N([aeiouAEIOU])", r"Ny\1", reply_text)
-    reply_text = re.sub(r"\!+", " " + random.choice(UWUS), reply_text)
+    reply_text = re.sub(r"!", " " + random.choice(UWUS), reply_text)
     reply_text = reply_text.replace("ove", "uv")
     reply_text += " " + random.choice(UWUS)
     await owo.edit(reply_text)

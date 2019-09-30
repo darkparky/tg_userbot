@@ -1,6 +1,5 @@
 """ A module for helping ban group join spammers. """
 
-
 from telethon.events import ChatAction
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import PeerUser
@@ -39,17 +38,17 @@ async def welcome_mute(event):
 
     user_full = await event.client(GetFullUserRequest(user.id))
     names = [str(user.first_name).lower(), str(user.last_name).lower()]
-    
+
     spam = False
 
     # Check the user's name for some red-flag words
     if any(i in names for i in RED_FLAG_WORDS):
         spam = True
-    
+
     # Now check their bio
     if any(flag in RED_FLAG_WORDS for flag in str(user_full.about)):
         spam = True
-    
+
     print(f"Spam: {spam}")
 
     # Potential spam/bot user detected
@@ -58,7 +57,7 @@ async def welcome_mute(event):
         if message.chat.admin_rights or message.chat.creator:
             response = "There's a good chance this person is a spammer/bot"
             await message.reply(response)
-        
+
         # Not an admin, so we'll just warn the admins
         else:
             # For now we're going to disable auto-mentioning of admins

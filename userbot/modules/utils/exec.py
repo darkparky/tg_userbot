@@ -12,7 +12,7 @@ async def run(event):
     reply_message = await event.get_reply_message()
 
     if event.pattern_match.group(1):
-        code = code = event.pattern_match.group(1)
+        pass
     elif reply_message:
         code = reply_message.text
     else:
@@ -33,7 +33,7 @@ execute. Use .help exec for an example.```")
     else:
         clines = code.splitlines()
         codepre = clines[0] + "\n" + clines[1] + "\n" + clines[2] + \
-            "\n" + clines[3] + "..."
+                  "\n" + clines[3] + "..."
 
     command = "".join(f"\n {l}" for l in code.split("\n.strip()"))
     process = await asyncio.create_subprocess_exec(
@@ -44,7 +44,7 @@ execute. Use .help exec for an example.```")
         stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await process.communicate()
     result = str(stdout.decode().strip()) \
-        + str(stderr.decode().strip())
+             + str(stderr.decode().strip())
 
     if result:
         if len(result) > 4096:

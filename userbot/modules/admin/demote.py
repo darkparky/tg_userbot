@@ -52,5 +52,5 @@ async def demote(dmod):
     if BOTLOG:
         await dmod.client.send_message(
             BOTLOG_CHATID, "#DEMOTE\n"
-            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-            f"CHAT: {dmod.chat.title}(`{dmod.chat_id}`)")
+                           f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                           f"CHAT: {dmod.chat.title}(`{dmod.chat_id}`)")

@@ -46,6 +46,6 @@ async def pin(msg):
     if BOTLOG:
         await msg.client.send_message(
             BOTLOG_CHATID, "#PIN\n"
-            f"ADMIN: [{user.first_name}](tg://user?id={user.id})\n"
-            f"CHAT: {msg.chat.title}(`{msg.chat_id}`)\n"
-            f"LOUD: {not is_silent}")
+                           f"ADMIN: [{user.first_name}](tg://user?id={user.id})\n"
+                           f"CHAT: {msg.chat.title}(`{msg.chat_id}`)\n"
+                           f"LOUD: {not is_silent}")

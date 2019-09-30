@@ -10,8 +10,6 @@ async def ungmoot(un_gmute):
     """ For .ungmute command, ungmutes the target in the userbot """
     # Admin or creator check
     chat = await un_gmute.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
 
     # Check if the function running under SQL mode
     if not is_mongo_alive() or not is_redis_alive():
@@ -37,5 +35,5 @@ async def ungmoot(un_gmute):
         if BOTLOG:
             await un_gmute.client.send_message(
                 BOTLOG_CHATID, "#UNGMUTE\n"
-                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                f"CHAT: {un_gmute.chat.title}(`{un_gmute.chat_id}`)")
+                               f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                               f"CHAT: {un_gmute.chat.title}(`{un_gmute.chat_id}`)")

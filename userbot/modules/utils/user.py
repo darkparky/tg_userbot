@@ -29,7 +29,7 @@ async def who(event: NewMessage.Event):
     args, user = parse_arguments(event.pattern_match.group(1), [
         'id', 'forward', 'general', 'bot', 'misc', 'all', 'mention'
     ])
-    
+
     args['forward'] = args.get('forward', True)
     args['user'] = user
 
@@ -39,20 +39,21 @@ async def who(event: NewMessage.Event):
     message_id_to_reply = event.message.reply_to_msg_id
 
     if not message_id_to_reply:
-        message_id_to_reply = None
+        pass
 
     await event.edit(caption, parse_mode="markdown")
+
 
 async def get_user(event: NewMessage.Event, **kwargs):
     """ Get the user from argument or replied message. """
     reply_msg: Message = await event.get_reply_message()
     user = kwargs.get('user', None)
-    
+
     if user:
         # First check for a user id
         if user.isnumeric():
             user = int(user)
-    
+
         # Then check for a user mention (@username)
         elif event.message.entities is not None:
             probable_user_mention_entity = event.message.entities[0]
@@ -69,19 +70,19 @@ async def get_user(event: NewMessage.Event, **kwargs):
         except (TypeError, ValueError) as err:
             await event.edit(str(err))
             return None
-    
+
     # Check for a forwarded message
     elif reply_msg and reply_msg.forward and kwargs['forward']:
         forward = reply_msg.forward
         replied_user = await event.client(
             GetFullUserRequest(forward.sender_id))
-    
+
     # Check for a replied to message
     elif event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         replied_user = await event.client(
             GetFullUserRequest(previous_message.from_id))
-    
+
     # Last case scenario is to get the current user
     else:
         self_user = await event.client.get_me()
@@ -100,7 +101,7 @@ async def fetch_info(replied_user, **kwargs):
     show_misc = kwargs.get('misc', False)
     show_all = kwargs.get('all', False)
     mention_name = kwargs.get('mention', False)
-    
+
     if show_all:
         show_general = True
         show_bot = True
@@ -113,14 +114,14 @@ async def fetch_info(replied_user, **kwargs):
     else:
         title = f"**{full_name}** \n"
 
-    caption =  title
-    
+    caption = title
+
     if id_only:
         caption += f"id: {user.id}"
         return caption
 
     if show_general:
-        caption +=  "  **general** \n"
+        caption += "  **general** \n"
         caption += f"    id: `{user.id}` \n"
         caption += f"    first name: {user.first_name} \n"
         caption += f"    last name: {user.last_name} \n"
@@ -129,7 +130,7 @@ async def fetch_info(replied_user, **kwargs):
         caption += f"    groups in common: {replied_user.common_chats_count} \n"
 
     if show_misc:
-        caption +=  "  **misc** \n"
+        caption += "  **misc** \n"
         caption += f"    restricted: {user.restricted} \n"
         caption += f"    restriction reason: {user.restriction_reason} \n"
         caption += f"    deleted: {user.deleted} \n"
@@ -138,14 +139,14 @@ async def fetch_info(replied_user, **kwargs):
         caption += f"    lang code: {user.lang_code} \n"
 
     if show_bot:
-        caption +=  "  **bot info** \n"
+        caption += "  **bot info** \n"
         caption += f"    bot: {user.bot} \n"
         caption += f"    chat history: {user.bot_chat_history} \n"
         caption += f"    info version: {user.bot_info_version} \n"
         caption += f"    inline geo: {user.bot_inline_geo} \n"
         caption += f"    inline placeholder: {user.bot_inline_placeholder} \n"
         caption += f"    nochats: {user.bot_nochats} \n"
-        
+
     return caption
 
 

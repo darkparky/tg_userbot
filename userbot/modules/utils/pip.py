@@ -20,7 +20,7 @@ async def pipcheck(pip):
 
             stdout, stderr = await pipc.communicate()
             pipout = str(stdout.decode().strip()) \
-                + str(stderr.decode().strip())
+                     + str(stderr.decode().strip())
 
             if pipout:
                 if len(pipout) > 4096:

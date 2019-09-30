@@ -67,10 +67,10 @@ def youtube_search(query,
             videos.append(search_result)
     try:
         nexttok = search_response["nextPageToken"]
-        return (nexttok, videos)
+        return nexttok, videos
     except HttpError:
         nexttok = "last_page"
-        return (nexttok, videos)
+        return nexttok, videos
     except KeyError:
         nexttok = "KeyError, try again."
-        return (nexttok, videos)
+        return nexttok, videos

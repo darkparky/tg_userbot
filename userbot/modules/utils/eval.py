@@ -4,7 +4,7 @@ from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.eval(?: |$)([\S\s]+)")
+@register(outgoing=True, pattern=r"^.eval(?: |$)([\S\s]+)")
 async def evaluate(query):
     """ For .eval command, evaluates the given Python expression. """
     reply_message = await query.get_reply_message()

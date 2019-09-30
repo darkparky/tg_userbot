@@ -1,5 +1,6 @@
 from userbot import MONGO, REDIS
 
+
 # Mutes
 async def mute(chat_id, userid):
     if await is_muted(chat_id, userid) is True:
@@ -454,6 +455,7 @@ async def set_weather(city):
     else:
         MONGO.misc.insert_one({'weather_city': city})
 
+
 # Subscriptions
 async def get_subs(chat_id):
     if not chat_id:
@@ -490,5 +492,5 @@ async def delete_sub(name):
         MONGO.subs.delete_one({
             'name': name
         })
-        
+
         return True

@@ -3,7 +3,7 @@ import pybase64
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.b64 (en|de)(?:\s+(.*))?")
+@register(outgoing=True, pattern=r"^.b64 (en|de)(?:\s+(.*))?")
 async def endecrypt(query):
     """ For .b64 command, find the base64 encoding of the given string. """
     reply_message = await query.get_reply_message()
@@ -12,5 +12,5 @@ async def endecrypt(query):
         lething = str(pybase64.b64encode(bytes(text, "utf-8")))[2:]
         await query.reply("Encoded: `" + lething[:-1] + "`")
     else:
-        lething = str( pybase64.b64decode(bytes(text, "utf-8"), validate=True))[2:]
+        lething = str(pybase64.b64decode(bytes(text, "utf-8"), validate=True))[2:]
         await query.reply("Decoded: `" + lething[:-1] + "`")

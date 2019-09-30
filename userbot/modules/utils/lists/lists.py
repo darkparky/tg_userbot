@@ -38,7 +38,6 @@ async def lists_logic(event):
             listname = event.text[1:]
             _list = await get_list(event.chat_id, listname)
             if _list:
-                storage = "None"
                 if _list['chat_id'] == 0:
                     storage = "global"
                 else:
@@ -48,7 +47,7 @@ async def lists_logic(event):
 
                 if _list['items']:
                     for i, item in enumerate(_list['items']):
-                        return_str += f"{i+1}. {item}\n"
+                        return_str += f"{i + 1}. {item}\n"
 
                     return_str += f"\n{CHK_HELP}"
                 else:

@@ -10,8 +10,6 @@ async def gspider(gspdr):
     """ For .gmute command, gmutes the target in the userbot """
     # Admin or creator check
     chat = await gspdr.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
 
     # Check if the function running under SQL mode
     if not is_mongo_alive() or not is_redis_alive():
@@ -34,5 +32,5 @@ async def gspider(gspdr):
         if BOTLOG:
             await gspdr.client.send_message(
                 BOTLOG_CHATID, "#GMUTE\n"
-                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                f"CHAT: {gspdr.chat.title}(`{gspdr.chat_id}`)")
+                               f"USER: [{user.first_name}](tg://user?id={user.id})\n"
+                               f"CHAT: {gspdr.chat.title}(`{gspdr.chat_id}`)")

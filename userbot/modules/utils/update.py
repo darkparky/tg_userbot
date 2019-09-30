@@ -34,14 +34,15 @@ async def is_off_br(br):
 
 @register(outgoing=True, pattern="^.update(?: |$)(.*)")
 async def upstream(ups):
-    "For .update command, check if the bot is up to date, update if specified"
+    """For .update command, check if the bot is up to date, update if specified"""
     await ups.edit("`Checking for updates, please wait....`")
     conf = ups.pattern_match.group(1)
     off_repo = 'https://github.com/watzon/tg_userbot.git'
 
+    txt = "`Oops.. Updater cannot continue due to "
+    txt += "some problems occured`\n\n**LOGTRACE:**\n"
+
     try:
-        txt = "`Oops.. Updater cannot continue due to "
-        txt += "some problems occured`\n\n**LOGTRACE:**\n"
         repo = Repo()
     except NoSuchPathError as error:
         await ups.edit(f'{txt}\n`directory {error} is not found`')
@@ -109,10 +110,10 @@ async def upstream(ups):
 
 CMD_HELP.update({
     'update':
-    'Check if the main userbot repository has an update '
-    'available and show changelog if so. \n'
-    'Usage: `.update` \n \n'
-    'Update your userbot, if there are any '
-    'updates in the main userbot repository. \n'
-    'Usage: `.update now`'
+        'Check if the main userbot repository has an update '
+        'available and show changelog if so. \n'
+        'Usage: `.update` \n \n'
+        'Update your userbot, if there are any '
+        'updates in the main userbot repository. \n'
+        'Usage: `.update now`'
 })

@@ -14,7 +14,6 @@ async def edit_list_item(event):
         return
 
     textx = await event.get_reply_message()
-    listname = None
 
     if textx:
         x = re.search(r"\[Paperplane-List] List \*\*(\w*)", textx.text)

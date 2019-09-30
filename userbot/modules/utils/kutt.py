@@ -32,7 +32,7 @@ async def kutt_it(e):
         payload = {'target': url, 'reuse': reuse}
         headers = {'X-API-Key': KUTT_IT_API_KEY}
         resp = requests.post(API_ENDPOINT + "url/submit", json=payload, headers=headers)
-        
+
         json = resp.json()
         if resp.status_code == 200:
             shortened[url] = json['shortUrl']
@@ -42,5 +42,5 @@ async def kutt_it(e):
     message = ""
     for item in shortened.items():
         message += f"Original URL: {item[0]} \nShortened URL: {item[1]} \n"
-    
+
     await e.edit(message, link_preview=False)

@@ -60,10 +60,10 @@ async def sub_logic(event):
                         message_link = f"https://t.me/c/{event.chat_id}/{event.message.id}"
 
                     await event.client.send_message(
-                            BOTLOG_CHATID,
-                            f"Sub `{sub['name']}` triggered in chat `{event.chat_id}`. "
-                            f"Here's a link. \n{message_link}",
-                            schedule=timedelta(seconds=5))
+                        BOTLOG_CHATID,
+                        f"Sub `{sub['name']}` triggered in chat `{event.chat_id}`. "
+                        f"Here's a link. \n{message_link}",
+                        schedule=timedelta(seconds=5))
                     break
     except BaseException:
         pass

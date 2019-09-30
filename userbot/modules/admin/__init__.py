@@ -47,6 +47,7 @@ MUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=True)
 
 UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 
+
 @register(incoming=True, disable_errors=True)
 async def muter(moot):
     """ Used for deleting the messages of muted people """
@@ -82,6 +83,7 @@ async def muter(moot):
     for i in gmuted:
         if i == moot.sender_id:
             await moot.delete()
+
 
 CMD_HELP.update({
     "Admin": {
