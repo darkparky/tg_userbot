@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
+*.pyc
+*.pyo
+*.pyd
 
 # C extensions
 *.so
@@ -61,8 +63,8 @@ userbot.db
 userbot.session
 userbot.session-journal
 .progress
-.vscode/*
-.idea/*
+.vscode/
+.idea/
 error.log
 config.env
-*secret*
+secret.json
