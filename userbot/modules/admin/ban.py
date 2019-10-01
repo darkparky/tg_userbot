@@ -1,6 +1,7 @@
 from telethon.errors import BadRequestError
 from telethon.tl.functions.channels import EditBannedRequest
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, NO_PERM, BANNED_RIGHTS
@@ -56,3 +57,15 @@ async def ban(bon):
             BOTLOG_CHATID, "#BAN\n"
                            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                            f"CHAT: {bon.chat.title}(`{bon.chat_id}`)")
+
+add_help_item(
+    ".ban",
+    "Admin",
+    "Ban a user from the current chat.",
+    """
+    `.ban (username|userid)`
+    
+    Or, in reply to a message
+    `.ban`
+    """
+)

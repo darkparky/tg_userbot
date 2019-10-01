@@ -3,43 +3,29 @@ from asyncio.tasks import sleep
 from telethon.errors import ChatAdminRequiredError, UserAdminInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
 
+from ..help import add_help_item
 from userbot.events import register
 from userbot.modules.admin import BANNED_RIGHTS, UNBAN_RIGHTS
 
 
-@register(outgoing=True, group_only=True, pattern="^.delusers(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern="^.clean(?: |$)(.*)")
 async def rm_deletedacc(show):
-    """ For .delusers command, clean deleted accounts. """
+    """ For .clean command, clean deleted accounts. """
     con = show.pattern_match.group(1)
     del_u = 0
-    del_status = "`No deleted accounts found, Group is cleaned as Hell`"
+    del_status = "**No deleted accounts found**"
 
-    if con != "clean":
-        await show.edit("`Searching for zombie accounts...`")
-        async for user in show.client.iter_participants(show.chat_id,
-                                                        aggressive=True):
-            if user.deleted:
-                del_u += 1
-
-        if del_u > 0:
-            del_status = f"found **{del_u}** \
-                deleted account(s) in this group \
-            \nclean them by using .delusers clean"
-
-        await show.edit(del_status)
-        return
-
-    # Here laying the sanity check
+    # Sanity check
     chat = await show.get_chat()
     admin = chat.admin_rights
     creator = chat.creator
 
     # Well
     if not admin and not creator:
-        await show.edit("`You aren't an admin here!`")
+        await show.edit("You aren't an admin here!", delete_in=3)
         return
 
-    await show.edit("`Cleaning deleted accounts...`")
+    await show.edit("**Cleaning deleted accounts...**")
     del_u = 0
     del_a = 0
 
@@ -49,7 +35,7 @@ async def rm_deletedacc(show):
                 await show.client(
                     EditBannedRequest(show.chat_id, user.id, BANNED_RIGHTS))
             except ChatAdminRequiredError:
-                await show.edit("`You don't have enough rights.`")
+                await show.edit("You don't have sufficient permissions", delete_in=3)
                 return
             except UserAdminInvalidError:
                 del_u -= 1
@@ -59,10 +45,20 @@ async def rm_deletedacc(show):
             del_u += 1
             await sleep(1)
     if del_u > 0:
-        del_status = f"cleaned **{del_u}** deleted account(s)"
+        del_status = f"Cleaned **{del_u}** deleted account(s)"
 
     if del_a > 0:
-        del_status = f"cleaned **{del_u}** deleted account(s) \
-\n**{del_a}** deleted admin accounts are not removed"
+        del_status = f"Cleaned **{del_u}** deleted account(s) \n"
+        del_status += f"**{del_a}** deleted admin accounts were not removed"
 
     await show.edit(del_status)
+
+
+add_help_item(
+    ".clean",
+    "Admin",
+    "Clean the current chat of deleted accounts.",
+    """
+    `.clean`
+    """
+)
