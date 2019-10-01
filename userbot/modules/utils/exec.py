@@ -72,4 +72,4 @@ execute. Use .help exec for an example.```")
     if BOTLOG:
         await event.client.send_message(
             BOTLOG_CHATID,
-            "Exec query " + codepre + " was executed successfully")
+            "Exec query: \n```\n" + codepre + "\n```\n was executed successfully")
