@@ -5,8 +5,9 @@
 #
 """ Userbot help command """
 
-from userbot import CMD_HELP
 from userbot.events import register
+
+CMD_HELP = {}
 
 
 @register(outgoing=True, pattern="^.help(?: |$)(.*)")
