@@ -12,7 +12,7 @@ async def run(event):
     reply_message = await event.get_reply_message()
 
     if event.pattern_match.group(1):
-        pass
+        code = event.pattern_match.group(1)
     elif reply_message:
         code = reply_message.text
     else:
