@@ -2,6 +2,7 @@ import os
 
 from gtts import gTTS
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.misc import LANG
@@ -56,3 +57,19 @@ async def text_to_speech(query):
         if BOTLOG:
             await query.client.send_message(
                 BOTLOG_CHATID, "tts of " + message + " executed successfully!")
+
+add_help_item(
+    ".tts",
+    "Misc",
+    "Uses Google Text to Speech to say the message.",
+    """
+    `.tts [options] (message)`
+    
+    Or, in reply to a message
+    `.tts [options]`
+    
+    Options:
+    `.slow`: Say the message slowly.
+    `.lang`: Message to speak in.
+    """
+)

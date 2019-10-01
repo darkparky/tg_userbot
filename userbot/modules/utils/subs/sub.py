@@ -1,13 +1,14 @@
 from datetime import timedelta
 from re import match
 
+from ...help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.dbhelper import add_sub, get_subs
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r".sub ([\S\s]+)")
+@register(outgoing=True, pattern=r".sub\s+([\S\s]+)")
 async def add_subscription(e):
     """ Add a subscription pattern. Whenever this pattern
     is matched in the current chat you will be notified """
@@ -67,3 +68,16 @@ async def sub_logic(event):
                     break
     except BaseException:
         pass
+
+add_help_item(
+    ".sub",
+    "Utilities [subs]",
+    "Add a subscription, allowing you to be notified "
+    "whenever a message matches a specific pattern.",
+    """
+    `.sub [options] (name) (pattern)`
+    
+    Options:
+    `.global`: Use this subscription with all chats.
+    """
+)

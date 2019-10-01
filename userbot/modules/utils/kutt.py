@@ -2,6 +2,7 @@
 
 import requests
 
+from ..help import add_help_item
 from userbot import KUTT_IT_API_KEY
 from userbot.events import register
 from userbot.utils import parse_arguments, extract_urls
@@ -44,3 +45,19 @@ async def kutt_it(e):
         message += f"Original URL: {item[0]} \nShortened URL: {item[1]} \n"
 
     await e.edit(message, link_preview=False)
+
+add_help_item(
+    ".kutt",
+    "Utilities",
+    "Uses kutt.it to shorten links.",
+    """
+    With any number of URLs. All will be converted.
+    `.kutt [options] (url1) (url2) ... (urlN)`
+    
+    Or, in response to a message containing URLs.
+    `.kutt [options]`
+    
+    Options:
+    `.reuse`: Allows previously converted URLs to be reused (default: `False`)
+    """
+)

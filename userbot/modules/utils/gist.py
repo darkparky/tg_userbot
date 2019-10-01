@@ -1,5 +1,6 @@
 from github import InputFileContent
 
+from ..help import add_help_item
 from userbot import github
 from userbot.events import register
 
@@ -29,3 +30,16 @@ async def create_gist(e):
     gist = user.create_gist(True, {filename: file})
 
     await e.edit(f"Gist created. You can find it here {gist.html_url}.")
+
+add_help_item(
+    ".gist",
+    "Utilities",
+    "Create a gist using the supplied content or the "
+    "replied to message.",
+    """
+    `.gist (content)`
+    
+    Or, in reply to a message
+    `.gist`
+    """
+)

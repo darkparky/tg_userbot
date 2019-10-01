@@ -2,6 +2,7 @@ from platform import python_version
 
 from telethon import version
 
+from ..help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, bot
 from userbot.events import register
 from userbot.modules import ALL_MODULES
@@ -27,3 +28,13 @@ async def amireallyalive(e):
                  f"Database Status: {db} \n"
                  f"Modules loaded: {len(ALL_MODULES)}"
                  "`")
+
+add_help_item(
+    ".alive",
+    "Utilities",
+    "If the bot is alive, returns some basic info "
+    "about the bot.",
+    """
+    `.alive`
+    """
+)

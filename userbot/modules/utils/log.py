@@ -1,10 +1,11 @@
 from time import sleep
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.log(?: |$)([\s\S]*)")
+@register(outgoing=True, pattern=r"^.log(?:\s+|$)([\s\S]*)")
 async def log(log_text):
     """ For .log command, forwards a message
      or the command argument to the bot logs group """
@@ -24,3 +25,16 @@ async def log(log_text):
         await log_text.edit("`This feature requires Logging to be enabled!`")
     sleep(2)
     await log_text.delete()
+
+add_help_item(
+    ".log",
+    "Utilities",
+    "Logs the message to the bot log group, or forwards the "
+    "replied to message to the group.",
+    """
+    `.log (message)`
+    
+    Or, in response to a message
+    `.log`
+    """
+)

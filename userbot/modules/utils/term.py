@@ -2,6 +2,7 @@ import asyncio
 from getpass import getuser
 from os import remove
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
@@ -62,3 +63,14 @@ async def terminal_runner(term):
             BOTLOG_CHATID,
             "Terminal Command " + command + " was executed sucessfully",
         )
+
+
+add_help_item(
+    ".term",
+    "Utilities",
+    "Execute a terminal command on the machine this "
+    "bot is running on.",
+    """
+    `.term (command) [args]`
+    """
+)

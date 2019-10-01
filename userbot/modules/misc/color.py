@@ -3,6 +3,7 @@ import io
 import spectra
 from PIL import Image
 
+from ..help import add_help_item
 from userbot.utils import parse_arguments
 from userbot.events import register
 
@@ -84,3 +85,16 @@ def make_swatch(color, size=(300, 128)):
     return output.getvalue()
 
 
+add_help_item(
+    ".color",
+    "Misc",
+    "Show the supplied color and return it "
+    "in different colorspaces.",
+    """
+    `.color [options] (color)`
+    
+    Options:
+    `.format`: Format of the supplied color. Defaults to `html` which can be any valid HTML color (hex or name). Other valid values are `rgb`, `lab`, `lch`, `hsl`, `hsv`, `xyz`, `cmy`, and `cmyk`.
+    `.extended`: Return some non-typical colorspaces in addition to the usual.
+    """
+)

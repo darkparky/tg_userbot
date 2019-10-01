@@ -2,6 +2,7 @@ from emoji import get_emoji_regexp
 # noinspection PyProtectedMember
 from googletrans import Translator, LANGUAGES
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.utils import parse_arguments
@@ -51,3 +52,16 @@ async def translateme(trans):
 def deEmojify(inputString):
     """ Remove emojis and other non-safe characters from string """
     return get_emoji_regexp().sub(u'', inputString)
+
+add_help_item(
+    ".trt",
+    "Misc",
+    "Uses Google Translate to translate the supplied string.",
+    """
+    `.trt [options] (message)`
+    
+    Options:
+    `.to`: To language code
+    `.from`: From language code
+    """
+)

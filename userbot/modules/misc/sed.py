@@ -10,6 +10,7 @@
 import re
 from sre_constants import error as sre_err
 
+from ..help import add_help_item
 from userbot import CMD_HELP
 from userbot.events import register
 
@@ -100,9 +101,13 @@ async def sed(command):
             await command.edit("Did you mean? \n\n`" + text + "`")
 
 
-CMD_HELP.update({
-    "sed":
-    "Replaces a word or words using sed. \n"
-    "Usage: `sed<delimiter>(pattern)<delimiter>(replacement)` \n"
-    "Delimiters: `/, :, |, _`"
-})
+add_help_item(
+    "sed",
+    "Misc",
+    "Replaces a word or words using sed.",
+    """
+    `sed/(pattern)/(replacement)/[ig]`
+    
+    Valid delimiters are `/`, `:`, `|`, `_`
+    """
+)

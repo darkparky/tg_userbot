@@ -5,6 +5,7 @@ import urllib.request
 from PIL import Image
 from telethon.tl.types import MessageMediaPhoto, DocumentAttributeFilename
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 
@@ -232,3 +233,14 @@ async def resize_photo(photo):
         image.thumbnail(maxsize)
 
     return image
+
+add_help_item(
+    ".kang",
+    "Misc",
+    "Kangs the replied to image, adding it to a "
+    "userbot sticker pack.",
+    """
+    In response to an image or sticker
+    `.kang [emojis]`
+    """
+)

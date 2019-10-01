@@ -3,6 +3,7 @@ from urllib.error import HTTPError
 
 from urbandict import define
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
@@ -44,3 +45,12 @@ async def urban_dict(ud_e):
                 BOTLOG_CHATID, "ud query " + query + " executed successfully.")
     else:
         await ud_e.edit("No result found for **" + query + "**")
+
+add_help_item(
+    ".ud",
+    "Misc",
+    "Searches Urban Dictionary for the query.",
+    """
+    `.ud (query)`
+    """
+)

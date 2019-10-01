@@ -3,6 +3,7 @@ from html import unescape
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from ..help import add_help_item
 from userbot import YOUTUBE_API_KEY
 from userbot.events import register
 from userbot.utils import parse_arguments
@@ -74,3 +75,16 @@ def youtube_search(query,
     except KeyError:
         nexttok = "KeyError, try again."
         return nexttok, videos
+
+
+add_help_item(
+    ".yt",
+    "Misc",
+    "Search YouTube and return the results.",
+    """
+    `.yt [options] (query)`
+    
+    Options:
+    `.limit`: Limit the results.
+    """
+)

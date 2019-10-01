@@ -2,6 +2,7 @@ import os
 
 from wikipedia import summary, DisambiguationError, PageError
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
@@ -36,3 +37,12 @@ async def wiki(wiki_q):
     if BOTLOG:
         await wiki_q.client.send_message(
             BOTLOG_CHATID, f"Wiki query {match} was executed successfully")
+
+add_help_item(
+    ".wiki",
+    "Misc",
+    "Searches wikipedia for the query.",
+    """
+    `.wiki (query)`
+    """
+)

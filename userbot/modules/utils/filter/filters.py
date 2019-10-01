@@ -1,3 +1,4 @@
+from ...help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive
 from userbot.events import register
 from userbot.modules.dbhelper import get_filters
@@ -21,3 +22,12 @@ async def filters_active(event):
                                                     filt["msg"])
 
     await event.edit(transact)
+
+add_help_item(
+    ".filters",
+    "Utilities [filters]",
+    "List all registered filters.",
+    """
+    `.filters`
+    """
+)

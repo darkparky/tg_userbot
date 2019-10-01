@@ -1,3 +1,4 @@
+from ...help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive
 from userbot.events import register
 from userbot.modules.dbhelper import get_subs
@@ -32,3 +33,16 @@ async def list_subscriptions(event):
             message += f"`{sub['name']}{gbl}`: `{pattern}` \n"
 
     await event.edit(message.strip())
+
+add_help_item(
+    ".subs",
+    "Utilities [subs]",
+    "List all registered subscriptions for the current "
+    "chat (or all).",
+    """
+    `.subs [options]`
+    
+    Options:
+    `.all`: List all registered subscriptions.
+    """
+)

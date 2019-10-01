@@ -2,6 +2,7 @@ import asyncio
 from os import remove
 from sys import executable
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
@@ -72,3 +73,15 @@ execute. Use .help exec for an example.```")
         await event.client.send_message(
             BOTLOG_CHATID,
             "Exec query: \n```\n" + codepre + "\n```\n was executed successfully")
+
+add_help_item(
+    ".exec",
+    "Utilities",
+    "Execute a dynamically created Python program.",
+    """
+    `.exec (program)`
+    
+    Or, in response to a message containing Python code
+    `.exec`
+    """
+)

@@ -1,6 +1,7 @@
 from asyncio.subprocess import create_subprocess_shell as asyncrunapp, PIPE as asyncPIPE
 from os import remove
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -46,3 +47,15 @@ async def pipcheck(pip):
                                "`\n**Result: **\n`No Result Returned/False`")
         else:
             await pip.edit("`Use .help pip to see an example`")
+
+add_help_item(
+    ".pip",
+    "Utilities",
+    "Searches PyPi and returns the results. If there "
+    "are too many results the output will be returned "
+    "as a text file.",
+    """
+    Search PyPi for a specific term
+    `.pip (search term)`
+    """
+)

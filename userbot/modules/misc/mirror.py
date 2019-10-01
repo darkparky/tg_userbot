@@ -23,13 +23,14 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from telethon.tl.types import MessageMediaPhoto
 
+from ..help import add_help_item
 from userbot import GDRIVE_FOLDER, LOGS
 from userbot.events import register
 
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./")
 
 
-@register(pattern=r"^.mirror(?: |$)([\s\S]*)", outgoing=True)
+@register(pattern=r"^.mirror(?:\s+|$)([\s\S]*)", outgoing=True)
 async def gdrive_mirror(request):
     """ Download a file and upload to Google Drive """
     message = request.pattern_match.group(1)
@@ -194,3 +195,16 @@ def drive_auth():
     # Save the current credentials to a file
     gauth.SaveCredentialsFile("secret.json")
     return GoogleDrive(gauth)
+
+add_help_item(
+    ".mirror",
+    "Misc",
+    "Mirrors the supplied file to Google Drive.",
+    """
+    In response to a message with a file
+    `.mirror`
+    
+    With a URL
+    `.mirror (url)[|(filename)]
+    """
+)

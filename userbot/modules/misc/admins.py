@@ -1,3 +1,4 @@
+from ..help import add_help_item
 from userbot.events import register
 from userbot.utils import admins, make_mention
 
@@ -11,3 +12,12 @@ async def notif_admins(msg):
 
     await msg.client.send_message(msg.chat, response, reply_to=reply_message)
     await msg.delete()
+
+add_help_item(
+    ".admins",
+    "Misc",
+    "Mention all admins (besides bots) in the current chat.",
+    """
+    `.admins`
+    """
+)

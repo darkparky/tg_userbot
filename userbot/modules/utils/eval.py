@@ -1,10 +1,11 @@
 from os import remove
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.eval(?: |$)([\S\s]+)")
+@register(outgoing=True, pattern=r"^.eval(?:\s+|$)([\S\s]+)")
 async def evaluate(query):
     """ For .eval command, evaluates the given Python expression. """
     reply_message = await query.get_reply_message()
@@ -59,3 +60,15 @@ async def evaluate(query):
         await query.client.send_message(
             BOTLOG_CHATID,
             f"Eval query {expression} was executed successfully")
+
+add_help_item(
+    ".eval",
+    "Utilities",
+    "Evaluates a small Python expression using `eval()`.",
+    """
+    `.eval (expression)`
+    
+    Or, in response to a message
+    `.eval`
+    """
+)

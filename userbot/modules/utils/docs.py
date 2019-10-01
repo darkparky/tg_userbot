@@ -1,5 +1,6 @@
 import requests
 
+from ..help import add_help_item
 from userbot.events import register
 from userbot.utils import parse_arguments
 
@@ -25,3 +26,13 @@ async def doc_search(e):
             await e.edit(response)
     else:
         await e.edit(f"No docs found for `{lib}`...", delete_in=3)
+
+add_help_item(
+    ".docs",
+    "Utilities",
+    "Searches doc sources (currently python.org and "
+    "readthedocs.org) for module documentation.",
+    """
+    `.docs (module)`
+    """
+)

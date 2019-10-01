@@ -1,5 +1,6 @@
 from dns.resolver import Resolver
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -23,3 +24,13 @@ async def dig_dns(dig):
     response = response + '\n'.join(map(str, additionals))
 
     await dig.edit(response)
+
+add_help_item(
+    ".dig",
+    "Utilities",
+    "Similar to the `dig` terminal command, returns "
+    "DNS information for a host.",
+    """
+    `.dig (host)`
+    """
+)

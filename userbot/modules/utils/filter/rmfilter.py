@@ -1,3 +1,4 @@
+from ...help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.dbhelper import delete_filter
@@ -21,3 +22,12 @@ async def remove_filter(event):
                 BOTLOG_CHATID,
                 "`Filter` **{}** `was deleted successfully`".format(filt))
     await event.delete()
+
+add_help_item(
+    ".rmfilter",
+    "Utilities [filters]",
+    "Remove a filter.",
+    """
+    `.rmfilter "(pattern)"`
+    """
+)

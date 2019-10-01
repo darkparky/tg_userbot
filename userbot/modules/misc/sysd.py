@@ -1,5 +1,6 @@
 from asyncio.subprocess import create_subprocess_shell as asyncrunapp, PIPE as asyncPIPE
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -22,3 +23,10 @@ async def sysdetails(sysd):
             await sysd.edit("`" + result + "`")
         except FileNotFoundError:
             await sysd.edit("Please install neofetch before using this", delete_in=3)
+
+add_help_item(
+    ".sysd",
+    "Misc",
+    "Gets system information using neofetch.",
+    "`.sysd`"
+)

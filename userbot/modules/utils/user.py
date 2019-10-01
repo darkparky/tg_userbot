@@ -151,7 +151,7 @@ async def fetch_info(replied_user, **kwargs):
 
 add_help_item(
     ".user",
-    "General",
+    "Utilities",
     "List information about a particular user.",
     """
     `.u(ser) [options] (username|id)`
@@ -159,7 +159,7 @@ add_help_item(
     Or, in response to a message
     `.u(ser) [options]`
     
-    Valid options include:
+    Options:
     `.id`: Show only the user's ID (default: `False`)
     `.general`: Show general user info (default: `True`)
     `.bot`: Show bot related info (default: `False`)

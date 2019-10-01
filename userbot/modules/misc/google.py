@@ -1,5 +1,6 @@
 from search_engine_parser import GoogleSearch
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.utils import parse_arguments
@@ -37,3 +38,17 @@ async def gsearch(q_event):
             BOTLOG_CHATID,
             "Google Search query `" + query + "` was executed successfully",
         )
+
+add_help_item(
+    ".google",
+    "Misc",
+    "Executes a search query with Google and returns "
+    "the results.",
+    """
+    `.google [options] (query)`
+    
+    Options:
+    `.page`: Page of results to return.
+    `.limit`: Limit the number of returned results (defaults to 5).
+    """
+)

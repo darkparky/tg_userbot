@@ -1,5 +1,6 @@
 import re
 
+from ...help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.dbhelper import add_filter, get_filters
@@ -52,3 +53,13 @@ async def filter_incoming_handler(handler):
                     return
     except AttributeError:
         pass
+
+add_help_item(
+    ".filter",
+    "Utilities [filters]",
+    "Add a new filter. Filters allow you to respond "
+    "to a specific pattern with a message.",
+    """
+    `.filter "(pattern)" (response)`
+    """
+)

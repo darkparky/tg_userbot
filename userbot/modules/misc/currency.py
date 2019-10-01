@@ -1,5 +1,6 @@
 from requests import get
 
+from ..help import add_help_item
 from userbot import CURRENCY_API
 from userbot.events import register
 
@@ -18,3 +19,12 @@ async def currency(cconvert):
     result = round(result, 5)
     await cconvert.edit(
         f"{amount} {currency_to} is:\n`{result} {currency_from}`")
+
+add_help_item(
+    ".cr",
+    "Misc",
+    "Convert currencies.",
+    """
+    `.cr (amount) (from) (to)`
+    """
+)

@@ -3,11 +3,12 @@ import shutil
 
 from google_images_download import google_images_download
 
+from ..help import add_help_item
 from userbot.events import register
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^.img (.*)")
+@register(outgoing=True, pattern=r"^.img\s+(.*)")
 async def img_sampler(event):
     """ For .img command, search and return images matching the query. """
     await event.edit("Processing query...")
@@ -37,3 +38,17 @@ async def img_sampler(event):
 
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
     await event.delete()
+
+add_help_item(
+    ".img",
+    "Misc",
+    "Search Google Images and return images that "
+    "match the query.",
+    """
+    `.img [options] (query)`
+    
+    Options:
+    `.limit`: Number of results to return.
+    `.format`: Format of the returned images. Can be one of `jpg`, `png`, `gif`, `webm`.
+    """
+)

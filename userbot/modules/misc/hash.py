@@ -1,6 +1,7 @@
 import re
 from importlib import import_module
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -23,3 +24,12 @@ async def gethash(hash_q):
     output = algo.hexdigest()
 
     await hash_q.reply(f'{algo_name}: `{output}`')
+
+add_help_item(
+    ".hash",
+    "Misc",
+    "Hash the supplied string with a specific hashing algorithm.",
+    """
+    `.hash (md[245]|sha1|sha256|ripemd) (string)`
+    """
+)

@@ -1,5 +1,6 @@
 import speedtest
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -40,3 +41,10 @@ def speed_convert(size):
         size /= power
         zero += 1
     return f"{round(size, 2)} {units[zero]}"
+
+add_help_item(
+    ".speed",
+    "Misc",
+    "Run a speedtest with your bot.",
+    "`.speed`"
+)

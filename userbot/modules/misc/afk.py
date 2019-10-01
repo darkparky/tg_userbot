@@ -1,14 +1,10 @@
-# Copyright (C) 2019 The Raphielscape Company LLC.
-#
-# Licensed under the Raphielscape Public License, Version 1.c (the "License");
-# you may not use this file except in compliance with the License.
-#
 """ Userbot module which contains afk-related commands """
 
 import time
 
 from telethon.events import StopPropagation
 
+from ..help import add_help_item
 from userbot import (BOTLOG, BOTLOG_CHATID, CMD_HELP, is_redis_alive)
 from userbot.events import register
 from userbot.modules.dbhelper import afk, afk_reason, is_afk, no_afk
@@ -129,10 +125,16 @@ async def type_afk_is_not_true(e):
         COUNT_MSG = 0
         USERS = {}
 
-
-CMD_HELP.update({
-    "afk":
-        ".afk <reason>(optional)"
-        "\nUsage: Sets your status as AFK. Responds to anyone who tags/PM's "
-        "you telling you are AFK. Switches off AFK when you type back anything."
-})
+add_help_item(
+    ".afk",
+    "Misc",
+    "Set yourself as being AFK and notifies anyone "
+    "who tags or PMs you that you are away. Turns off "
+    "whenever you start typing something.",
+    """
+    `.afk`
+    
+    Or with an optional reason
+    `.afk (reason)`
+    """
+)

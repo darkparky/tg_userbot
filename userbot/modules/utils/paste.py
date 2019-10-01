@@ -8,6 +8,7 @@
 
 from requests import post
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 
@@ -62,9 +63,14 @@ async def paste(pstl):
             "Paste query `" + message + "` was executed successfully",
         )
 
-
-CMD_HELP["General"].update({
-    "paste":
-        "Create a paste or a shortened url using "
-        "dogbin (https://del.dog/)"
-})
+add_help_item(
+    ".paste",
+    "Utilities",
+    "Uses del.dog to create a new paste.",
+    """
+    `.paste (content)`
+    
+    Or, in reply to a message
+    `.paste`
+    """
+)

@@ -2,6 +2,7 @@ import urllib.parse
 
 import requests
 
+from ..help import add_help_item
 from userbot.events import register
 from userbot.utils import parse_arguments, extract_urls
 
@@ -64,3 +65,16 @@ async def resolve_url(url: str, base_domain: bool = True) -> str:
     if _base_domain and base_domain:
         url = _base_domain
     return url
+
+add_help_item(
+    ".follow",
+    "Utilities",
+    "Follow a link or any number of links to their "
+    "destination. Mainly for use with short URLs.",
+    """
+    `.f(ollow) (link1) (link2) ... (linkN)`
+    
+    Or, in reply to a message containing links
+    `.f(ollow)`
+    """
+)

@@ -122,13 +122,3 @@ add_help_item(
     `.update now`
     """
 )
-
-CMD_HELP.update({
-    'update':
-        'Check if the main userbot repository has an update '
-        'available and show changelog if so. \n'
-        'Usage: `.update` \n \n'
-        'Update your userbot, if there are any '
-        'updates in the main userbot repository. \n'
-        'Usage: `.update now`'
-})

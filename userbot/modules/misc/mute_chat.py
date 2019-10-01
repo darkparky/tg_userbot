@@ -5,6 +5,7 @@
 #
 """ Userbot module for muting chats. """
 
+from ..help import add_help_item
 from userbot import (BOTLOG, BOTLOG_CHATID, CMD_HELP, MONGO, is_mongo_alive,
                      is_redis_alive)
 from userbot.events import register
@@ -47,11 +48,20 @@ async def keep_read(message):
                 await message.client.send_read_acknowledge(message.chat_id)
 
 
-CMD_HELP["General"].update({
-    'unmutechat':
-        'Unmute a muted chat. \n'
-        'Usage: `.unmutechat`',
-    'mutechat':
-        'Mute a chat. \n'
-        'Usage: `.mutechat`'
-})
+add_help_item(
+    ".mutechat",
+    "Misc",
+    "Mute the current chat.",
+    """
+    `.mutechat`
+    """
+)
+
+add_help_item(
+    ".unmutechat",
+    "Misc",
+    "Unmute the current chat.",
+    """
+    `.unmutechat`
+    """
+)
