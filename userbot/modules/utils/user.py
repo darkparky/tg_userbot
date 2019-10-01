@@ -13,7 +13,7 @@ from telethon.tl.custom import Message
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
-from userbot import CMD_HELP
+from ..help import add_help_item
 from userbot.events import register
 from userbot.utils import parse_arguments
 
@@ -149,17 +149,23 @@ async def fetch_info(replied_user, **kwargs):
 
     return caption
 
-
-CMD_HELP["General"].update({
-    "user":
-        "Get info about a user. \n"
-        "Usage: `.u(ser) [options] (username|id)?` \n"
-        "Options: (`.` prefix means true, `!` means false) \n"
-        "  `.id`: Show only the user's ID (default: `False`) \n"
-        "  `.general`: Show general user info (default: `True`) \n"
-        "  `.bot`: Show bot related info (default: `False`) \n"
-        "  `.misc`: Show miscelanious info (default: `False`) \n"
-        "  `.all`: Show all info (overrides other options) (default: `False`) \n"
-        "  `.mention`: Inline mention the user (default: `False`) \n"
-        "  `.forward`: Follow forwarded message (default: `True`)"
-})
+add_help_item(
+    ".user",
+    "General",
+    "List information about a particular user.",
+    """
+    `.u(ser) [options] (username|id)`
+    
+    Or, in response to a message
+    `.u(ser) [options]`
+    
+    Valid options include:
+    `.id`: Show only the user's ID (default: `False`)
+    `.general`: Show general user info (default: `True`)
+    `.bot`: Show bot related info (default: `False`)
+    `.misc`: Show miscelanious info (default: `False`)
+    `.all`: Show all info (overrides other options) (default: `False`)
+    `.mention`: Inline mention the user (default: `False`)
+    `.forward`: Follow forwarded message (default: `True`)
+    """
+)

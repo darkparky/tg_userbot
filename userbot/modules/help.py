@@ -5,9 +5,27 @@
 #
 """ Userbot help command """
 
+import textwrap
+
 from userbot.events import register
 
-CMD_HELP = {}
+CAT_ITEMS = {}
+HELP_ITEMS = {}
+
+
+def add_help_item(command, category, description, examples, keywords=None):
+    if not category in CAT_ITEMS:
+        CAT_ITEMS.update({category: []})
+
+    HELP_ITEMS.update({
+        command: {
+            "description": description,
+            "examples": examples,
+            "keywords": keywords
+        }
+    })
+
+    CAT_ITEMS[category].append(command)
 
 
 @register(outgoing=True, pattern="^.help(?: |$)(.*)")
@@ -15,27 +33,27 @@ async def show_help(event):
     """ For .help command,"""
     args = event.pattern_match.group(1)
     if args:
-        if args in CMD_HELP:
-            await event.edit(str(CMD_HELP[args]))
+        if args in HELP_ITEMS:
+            halp = HELP_ITEMS[args]
+
+            help_message = f"**{args}** \n"
+            help_message += f"{halp['description']} \n\n"
+            help_message += "**Usage:**\n"
+            help_message += textwrap.dedent(halp['examples']).strip()
+
+            await event.edit(help_message)
         else:
             await event.edit("Please specify a valid module name.")
     else:
-        await event.edit("Please specify which module do you want help for!")
-        categories = list(CMD_HELP.keys())
+        categories = list(CAT_ITEMS.keys())
         categories.sort()
 
         categorized = []
-        misc = []
-
         for cat in categories:
-            if type(CMD_HELP[cat]) == dict:
-                items = ', '.join(CMD_HELP[cat].keys())
-                message = f"**{cat}** \n"
-                message += items
-                categorized.append(message)
-            else:
-                misc.append(cat)
+            cat_items = CAT_ITEMS[cat]
+            msg =  f"**{cat}** \n"
+            msg += ' '.join(cat_items)
+            categorized.append(msg)
 
-        message = '\n \n'.join(categorized)
-        message += "\n \n **Misc** \n" + ', '.join(misc)
-        await event.reply(message)
+        message = "Please specify which module do you want help for! \n\n" + '\n\n'.join(categorized)
+        await event.edit(message)

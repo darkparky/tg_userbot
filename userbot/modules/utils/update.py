@@ -15,6 +15,7 @@ from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 
 from userbot import CMD_HELP
 from userbot.events import register
+from ..help import add_help_item
 
 
 async def gen_chlog(repo, diff):
@@ -107,6 +108,20 @@ async def upstream(ups):
     # Shut the existing one down
     exit()
 
+add_help_item(
+    ".update",
+    "Utilities",
+    "Checks if an update is available for the bot. "
+    "If an update is available, allows the bot to "
+    "be updated.",
+    """
+    To check for an update
+    `.update`
+    
+    To update the bot to the newest version
+    `.update now`
+    """
+)
 
 CMD_HELP.update({
     'update':
