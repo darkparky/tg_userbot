@@ -110,7 +110,7 @@ async def fetch_info(replied_user, **kwargs):
     full_name = str(user.first_name + ' ' + (user.last_name or ''))
 
     if mention_name:
-        title = f"**[{full_name}](tg://user?id={user.id})** \n"
+        title = f"[{full_name}](tg://user?id={user.id}) \n"
     else:
         title = f"**{full_name}** \n"
 
