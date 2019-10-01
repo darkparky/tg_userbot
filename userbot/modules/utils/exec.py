@@ -60,13 +60,13 @@ execute. Use .help exec for an example.```")
             remove("output.txt")
             return
         await event.edit("**Query: **\n`"
-                         f"{codepre}"
+                         f"{codepre.strip()} \n"
                          "`\n**Result: **\n`"
                          f"{result}"
                          "`")
     else:
         await event.edit("**Query: **\n`"
-                         f"{codepre}"
+                         f"{codepre.strip()} \n"
                          "`\n**Result: **\n`No Result Returned/False`")
 
     if BOTLOG:
