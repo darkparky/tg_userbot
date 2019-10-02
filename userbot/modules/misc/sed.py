@@ -68,15 +68,13 @@ async def sed(command):
         if textx:
             to_fix = textx.text
         else:
-            await command.edit(
-                "`Master, I don't have brains. Well you too don't I guess.`")
+            await command.edit("Sed formatting error...", delete_in=3)
             return
 
         repl, repl_with, flags = sed_result
 
         if not repl:
-            await command.edit(
-                "`Master, I don't have brains. Well you too don't I guess.`")
+            await command.edit("Sed formatting error...", delete_in=3)
             return
 
         try:
@@ -91,10 +89,10 @@ async def sed(command):
             else:
                 text = re.sub(repl, repl_with, to_fix, count=1).strip()
         except sre_err:
-            await command.edit("B O I! [Learn Regex](https://regexone.com)")
+            await command.edit(f"Regex error", delete_in=3)
             return
         if text:
-            await command.edit("Did you mean? \n\n`" + text + "`")
+            await command.edit(f"`「edit」` \n{text}")
 
 
 add_help_item(

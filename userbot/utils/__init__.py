@@ -88,8 +88,8 @@ async def get_user_from_id(user, event):
     return user_obj
 
 
-async def admins(msg):
-    adms = await msg.client.get_participants(msg.chat, filter=ChannelParticipantsAdmins)
+async def list_admins(event):
+    adms = await event.client.get_participants(event.chat, filter=ChannelParticipantsAdmins)
     adms = map(lambda x: x if not x.bot else None, adms)
     adms = [i for i in list(adms) if i]
     return adms
@@ -99,7 +99,16 @@ def make_mention(user):
     if user.username:
         return f"@{user.username}"
     else:
-        names = [user.first_name, user.last_name]
-        names = [i for i in list(names) if i]
-        full_name = ' '.join(names)
-        return f"[{full_name}](tg://user?id={user.id})"
+        return inline_mention(user)
+
+
+def inline_mention(user):
+    full_name = user_full_name(user) or "No Name"
+    return f"[{full_name}](tg://user?id={user.id})"
+
+
+def user_full_name(user):
+    names = [user.first_name, user.last_name]
+    names = [i for i in list(names) if i]
+    full_name = ' '.join(names)
+    return full_name
