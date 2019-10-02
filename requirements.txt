@@ -1,3 +1,5 @@
+git+https://github.com/LonamiWebs/Telethon.git
+git+https://github.com/bigg215/pytube.git
 Pillow>=5.3.0
 aiohttp
 cowpy
@@ -13,12 +15,10 @@ gtts>=2.0.1
 hachoir
 pybase64>=0.4.0
 python-dotenv
-git+https://github.com/bigg215/pytube.git
 pytz
 requests>=2.18.4
 speedtest-cli>=2.0.2
 telegraph
-git+https://github.com/LonamiWebs/Telethon.git
 urbandict>=0.5
 wikipedia>=1.4.0
 search-engine-parser
