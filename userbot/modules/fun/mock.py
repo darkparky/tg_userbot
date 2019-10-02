@@ -1,5 +1,6 @@
 import random
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -25,3 +26,15 @@ async def spongemocktext(mock):
             reply_text.append(charac)
 
     await mock.edit("".join(reply_text))
+
+add_help_item(
+    ".mock",
+    "Fun",
+    "Mocks the selected text like the [spongebob meme](https://knowyourmeme.com/memes/mocking-spongebob).",
+    """
+    `.mock (message)`
+    
+    Or, in reply to a message
+    `.mock`
+    """
+)

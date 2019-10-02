@@ -2,6 +2,7 @@ from telethon.errors import (UserIdInvalidError, UserAdminInvalidError,
                              ChatAdminRequiredError, BadRequestError)
 from telethon.tl.functions.channels import EditBannedRequest
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID, is_mongo_alive, is_redis_alive
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, NO_SQL, MUTE_RIGHTS
@@ -71,3 +72,16 @@ async def spider(spdr):
             Anyways muted on the userbot.
             I'll automatically delete messages
             in this chat from this person`""")
+
+
+add_help_item(
+    ".mute",
+    "Admin",
+    "Mute a user in the current chat.",
+    """
+    `.mute (username|userid)`
+    
+    Or, in reply to a user
+    `.mute`
+    """
+)

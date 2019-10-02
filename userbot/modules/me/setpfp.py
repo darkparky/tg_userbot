@@ -4,6 +4,7 @@ from telethon.errors import PhotoCropSizeSmallError, ImageProcessFailedError, Ph
 from telethon.tl.functions.photos import UploadProfilePhotoRequest
 from telethon.tl.types import MessageMediaPhoto
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 
@@ -37,3 +38,16 @@ async def set_profilepic(propic):
             await propic.edit(PP_ERROR)
         except PhotoExtInvalidError:
             await propic.edit(INVALID_MEDIA)
+
+
+add_help_item(
+    ".setpfp",
+    "Me",
+    "Set your profile pic.",
+    """
+    `.setpfp [with image]`
+    
+    Or, in response to an image
+    `.setpfp`
+    """
+)

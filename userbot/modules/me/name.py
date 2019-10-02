@@ -1,5 +1,6 @@
 from telethon.tl.functions.account import UpdateProfileRequest
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 
@@ -20,3 +21,13 @@ async def update_name(name):
 
     await bot(UpdateProfileRequest(first_name=firstname, last_name=lastname))
     await name.edit(NAME_OK)
+
+
+add_help_item(
+    ".name",
+    "Me",
+    "Change your name.",
+    """
+    `.name (first name) [last name]`
+    """
+)

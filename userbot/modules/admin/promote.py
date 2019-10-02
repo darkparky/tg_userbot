@@ -2,6 +2,7 @@ from telethon.errors import BadRequestError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, NO_PERM
@@ -29,7 +30,7 @@ async def promote(promt):
                                  delete_messages=True,
                                  pin_messages=True)
 
-    await promt.edit("`Promoting...`")
+    await promt.edit("Promoting...")
 
     user = await get_user_from_event(promt)
     if user:
@@ -55,3 +56,16 @@ async def promote(promt):
             BOTLOG_CHATID, "#PROMOTE\n"
                            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                            f"CHAT: {promt.chat.title}(`{promt.chat_id}`)")
+
+
+add_help_item(
+    ".promote",
+    "Admin",
+    "Promote the selected user.",
+    """
+    `.promote (username|userid)`
+
+    Or, in reply to a user
+    `.promote`
+    """
+)

@@ -1,5 +1,6 @@
 import random
 
+from ..help import add_help_item
 from userbot import ZALG_LIST
 from userbot.events import register
 
@@ -41,3 +42,16 @@ async def zal(zgfy):
         reply_text.append(charac)
 
     await zgfy.edit("".join(reply_text))
+
+
+add_help_item(
+    ".zal",
+    "Fun",
+    "Z̥̯a̧̖l̹͘g̵̞ò̜f̶͕y̐ͅ aͩ͞ m̩͛e͔ͧs͙͠ṡ̶a̭ͅg̶ ̾ē̸",
+    """
+    `.zal (message)`
+    
+    Or, in reply to a message
+    `.zal`
+    """
+)

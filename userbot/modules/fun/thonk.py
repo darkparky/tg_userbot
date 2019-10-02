@@ -3,6 +3,7 @@ from io import BytesIO
 
 from PIL import Image
 
+from ..help import add_help_item
 from userbot.events import register
 from userbot.utils.thonkify_dict import thonkifydict
 
@@ -56,3 +57,16 @@ async def thonkify(thonk):
         buffer.seek(0)
         await thonk.delete()
         await thonk.client.send_file(thonk.chat_id, file=buffer, reply_to=textx)
+
+
+add_help_item(
+    ".thonk",
+    "Fun",
+    "Thonkify some text (just try it).",
+    """
+    `.thonk (message)`
+    
+    Or, in reply to a message
+    `.thonk`
+    """
+)

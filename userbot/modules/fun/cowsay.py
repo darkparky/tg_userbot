@@ -1,5 +1,7 @@
 from cowpy import cow
 
+
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -17,3 +19,18 @@ async def univsaye(cowmsg):
     cheese = cheese()
 
     await cowmsg.edit(f"`{cheese.milk(text).replace('`', '´')}`")
+
+COWACTERS = [f"`{c}`" for c in cow.COWACTERS]
+add_help_item(
+    ".cowsay",
+    "Fun",
+    "Uses [cowpy](https://github.com/jeffbuttars/cowpy) to cowsay your message.",
+    f"""
+    `.(variation)say (message)`
+    
+    Example: `.cowsay Hello world`
+    
+    Variations:
+    {', '.join(COWACTERS)}
+    """
+)

@@ -1,3 +1,4 @@
+from ..help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_SQL
@@ -22,15 +23,28 @@ async def gspider(gspdr):
         return
 
     # If pass, inform and start gmuting
-    await gspdr.edit("`Grabs a huge, sticky duct tape!`")
+    await gspdr.edit("Grabbing some duct tape...")
 
     if await gmute(user.id) is False:
-        await gspdr.edit('`Error! User probably already gmuted.`')
+        await gspdr.edit('Error! User probably already gmuted.')
     else:
-        await gspdr.edit("`Globally taped!`")
+        await gspdr.edit("Globally muted!")
 
         if BOTLOG:
             await gspdr.client.send_message(
                 BOTLOG_CHATID, "#GMUTE\n"
                                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                                f"CHAT: {gspdr.chat.title}(`{gspdr.chat_id}`)")
+
+
+add_help_item(
+    ".gmute",
+    "Admin",
+    "Mute the selected user in all registered groups.",
+    """
+    `.gmute (username|userid)`
+    
+    Or, in reply to a user
+    `.gmute`
+    """
+)

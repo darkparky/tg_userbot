@@ -1,6 +1,7 @@
 import random
 import re
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -21,3 +22,16 @@ async def stretch(stret):
     reply_text = re.sub(r"([aeiouAEIOUａｅｉｏｕＡＥＩＯＵаеиоуюяыэё])", (r"\1" * count),
                         message)
     await stret.edit(reply_text)
+
+
+add_help_item(
+    ".str",
+    "Fun",
+    "Stretches vowels in a message.",
+    """
+    `.str (message)`
+    
+    Or, in reply to a message
+    `.str`
+    """
+)

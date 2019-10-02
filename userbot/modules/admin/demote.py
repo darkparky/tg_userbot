@@ -2,6 +2,7 @@ from telethon.errors import BadRequestError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.types import ChatAdminRights
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, NO_PERM
@@ -54,3 +55,15 @@ async def demote(dmod):
             BOTLOG_CHATID, "#DEMOTE\n"
                            f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                            f"CHAT: {dmod.chat.title}(`{dmod.chat_id}`)")
+
+add_help_item(
+    ".demote",
+    "Admin",
+    "Demote the targeted user.",
+    """
+    `.demote (username|userid)`
+    
+    Or, in reply to a user
+    `.demote`
+    """
+)

@@ -43,17 +43,17 @@ async def show_help(event):
 
             await event.edit(help_message)
         else:
-            await event.edit("Please specify a valid module name.")
+            await event.edit("**Please specify a valid module name.**", delete_in=3)
     else:
         categories = list(CAT_ITEMS.keys())
         categories.sort()
 
         categorized = []
         for cat in categories:
-            cat_items = [f"`{item}`" for item in CAT_ITEMS[cat]]
-            msg =  f"**{cat}** \n"
-            msg += ', '.join(cat_items)
+            cat_items = sorted(CAT_ITEMS[cat])
+            cat_items = [f"`{item}`" for item in cat_items]
+            msg = f"**{cat}** \n" + '  '.join(cat_items)
             categorized.append(msg)
 
-        message = "Please specify which module do you want help for! \n\n" + '\n\n'.join(categorized)
+        message = "**Please specify which module do you want help for!** \n\n" + '\n\n'.join(categorized)
         await event.edit(message)

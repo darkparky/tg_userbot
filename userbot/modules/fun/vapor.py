@@ -1,3 +1,4 @@
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -24,3 +25,16 @@ async def vapor(vpr):
             reply_text.append(charac)
 
     await vpr.edit("".join(reply_text))
+
+
+add_help_item(
+    ".vapor",
+    "Fun",
+    "Vaporize some text.",
+    """
+    `.vapor (message)`
+    
+    Or, in reply to a message
+    `.vapor`
+    """
+)

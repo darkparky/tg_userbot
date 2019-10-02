@@ -1,5 +1,6 @@
 import asyncio
 
+from ..help import add_help_item
 from userbot.events import register
 
 
@@ -27,3 +28,16 @@ async def typewriter(typew):
         await asyncio.sleep(sleep_time)
         await typew.edit(old_text)
         await asyncio.sleep(sleep_time)
+
+
+add_help_item(
+    ".type",
+    "Fun",
+    "Simulate a typewriter.",
+    """
+    `.type (message)`
+    
+    Or, in reply to a message
+    `.type`
+    """
+)

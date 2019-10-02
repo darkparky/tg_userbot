@@ -31,7 +31,7 @@ class UserBot(TelegramClient):
 
 Message._edit_ = Message.edit
 Message._reply_ = Message.reply
-Message._repond_ = Message.respond
+Message._respond_ = Message.respond
 
 
 async def edit(self, *args, **kwargs):

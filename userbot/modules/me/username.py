@@ -1,6 +1,7 @@
 from telethon.errors import UsernameOccupiedError, UsernameInvalidError
 from telethon.tl.functions.account import UpdateUsernameRequest
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 
@@ -20,3 +21,13 @@ async def update_username(username):
         await username.edit(USERNAME_TAKEN)
     except UsernameInvalidError:
         await username.edit(USERNAME_INVALID)
+
+
+add_help_item(
+    ".username",
+    "Me",
+    "Set your username.",
+    """
+    `.username (new username)`
+    """
+)

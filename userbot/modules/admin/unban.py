@@ -1,6 +1,7 @@
 from telethon.errors import UserIdInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, UNBAN_RIGHTS
@@ -41,3 +42,16 @@ async def nothanos(unbon):
                                f"CHAT: {unbon.chat.title}(`{unbon.chat_id}`)")
     except UserIdInvalidError:
         await unbon.edit("`Uh oh my unban logic broke!`")
+
+
+add_help_item(
+    ".unban",
+    "Admin",
+    "Unban the selected user.",
+    """
+    `.unban (username|userid)`
+
+    Or, in reply to a user
+    `.unban`
+    """
+)

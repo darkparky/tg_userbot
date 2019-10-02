@@ -1,5 +1,6 @@
 from telethon.tl.functions.account import UpdateProfileRequest
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 
@@ -12,3 +13,13 @@ async def set_biograph(setbio):
     newbio = setbio.pattern_match.group(1)
     await bot(UpdateProfileRequest(about=newbio))
     await setbio.edit(BIO_SUCCESS)
+
+
+add_help_item(
+    ".setbio",
+    "Me",
+    "Set your bio.",
+    """
+    `.setbio (content)`
+    """
+)

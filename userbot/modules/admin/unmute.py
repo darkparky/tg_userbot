@@ -1,6 +1,7 @@
 from telethon.errors import UserIdInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
 
+from ..help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, NO_SQL, UNMUTE_RIGHTS
@@ -50,3 +51,16 @@ async def unmoot(unmot):
                 BOTLOG_CHATID, "#UNMUTE\n"
                                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                                f"CHAT: {unmot.chat.title}(`{unmot.chat_id}`)")
+
+
+add_help_item(
+    ".unmute",
+    "Admin",
+    "Unmute the selected user.",
+    """
+    `.unmute (username|userid)`
+
+    Or, in reply to a user
+    `.unmute`
+    """
+)

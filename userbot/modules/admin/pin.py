@@ -1,6 +1,7 @@
 from telethon.errors import BadRequestError
 from telethon.tl.functions.messages import UpdatePinnedMessageRequest
 
+from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_ADMIN, NO_PERM
@@ -49,3 +50,14 @@ async def pin(msg):
                            f"ADMIN: [{user.first_name}](tg://user?id={user.id})\n"
                            f"CHAT: {msg.chat.title}(`{msg.chat_id}`)\n"
                            f"LOUD: {not is_silent}")
+
+
+add_help_item(
+    ".pin",
+    "Admin",
+    "Pin a message in the current group.",
+    """
+    In reply to a the message you want to pin
+    `.pin`
+    """
+)

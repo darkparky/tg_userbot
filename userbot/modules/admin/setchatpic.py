@@ -2,14 +2,15 @@ from telethon.errors import PhotoCropSizeSmallError, ImageProcessFailedError
 from telethon.tl.functions.channels import EditPhotoRequest
 from telethon.tl.types import MessageMediaPhoto
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 from userbot.modules.admin import (NO_ADMIN, INVALID_MEDIA, CHAT_PP_CHANGED, PP_TOO_SMOL, PP_ERROR)
 
 
-@register(outgoing=True, group_only=True, pattern="^.setgrouppic$")
+@register(outgoing=True, group_only=True, pattern="^.setchatpic$")
 async def set_group_photo(e):
-    """ For .setgrouppic command, changes the picture of a group """
+    """ For .setchatpic command, changes the picture of a chat """
     replymsg = await e.get_reply_message()
     chat = await e.get_chat()
     photo = None
@@ -35,3 +36,16 @@ async def set_group_photo(e):
             await e.edit(PP_TOO_SMOL)
         except ImageProcessFailedError:
             await e.edit(PP_ERROR)
+
+
+add_help_item(
+    ".setchatpic",
+    "Admin",
+    "Set the profile pic for the current chat.",
+    """
+    `.setchatpic [with an image]`
+    
+    Or, in reply to a message with an image
+    `.setchatpic`
+    """
+)

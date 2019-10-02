@@ -1,3 +1,4 @@
+from ..help import add_help_item
 from userbot.events import register
 
 PENIS_TEMPLATE = """
@@ -28,3 +29,14 @@ async def emoji_penis(e):
         message = message.replace('🍆', emoji)
 
     await e.edit(message)
+
+
+add_help_item(
+    ".penis",
+    "Fun",
+    "Creates a penis using the provided emoji, or 🍆 "
+    "if no emoji is provided.",
+    """
+    `.penis [emoji]`
+    """
+)

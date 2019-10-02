@@ -1,6 +1,7 @@
 from telethon.tl.functions.photos import GetUserPhotosRequest, DeletePhotosRequest
 from telethon.tl.types import InputPhoto
 
+from ..help import add_help_item
 from userbot import bot
 from userbot.events import register
 
@@ -31,3 +32,13 @@ async def remove_profilepic(delpfp):
     await bot(DeletePhotosRequest(id=input_photos))
     await delpfp.edit(
         f"`Successfully deleted {len(input_photos)} profile picture(s).`")
+
+
+add_help_item(
+    ".rmpfp",
+    "Me",
+    "Remove your profile pic.",
+    """
+    `.rmpfp`
+    """
+)

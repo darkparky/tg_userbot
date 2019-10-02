@@ -1,6 +1,7 @@
 import tempfile
 from io import BytesIO
 
+from ..help import add_help_item
 from userbot import FACE_API_KEY, FACE_API_URL
 from userbot.events import register
 from userbot.modules.fun import resize_photo
@@ -33,3 +34,13 @@ async def fry(message):
 
         await message.delete()
         await message.client.send_file(message.chat.id, file=temp.name, reply_to=reply_message)
+
+add_help_item(
+    ".fry",
+    "Fun",
+    "Frys the selected photo.",
+    """
+    In response to a photo
+    `.fry`
+    """
+)

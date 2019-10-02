@@ -2,28 +2,17 @@ import random
 import re
 import time
 
+from ..help import add_help_item
 from userbot.events import register
 
-UWUS = [
-    "(・`ω´・)",
-    ";;w;;",
-    "owo",
-    "UwU",
-    ">w<",
-    "^w^",
-    r"\(^o\) (/o^)/",
-    "( ^ _ ^)∠☆",
-    "(ô_ô)",
-    "~:o",
-    ";-;",
-    "(*^*)",
-    "(>_",
-    "(♥_♥)",
-    "*(^O^)*",
-    "((+_+))",
-]
+UWUS = (
+    'ÓwÓ', 'ÕwÕ', '@w@', 'ØwØ', 'øwø', 'uwu', '◕w◕', '◔w◔', 'ʘwʘ', '⓪w⓪', '(owo)',
+    '(。O ω O。)', '(。O⁄ ⁄ω⁄ ⁄ O。)', '(O ᵕ O)', '(O꒳O)', 'ღ(O꒳Oღ)', '♥(。ᅌ ω ᅌ。)', '(ʘωʘ)', '(⁄ʘ⁄ ⁄ ω⁄ ⁄ ʘ⁄)♡',
+    '( ͡o ω ͡o )', '( ͡o ᵕ ͡o )', '( ͡o ꒳ ͡o )', '( o͡ ꒳ o͡ )', '( °꒳° )', '( °ᵕ° )', '( °﹏° )', '( °ω° )',
+    '̷(ⓞ̷ ̷꒳̷ ̷ⓞ̷)', '（ ゜ω 。）'
+)
 
-FACEREACTS = [
+FACEREACTS = (
     "ʘ‿ʘ",
     "ヾ(-_- )ゞ",
     "(っ˘ڡ˘ς)",
@@ -123,7 +112,7 @@ FACEREACTS = [
     "（　ﾟДﾟ）",
     r"¯\(°_o)/¯",
     "(｡◕‿◕｡)",
-]
+)
 
 
 @register(outgoing=True, pattern="^:/$", ignore_unsafe=True)
@@ -154,8 +143,7 @@ async def faces(owo):
     elif textx:
         message = textx.text
     else:
-        await owo.edit("` UwU no text given! `")
-        return
+        message = ""
 
     reply_text = re.sub(r"([rl])", "w", message)
     reply_text = re.sub(r"([RL])", "W", reply_text)
@@ -164,7 +152,7 @@ async def faces(owo):
     reply_text = re.sub(r"!", " " + random.choice(UWUS), reply_text)
     reply_text = reply_text.replace("ove", "uv")
     reply_text += " " + random.choice(UWUS)
-    await owo.edit(reply_text)
+    await owo.edit(reply_text.strip())
 
 
 @register(outgoing=True, pattern="^.react$")
@@ -197,3 +185,40 @@ async def claptext(memereview):
     reply_text += message.replace(" ", " 👏 ")
     reply_text += " 👏"
     await memereview.edit(reply_text)
+
+
+add_help_item(
+    ".owo",
+    "Fun",
+    "UwU's you OwO",
+    """
+    `.owo [message]`
+    """
+)
+
+add_help_item(
+    ".react",
+    "Fun",
+    "React to a message.",
+    """
+    In reply to a message
+    `.react`
+    """
+)
+
+add_help_item(
+    ".shg",
+    "Fun",
+    r"¯\_(ツ)_/¯",
+    "`.shg`"
+)
+
+add_help_item(
+    ".clap",
+    "Fun",
+    "Claps for the selected message.",
+    """
+    In reply to a message
+    `.clap`
+    """
+)

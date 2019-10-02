@@ -72,16 +72,17 @@ async def get_user(event: NewMessage.Event, **kwargs):
             return None
 
     # Check for a forwarded message
-    elif reply_msg and reply_msg.forward and kwargs['forward']:
+    elif (reply_msg and
+          reply_msg.forward and
+          reply_msg.forward.sender_id and
+          kwargs['forward']):
         forward = reply_msg.forward
-        replied_user = await event.client(
-            GetFullUserRequest(forward.sender_id))
+        replied_user = await event.client(GetFullUserRequest(forward.sender_id))
 
     # Check for a replied to message
     elif event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
-        replied_user = await event.client(
-            GetFullUserRequest(previous_message.from_id))
+        replied_user = await event.client(GetFullUserRequest(previous_message.from_id))
 
     # Last case scenario is to get the current user
     else:

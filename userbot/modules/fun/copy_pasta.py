@@ -1,11 +1,12 @@
 import random
 
+from ..help import add_help_item
 from userbot.events import register
 
-EMOJIS = [
-    "😂",
+EMOJIS = (
     "😂",
     "👌",
+    "😂",
     "✌",
     "💞",
     "👍",
@@ -31,7 +32,7 @@ EMOJIS = [
     "👅",
     "😩",
     "🚰",
-]
+)
 
 
 @register(outgoing=True, pattern="^.cp(?: |$)(.*)")
@@ -66,3 +67,16 @@ async def copypasta(cp_e):
                 reply_text += owo.lower()
     reply_text += random.choice(EMOJIS)
     await cp_e.edit(reply_text)
+
+
+add_help_item(
+    ".cp",
+    "Fun",
+    "Convert text to copypasta (obnoxious).",
+    """
+    `.cp (message)`
+    
+    Or, in reply to a message
+    `.cp`
+    """
+)

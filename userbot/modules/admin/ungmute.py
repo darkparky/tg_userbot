@@ -1,3 +1,4 @@
+from ..help import add_help_item
 from userbot import is_mongo_alive, is_redis_alive, BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 from userbot.modules.admin import NO_SQL
@@ -37,3 +38,16 @@ async def ungmoot(un_gmute):
                 BOTLOG_CHATID, "#UNGMUTE\n"
                                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                                f"CHAT: {un_gmute.chat.title}(`{un_gmute.chat_id}`)")
+
+
+add_help_item(
+    ".ungmute",
+    "Admin",
+    "Stop globally muting a user.",
+    """
+    `.ungmute (username|userid)`
+
+    Or, in reply to a user
+    `.ungmute`
+    """
+)

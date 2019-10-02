@@ -1,4 +1,5 @@
 import io
+import re
 
 import spectra
 from PIL import Image
@@ -19,33 +20,33 @@ async def color_props(e):
         return
 
     if args.get('format') == 'rgb':
-        r, g, b = color.split(r",\s?")
+        r, g, b = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.rgb(r, g, b)
     elif args.get('format') == 'lab':
-        l, a, b = color.split(r",\s?")
+        l, a, b = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.lab(l, a, b)
     elif args.get('format') == 'lch':
-        l, c, h = color.split(r",\s?")
+        l, c, h = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.lch(l, c, h)
     elif args.get('format') == 'hsl':
-        h, s, l = color.split(r",\s?")
+        h, s, l = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.hsl(h, s, l)
     elif args.get('format') == 'hsv':
-        h, s, v = color.split(r",\s?")
+        h, s, v = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.hsv(h, s, v)
     elif args.get('format') == 'xyz':
-        x, y, z = color.split(r",\s?")
+        x, y, z = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.xyz(x, y, z)
     elif args.get('format') == 'cmy':
-        c, m, y = color.split(r",\s?")
+        c, m, y = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.cmy(c, m, y)
     elif args.get('format') == 'cmyk':
-        c, m, y, k = color.split(r",\s?")
+        c, m, y, k = re.findall(r'[\-.0-9]+', color)
         parsed = spectra.cmyk(c, m, y, k)
     else:
         parsed = spectra.html(color)
 
-    rgb = [round(x * 255) for x in parsed.to('rgb').rgb]
+    rgb = [round(x * 255) for x in parsed.to('rgb').clamped_rgb]
     hsl = parsed.to('hsl').values
     hsv = parsed.to('hsv').values
 
