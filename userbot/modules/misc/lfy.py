@@ -1,3 +1,5 @@
+import urllib.parse
+
 from ..help import add_help_item
 from userbot.events import register
 from userbot.utils import parse_arguments
@@ -24,21 +26,21 @@ PROVIDERS = {
 
 @register(outgoing=True, pattern=r"^.lfy([\S\s]+|$)", )
 async def let_me_google_that_for_you(e):
-    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
-        params = e.pattern_match.group(1) or ""
-        args, message = parse_arguments(params, ['source'])
+    params = e.pattern_match.group(1) or ""
+    args, message = parse_arguments(params, ['source'])
 
-        source = args.get('source', 'lmgtfy')
-        if not PROVIDERS.get(source):
-            source = 'lmgtfy'
-        provider = PROVIDERS[source]
+    source = args.get('source', 'lmgtfy')
+    provider = PROVIDERS[source]
 
-        reply_message = await e.get_reply_message()
-        query = message if message else reply_message.text
+    reply_message = await e.get_reply_message()
+    query = message if message else reply_message.text
+    query = urllib.parse.quote_plus(query)
 
-        message = provider['message']
-        url = provider['source'].format(query)
-        await e.edit(f"Hmm, [{message}]({url})")
+    message = provider['message']
+    url = provider['source'].format(query)
+
+    await e.edit(f"Hmm, [{message}]({url})")
+
 
 add_help_item(
     ".lfy",
