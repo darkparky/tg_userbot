@@ -9,7 +9,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.c(?:hat)(.*|$)")
+@register(outgoing=True, pattern="^.c(?:hat)?(.*|$)")
 async def get_chat(e):
     params = e.pattern_match.group(1) or ""
     args, _ = parse_arguments(params, ['id', 'general', 'admins', 'all'])
