@@ -20,17 +20,24 @@ PROVIDERS = {
     "bing": {
         "message": "why don't you give Bing a go?",
         "source": "https://www.bing.com/search?q={}"
+    },
+    "ecosia": {
+        "message": "try searching and planting a tree or two.",
+        "source": "https://www.ecosia.org/search?q={}"
     }
 }
 
 
 @register(outgoing=True, pattern=r"^.lfy([\S\s]+|$)", )
 async def let_me_google_that_for_you(e):
+    providers = list(PROVIDERS.keys())
     params = e.pattern_match.group(1) or ""
-    args, message = parse_arguments(params, ['source'])
+    args, message = parse_arguments(params, providers)
 
-    source = args.get('source', 'lmgtfy')
-    provider = PROVIDERS[source]
+    provider = PROVIDERS['lmgtfy']
+    for p in providers:
+        if args.get(p):
+            provider = PROVIDERS[p]
 
     reply_message = await e.get_reply_message()
     query = message if message else reply_message.text
@@ -45,11 +52,20 @@ async def let_me_google_that_for_you(e):
 add_help_item(
     ".lfy",
     "Misc",
-    "Let Me Google That for You",
-    """
-    `.lfy (query)`
+    "Uses lmgtfy or a number of other providers to "
+    "provide a passive aggressive suggestion to use "
+    "a search engine. Provider defaults to lmgtfy.",
+    f"""
+    `.lfy [provider] (query)`
     
     Or, in reply to a message
-    `.lfy`
+    `.lfy [provider]`
+    
+    Examples:
+    `.lfy .google how to use python`
+    `.lfy why am I so stupid`
+       
+    Providers:
+    {', '.join([f"`{provider}`" for provider in PROVIDERS.keys()])}
     """
 )

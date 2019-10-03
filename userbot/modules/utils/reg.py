@@ -67,7 +67,8 @@ async def call_registered_command(e):
                 f"./downloads/{name}",
                 caption=command.get('message'),
                 force_document=command.get('send_as_document'),
-                reply_to=reply_message
+                reply_to=reply_message,
+                link_preview=False
             )
         elif command.get('sticker'):
             # TODO
@@ -76,7 +77,8 @@ async def call_registered_command(e):
             await e.client.send_message(
                 e.chat_id,
                 command.get('message'),
-                reply_to=reply_message
+                reply_to=reply_message,
+                link_preview=False
             )
 
 
@@ -94,7 +96,7 @@ async def unregister_command(e):
 async def list_commands(e):
     commands = await get_commands()
     commands = [f"`{c['command']}`" for c in commands]
-    message = "**Commands** \n" + '  '.join(commands)
+    message = "**Registered Commands** \n" + ', '.join(commands)
     await e.edit(message)
 
 
@@ -112,6 +114,7 @@ async def save_file(file):
         print(name, file_stat.st_size, mime)
         with open(photo, 'rb') as file:
             minioClient.put_object(MINIO_BUCKET, name, file, file_stat.st_size, content_type=mime)
+        os.remove(photo)
         return name
     except ResponseError:
         return False
