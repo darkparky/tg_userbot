@@ -115,3 +115,45 @@ async def save_file(file):
         return name
     except ResponseError:
         return False
+
+
+add_help_item(
+    ".reg",
+    "Utils [regs]",
+    "Register a simple command which sends a message, "
+    "photo, sticker, or file of some kind.",
+    """
+    With an optional file attachment of some kind
+    `.reg [message]`,
+    
+    In reply to a message
+    `.reg`
+    """
+)
+
+add_help_item(
+    ".unreg",
+    "Utils [regs]",
+    "Unregister (delete) a registered command.",
+    """
+    `.unreg (command)`
+    """
+)
+
+add_help_item(
+    ".regs",
+    "Utils [regs]",
+    "List all registered commands.",
+    """
+    `.regs`
+    """
+)
+
+add_help_item(
+    "!!command",
+    "Utils [regs]",
+    "Call a registered command",
+    """
+    `!!(command)`
+    """
+)
