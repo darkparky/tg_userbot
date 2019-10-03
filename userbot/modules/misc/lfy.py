@@ -36,7 +36,7 @@ async def let_me_google_that_for_you(e):
         reply_message = await e.get_reply_message()
         query = message if message else reply_message.text
 
-        reply_text = f"Hmm, [{provider['message']}]({provider['source'] % query})"
+        reply_text = f"Hmm, [{provider['message']}]({provider['source'].format(query)})"
         await e.edit(reply_text, reply_to=reply_message)
 
 add_help_item(
