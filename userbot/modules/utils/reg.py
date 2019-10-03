@@ -151,12 +151,3 @@ add_help_item(
     `.regs`
     """
 )
-
-add_help_item(
-    "!!command",
-    "Utils [regs]",
-    "Call a registered command",
-    """
-    `!!(command)`
-    """
-)
