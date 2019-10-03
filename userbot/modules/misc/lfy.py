@@ -5,7 +5,7 @@ from userbot.utils import parse_arguments
 PROVIDERS = {
     "lmgtfy": {
         "message": "let me Google that for you.",
-        "source": "http://lmgtfy.com/?s=g&iie=1&q={}"
+        "source": "https://lmgtfy.com/?s=g&iie=1&q={}"
     },
     "google": {
         "message": "why don't you try Google?",
@@ -36,8 +36,9 @@ async def let_me_google_that_for_you(e):
         reply_message = await e.get_reply_message()
         query = message if message else reply_message.text
 
-        reply_text = f"Hmm, [{provider['message']}]({provider['source'].format(query)})"
-        await e.edit(reply_text)
+        message = provider['message']
+        url = provider['source'].format(query)
+        await e.edit(f"Hmm, [{message}]({url})")
 
 add_help_item(
     ".lfy",
