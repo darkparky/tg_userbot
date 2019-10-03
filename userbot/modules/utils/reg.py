@@ -49,6 +49,7 @@ async def register_command(e):
 
 @register(outgoing=True, pattern=r"^!!(\S+)")
 async def call_registered_command(e):
+    reply_message = await e.get_reply_message()
     command = e.pattern_match.group(1)
     command = await get_command(command)
 
@@ -65,7 +66,8 @@ async def call_registered_command(e):
                 e.chat_id,
                 f"./downloads/{name}",
                 caption=command.get('message'),
-                force_document=command.get('send_as_document')
+                force_document=command.get('send_as_document'),
+                reply_to=reply_message
             )
         elif command.get('sticker'):
             # TODO
@@ -73,7 +75,8 @@ async def call_registered_command(e):
         else:
             await e.client.send_message(
                 e.chat_id,
-                command.get('message')
+                command.get('message'),
+                reply_to=reply_message
             )
 
 
