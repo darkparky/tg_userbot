@@ -31,7 +31,7 @@ async def let_me_google_that_for_you(e):
         source = args.get('source', 'lmgtfy')
         if not PROVIDERS.get(source):
             source = 'lmgtfy'
-        provider = PROVIDERS['source']
+        provider = PROVIDERS[source]
 
         reply_message = await e.get_reply_message()
         query = message if message else reply_message.text
