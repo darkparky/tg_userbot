@@ -494,3 +494,52 @@ async def delete_sub(name):
         })
 
         return True
+
+
+async def get_command(command):
+    return MONGO.commands.find_one({'command': command})
+
+
+async def get_commands():
+    return MONGO.commands.find()
+
+
+async def add_command(
+        command,
+        message=None,
+        attachment=None,
+        sticker=None,
+        send_as_document=False):
+    to_check = await get_command(command)
+
+    if to_check:
+        return MONGO.commands.update_one({
+            '_id': to_check['_id'],
+            'command': to_check['command']
+        }, {"$set": {
+            'message': message,
+            'attachment': attachment,
+            'sticker': sticker,
+            'send_as_document': send_as_document
+        }})
+    else:
+        return MONGO.commands.insert_one({
+            'command': command,
+            'message': message,
+            'attachment': attachment,
+            'sticker': sticker,
+            'send_as_document': send_as_document,
+        })
+
+
+async def delete_command(command):
+    to_check = MONGO.commands.find({'command': command})
+
+    if not to_check:
+        return False
+    else:
+        MONGO.commands.delete_one({
+            'command': command
+        })
+        return True
+

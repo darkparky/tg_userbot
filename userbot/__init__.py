@@ -14,6 +14,7 @@ import pylast
 import redis
 from dotenv import load_dotenv
 from github import Github
+from minio import Minio
 from pymongo import MongoClient
 
 from userbot.client import UserBot
@@ -152,6 +153,18 @@ def is_redis_alive():
     except BaseException:
         return False
 
+
+MINIO_HOST = os.environ.get('MINIO_HOST', None)
+MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY', None)
+MINIO_SECRET_KEY = os.environ.get('MINIO_SECRET_KEY', None)
+MINIO_BUCKET = os.environ.get('MINIO_BUCKET', None)
+
+minioClient = Minio(
+    MINIO_HOST,
+    access_key=MINIO_ACCESS_KEY,
+    secret_key=MINIO_SECRET_KEY,
+    secure=True
+)
 
 # Global Variables
 COUNT_MSG = 0
