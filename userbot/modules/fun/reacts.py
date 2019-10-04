@@ -133,7 +133,7 @@ async def lol(lel):
         await lel.edit(okay)
 
 
-@register(outgoing=True, pattern="^.owo(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.owo(?: |$)(.*)")
 async def faces(owo):
     """ UwU """
     textx = await owo.get_reply_message()
@@ -155,7 +155,7 @@ async def faces(owo):
     await owo.edit(reply_text.strip())
 
 
-@register(outgoing=True, pattern="^.react$")
+@register(outgoing=True, pattern=r"^\.react$")
 async def react_meme(react):
     """ Make your userbot react to everything. """
     index = random.randint(0, len(FACEREACTS))
@@ -163,13 +163,13 @@ async def react_meme(react):
     await react.edit(reply_text)
 
 
-@register(outgoing=True, pattern="^.shg$")
+@register(outgoing=True, pattern=r"^\.shg$")
 async def shrugger(shg):
     r""" ¯\_(ツ)_/¯ """
     await shg.edit(r"¯\_(ツ)_/¯")
 
 
-@register(outgoing=True, pattern="^.clap(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.clap(?: |$)(.*)")
 async def claptext(memereview):
     """ Praise people! """
     textx = await memereview.get_reply_message()

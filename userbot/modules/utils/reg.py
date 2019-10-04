@@ -11,7 +11,7 @@ from userbot import minioClient, MINIO_BUCKET, bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.reg (\S+)([\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.reg (\S+)([\S\s]+|$)")
 async def register_command(e):
     reply_message = await e.get_reply_message()
     command = e.pattern_match.group(1)
@@ -82,7 +82,7 @@ async def call_registered_command(e):
             )
 
 
-@register(outgoing=True, pattern=r"^.unreg (\S+)")
+@register(outgoing=True, pattern=r"^\.unreg (\S+)")
 async def unregister_command(e):
     command = e.pattern_match.group(1)
 
@@ -92,7 +92,7 @@ async def unregister_command(e):
         await e.edit(f"Command `{command}` doesn't seem to exist", delete_in=3)
 
 
-@register(outgoing=True, pattern=r"^.regs$")
+@register(outgoing=True, pattern=r"^\.regs$")
 async def list_commands(e):
     commands = await get_commands()
     commands = [f"`{c['command']}`" for c in commands]

@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import get_list, add_list
 from . import DB_FAILED, CHK_HELP, LIST_NOT_FOUND
 
 
-@register(outgoing=True, pattern=r"^.rmlistitem ?(\w*)? ([0-9]+)")
+@register(outgoing=True, pattern=r"^\.rmlistitem ?(\w*)? ([0-9]+)")
 async def rmlistitems(event):
     """ For .rmlistitem command, remove an item from the list. """
     if not is_mongo_alive() or not is_redis_alive():

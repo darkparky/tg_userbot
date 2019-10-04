@@ -8,7 +8,7 @@ from userbot.modules.admin import NO_ADMIN, NO_PERM
 from userbot.utils import get_user_from_id
 
 
-@register(outgoing=True, group_only=True, pattern="^.pin(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.pin(?: |$)(.*)")
 async def pin(msg):
     # Admin or creator check
     chat = await msg.get_chat()

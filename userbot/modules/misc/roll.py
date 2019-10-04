@@ -5,7 +5,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.roll\s+(.*)")
+@register(outgoing=True, pattern=r"^\.roll\s+(.*)")
 async def roll_20(e):
     params = e.pattern_match.group(1)
     patterns = re.split(r"\s+", params)

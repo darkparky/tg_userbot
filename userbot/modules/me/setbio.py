@@ -7,7 +7,7 @@ from userbot.events import register
 BIO_SUCCESS = "```Successfully edited Bio.```"
 
 
-@register(outgoing=True, pattern="^.setbio (.*)")
+@register(outgoing=True, pattern=r"^\.setbio (.*)")
 async def set_biograph(setbio):
     """ For .setbio command, set a new bio for your profile in Telegram. """
     newbio = setbio.pattern_match.group(1)

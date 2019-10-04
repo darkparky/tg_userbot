@@ -10,7 +10,7 @@ from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.purge$")
+@register(outgoing=True, pattern=r"^\.purge$")
 async def fastpurger(purg):
     """ For .purge command, purge all messages starting from the reply. """
     chat = await purg.get_input_chat()
@@ -41,7 +41,7 @@ async def fastpurger(purg):
             "Purge of " + str(count) + " messages done successfully.")
 
 
-@register(outgoing=True, pattern=r"^.purgeme\s?([0-9]+|all)?")
+@register(outgoing=True, pattern=r"^\.purgeme\s?([0-9]+|all)?")
 async def purgeme(delme):
     """ For .purgeme, delete x count of your latest message."""
     count = delme.pattern_match.group(1)

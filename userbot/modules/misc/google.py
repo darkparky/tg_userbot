@@ -6,7 +6,7 @@ from userbot.events import register
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^.google(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.google(?: |$)(.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
     reply_message = await q_event.get_reply_message()

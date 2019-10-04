@@ -5,7 +5,7 @@ from userbot import ZALG_LIST
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.zal(?:go)?(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.zal(?:go)?(?: |$)(.*)")
 async def zal(zgfy):
     """ Invoke the feeling of chaos. """
     reply_text = list()

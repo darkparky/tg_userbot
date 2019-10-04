@@ -5,7 +5,7 @@ from userbot import github
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.gist\s+([\S]+)\s+([\S\s]+)")
+@register(outgoing=True, pattern=r"^\.gist\s+([\S]+)\s+([\S\s]+)")
 async def create_gist(e):
     if not github:
         await e.edit("Github information has not been set up", delete_in=3)

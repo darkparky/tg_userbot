@@ -4,7 +4,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.ping$")
+@register(outgoing=True, pattern=r"^\.ping$")
 async def ping(pong):
     """ For .ping command, ping the userbot from any chat.  """
     start = datetime.now()

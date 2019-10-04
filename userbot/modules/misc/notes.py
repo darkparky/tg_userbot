@@ -11,7 +11,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import add_note, delete_note, get_note, get_notes
 
 
-@register(outgoing=True, pattern=r"^.notes$")
+@register(outgoing=True, pattern=r"^\.notes$")
 async def notes_active(event):
     """ List all of the notes saved in a chat. """
     if not is_mongo_alive() or not is_redis_alive():
@@ -30,7 +30,7 @@ async def notes_active(event):
     await event.edit(message)
 
 
-@register(outgoing=True, pattern=r"^.delnote (.*)")
+@register(outgoing=True, pattern=r"^\.delnote (.*)")
 async def remove_notes(event):
     """Deletes the note with the given name"""
     if not is_mongo_alive() or not is_redis_alive():

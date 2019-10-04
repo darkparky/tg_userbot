@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import get_list
 from . import CHK_HELP, LIST_HEADER
 
 
-@register(pattern=r"^.getlist ?(\w*)?")
+@register(pattern=r"^\.getlist ?(\w*)?")
 async def getlist_logic(event):
     """ For .getlist, get the list by the name. """
     if not (await event.get_sender()).bot:

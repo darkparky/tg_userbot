@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import ungmute
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.ungmute(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.ungmute(?: |$)(.*)")
 async def ungmoot(un_gmute):
     """ For .ungmute command, ungmutes the target in the userbot """
     # Admin or creator check

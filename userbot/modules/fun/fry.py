@@ -8,7 +8,7 @@ from userbot.modules.fun import resize_photo
 from userbot.utils.deepfryer import deepfry
 
 
-@register(outgoing=True, pattern="^.fry")
+@register(outgoing=True, pattern=r"^\.fry")
 async def fry(message):
     """ For .fry command, fries stickers or creates new ones. """
     reply_message = await message.get_reply_message()

@@ -7,7 +7,7 @@ from userbot.events import register
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^.grep(?:\s+)([\S\s]+)")
+@register(outgoing=True, pattern=r"^\.grep(?:\s+)([\S\s]+)")
 async def grep_messages(e):
     params = e.pattern_match.group(1)
     args, pattern = parse_arguments(params, [

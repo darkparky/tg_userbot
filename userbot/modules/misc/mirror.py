@@ -30,7 +30,7 @@ from userbot.events import register
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./")
 
 
-@register(pattern=r"^.mirror(?:\s+|$)([\s\S]*)", outgoing=True)
+@register(pattern=r"^\.mirror(?:\s+|$)([\s\S]*)", outgoing=True)
 async def gdrive_mirror(request):
     """ Download a file and upload to Google Drive """
     message = request.pattern_match.group(1)

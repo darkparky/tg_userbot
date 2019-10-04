@@ -8,7 +8,7 @@ from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.ud (.*)")
+@register(outgoing=True, pattern=r"^\.ud (.*)")
 async def urban_dict(ud_e):
     """ For .ud command, fetch content from Urban Dictionary. """
     await ud_e.edit("Processing...")

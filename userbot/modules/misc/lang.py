@@ -2,7 +2,7 @@ from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
-@register(pattern="^.lang (.*)", outgoing=True)
+@register(pattern=r"^\.lang (.*)", outgoing=True)
 async def lang(value):
     """ For .lang command, change the default langauge of userbot scrapers. """
     global LANG

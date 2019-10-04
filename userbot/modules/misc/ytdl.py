@@ -10,7 +10,7 @@ from userbot.events import register
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^.ytdl (.*)")
+@register(outgoing=True, pattern=r"^\.ytdl (.*)")
 async def download_video(v_url):
     """ For .ytdl command, download videos from YouTube. """
     query = v_url.pattern_match.group(1)

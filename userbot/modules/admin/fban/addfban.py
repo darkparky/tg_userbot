@@ -3,7 +3,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import add_chat_fban
 
 
-@register(outgoing=True, pattern="^.addfban")
+@register(outgoing=True, pattern=r"^\.addfban")
 async def add_to_fban(chat):
     if not is_mongo_alive() or not is_redis_alive():
         await chat.edit("`Database connections failing!`")

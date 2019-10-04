@@ -8,7 +8,7 @@ from userbot.events import register
 from userbot.modules.admin import BANNED_RIGHTS, UNBAN_RIGHTS
 
 
-@register(outgoing=True, group_only=True, pattern="^.clean(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.clean(?: |$)(.*)")
 async def rm_deletedacc(show):
     """ For .clean command, clean deleted accounts. """
     con = show.pattern_match.group(1)

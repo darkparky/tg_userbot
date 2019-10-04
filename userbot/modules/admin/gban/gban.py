@@ -7,7 +7,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import get_gban
 
 
-@register(outgoing=True, pattern="^.gban")
+@register(outgoing=True, pattern=r"^\.gban")
 async def gban_all(msg):
     if not is_mongo_alive() or not is_redis_alive():
         await msg.edit("`Database connections failing!`")

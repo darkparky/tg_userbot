@@ -9,7 +9,7 @@ from userbot.modules.admin import NO_ADMIN, NO_PERM
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.demote(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.demote(?: |$)(.*)")
 async def demote(dmod):
     """ For .demote command, do demote targeted person """
     # Admin right check

@@ -5,7 +5,7 @@ from userbot import CURRENCY_API
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.cr (\S*) ?(\S*) ?(\S*)")
+@register(outgoing=True, pattern=r"^\.cr (\S*) ?(\S*) ?(\S*)")
 async def currency(cconvert):
     """ For .cr command, convert amount, from, to. """
     amount = cconvert.pattern_match.group(1)

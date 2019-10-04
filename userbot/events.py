@@ -30,9 +30,6 @@ def register(**args):
     if "disable_edited" in args:
         del args['disable_edited']
 
-    if "ignore_unsafe" in args:
-        del args['ignore_unsafe']
-
     if "group_only" in args:
         del args['group_only']
 

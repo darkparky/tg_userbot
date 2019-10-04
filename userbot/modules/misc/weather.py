@@ -39,7 +39,7 @@ async def get_tz(con):
         return
 
 
-@register(outgoing=True, pattern="^.weather(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.weather(?: |$)(.*)")
 async def fetch_weather(weather):
     """ For .weather command, gets the current weather of a city. """
     if len(OWM_API) < 1:
@@ -136,7 +136,7 @@ async def fetch_weather(weather):
         f"`{cityname}, {fullc_n}`\n" + f"`{time}`")
 
 
-@register(outgoing=True, pattern="^.setcity(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.setcity(?: |$)(.*)")
 async def set_default_city(city):
     """ For .setcity command, change the default
         city for weather command. """

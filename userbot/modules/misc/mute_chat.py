@@ -11,7 +11,7 @@ from userbot import (BOTLOG, BOTLOG_CHATID, CMD_HELP, MONGO, is_mongo_alive,
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.unmutechat$")
+@register(outgoing=True, pattern=r"^\.unmutechat$")
 async def unmute_chat(unm_e):
     """ For .unmutechat command, unmute a muted chat. """
     if not is_mongo_alive() or not is_redis_alive():
@@ -21,7 +21,7 @@ async def unmute_chat(unm_e):
     await unm_e.edit("```Unmuted this chat Successfully```")
 
 
-@register(outgoing=True, pattern="^.mutechat$")
+@register(outgoing=True, pattern=r"^\.mutechat$")
 async def mute_chat(mute_e):
     """ For .mutechat command, mute any chat. """
     if not is_mongo_alive() or not is_redis_alive():

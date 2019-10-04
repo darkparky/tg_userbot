@@ -11,7 +11,7 @@ from userbot.modules.admin import NO_ADMIN, KICK_RIGHTS, NO_PERM
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.kick(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.kick(?: |$)(.*)")
 async def kick(usr):
     """ For .kick command, kick someone from the group using the userbot. """
     # Admin or creator check

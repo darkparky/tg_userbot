@@ -24,7 +24,7 @@ def progress(current, total):
                                                      (current / total) * 100))
 
 
-@register(pattern=r"^.getqr$", outgoing=True)
+@register(pattern=r"^\.getqr$", outgoing=True)
 async def parseqr(qr_e):
     """ For .getqr command, get QR Code content from the replied photo. """
     if qr_e.fwd_from:
@@ -45,7 +45,7 @@ async def parseqr(qr_e):
         duration, qr_contents))
 
 
-@register(pattern=r"^.makeqr(?:\s+|$)([\s\S]*)", outgoing=True)
+@register(pattern=r"^\.makeqr(?:\s+|$)([\s\S]*)", outgoing=True)
 async def make_qr(qrcode):
     """ For .makeqr command, make a QR Code containing the given content. """
     if qrcode.fwd_from:

@@ -9,7 +9,7 @@ from userbot.events import register
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern="^.yt (.*)")
+@register(outgoing=True, pattern=r"^\.yt (.*)")
 async def yt_search(video_q):
     """ For .yt command, do a YouTube search from Telegram. """
     query = video_q.pattern_match.group(1)

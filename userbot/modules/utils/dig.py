@@ -4,7 +4,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.d(?:ig)? (\S+)")
+@register(outgoing=True, pattern=r"^\.d(?:ig)? (\S+)")
 async def dig_dns(dig):
     resolver = Resolver()
     host = dig.pattern_match.group(1)

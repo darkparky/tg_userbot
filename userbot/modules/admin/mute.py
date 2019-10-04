@@ -10,7 +10,7 @@ from userbot.modules.dbhelper import mute
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.mute(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.mute(?: |$)(.*)")
 async def spider(spdr):
     """
     This function is basically muting peeps

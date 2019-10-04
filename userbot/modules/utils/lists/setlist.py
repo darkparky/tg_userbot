@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import get_list, set_list
 from . import DB_FAILED, CHK_HELP
 
 
-@register(outgoing=True, pattern=r"^.setlist ?(\w*)? (global|local)")
+@register(outgoing=True, pattern=r"^\.setlist ?(\w*)? (global|local)")
 async def setliststate(event):
     """ For .setlist command, changes the state of a list. """
     if not is_mongo_alive() or not is_redis_alive():

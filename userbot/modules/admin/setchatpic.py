@@ -8,7 +8,7 @@ from userbot.events import register
 from userbot.modules.admin import (NO_ADMIN, INVALID_MEDIA, CHAT_PP_CHANGED, PP_TOO_SMOL, PP_ERROR)
 
 
-@register(outgoing=True, group_only=True, pattern="^.setchatpic$")
+@register(outgoing=True, group_only=True, pattern=r"^\.setchatpic$")
 async def set_group_photo(e):
     """ For .setchatpic command, changes the picture of a chat """
     replymsg = await e.get_reply_message()

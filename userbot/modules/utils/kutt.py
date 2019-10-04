@@ -10,7 +10,7 @@ from userbot.utils import parse_arguments, extract_urls
 API_ENDPOINT = "https://kutt.it/api/"
 
 
-@register(outgoing=True, pattern=r"^.kutt\s?([\S\s]+)?")
+@register(outgoing=True, pattern=r"^\.kutt\s?([\S\s]+)?")
 async def kutt_it(e):
     reply_message = await e.get_reply_message()
     params = e.pattern_match.group(1) or ""

@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import gmute
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.gmute(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.gmute(?: |$)(.*)")
 async def gspider(gspdr):
     """ For .gmute command, gmutes the target in the userbot """
     # Admin or creator check

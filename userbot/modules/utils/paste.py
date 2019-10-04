@@ -15,7 +15,7 @@ from userbot.events import register
 DOGBIN_URL = "https://del.dog/"
 
 
-@register(outgoing=True, pattern=r"^.paste(?: |$)([\s\S]*)?")
+@register(outgoing=True, pattern=r"^\.paste(?: |$)([\s\S]*)?")
 async def paste(pstl):
     """ For .paste command, allows using
         dogbin functionality with the command. """

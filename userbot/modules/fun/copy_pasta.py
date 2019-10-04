@@ -35,7 +35,7 @@ EMOJIS = (
 )
 
 
-@register(outgoing=True, pattern="^.cp(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.cp(?: |$)(.*)")
 async def copypasta(cp_e):
     """ Copypasta the famous meme """
     textx = await cp_e.get_reply_message()

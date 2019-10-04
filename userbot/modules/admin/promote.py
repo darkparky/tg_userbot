@@ -9,7 +9,7 @@ from userbot.modules.admin import NO_ADMIN, NO_PERM
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.promote(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.promote(?: |$)(.*)")
 async def promote(promt):
     """ For .promote command, do promote targeted person """
     # Get targeted chat

@@ -4,7 +4,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import get_filters
 
 
-@register(outgoing=True, pattern="^.filters$")
+@register(outgoing=True, pattern=r"^\.filters$")
 async def filters_active(event):
     """ For .filters command, lists all of the active filters in a chat. """
     if not is_mongo_alive() or not is_redis_alive():

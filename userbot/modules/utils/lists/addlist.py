@@ -4,7 +4,7 @@ from userbot.modules.dbhelper import add_list
 from . import DB_FAILED
 
 
-@register(outgoing=True, pattern=r"^.add(g)?list (\w*)")
+@register(outgoing=True, pattern=r"^\.add(g)?list (\w*)")
 async def addlist(event):
     """ For .add(g)list command, saves lists in a chat. """
     if not is_mongo_alive() or not is_redis_alive():

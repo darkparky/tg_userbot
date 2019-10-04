@@ -5,24 +5,24 @@ from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.eval(?:\s+|$)([\S\s]+)")
-async def evaluate(query):
+@register(outgoing=True, pattern=r"^\.eval(?:\s+|$)([\S\s]+)")
+async def evaluate(e):
     """ For .eval command, evaluates the given Python expression. """
-    reply_message = await query.get_reply_message()
-    if query.is_channel and not query.is_group:
-        await query.edit("`Eval isn't permitted on channels`")
+    reply = await e.get_reply()
+    if e.is_channel and not e.is_group:
+        await e.edit("`Eval isn't permitted on channels`")
         return
 
-    if query.pattern_match.group(1):
-        expression = query.pattern_match.group(1)
-    elif reply_message:
-        expression = reply_message.text
+    if e.pattern_match.group(1):
+        expression = e.pattern_match.group(1)
+    elif reply:
+        expression = reply.text
     else:
-        await query.edit("``` Give an expression to evaluate. ```")
+        await e.edit("``` Give an expression to evaluate. ```")
         return
 
     if expression in ("userbot.session", "config.env"):
-        await query.edit("`That's a dangerous operation! Not Permitted!`")
+        await e.edit("`That's a dangerous operation! Not Permitted!`")
         return
 
     try:
@@ -33,33 +33,34 @@ async def evaluate(query):
                     file = open("output.txt", "w+")
                     file.write(evaluation)
                     file.close()
-                    await query.client.send_file(
-                        query.chat_id,
+                    await e.client.send_file(
+                        e.chat_id,
                         "output.txt",
-                        reply_to=query.id,
+                        reply_to=e.id,
                         caption="`Output too large, sending as file`",
                     )
                     remove("output.txt")
                     return
-                await query.edit("**Query: **\n`"
-                                 f"{expression}"
-                                 "`\n**Result: **\n`"
-                                 f"{evaluation}"
-                                 "`")
-        else:
-            await query.edit("**Query: **\n`"
+                await e.edit("**Query: **\n`"
                              f"{expression}"
-                             "`\n**Result: **\n`No Result Returned/False`")
-    except Exception as err:
-        await query.edit("**Query: **\n`"
+                             "`\n**Result: **\n`"
+                             f"{evaluation}"
+                             "`")
+        else:
+            await e.edit("**Query: **\n`"
                          f"{expression}"
-                         "`\n**Exception: **\n"
-                         f"`{err}`")
+                         "`\n**Result: **\n`No Result Returned/False`")
+    except Exception as err:
+        await e.edit("**Query: **\n`"
+                     f"{expression}"
+                     "`\n**Exception: **\n"
+                     f"`{err}`")
 
     if BOTLOG:
-        await query.client.send_message(
+        await e.client.send_message(
             BOTLOG_CHATID,
             f"Eval query {expression} was executed successfully")
+
 
 add_help_item(
     ".eval",

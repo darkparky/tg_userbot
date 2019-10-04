@@ -5,7 +5,7 @@ from userbot import bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.kickme$")
+@register(outgoing=True, pattern=r"^\.kickme$")
 async def kickme(leave):
     """ Basically it's .kickme command """
     await leave.edit("`Nope, no, no, I go away`")

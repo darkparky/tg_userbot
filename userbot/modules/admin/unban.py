@@ -8,7 +8,7 @@ from userbot.modules.admin import NO_ADMIN, UNBAN_RIGHTS
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.unban(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.unban(?: |$)(.*)")
 async def nothanos(unbon):
     """ For .unban command, unban the target """
     # Here laying the sanity check

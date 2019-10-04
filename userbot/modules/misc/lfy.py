@@ -28,7 +28,7 @@ PROVIDERS = {
 }
 
 
-@register(outgoing=True, pattern=r"^.lfy([\S\s]+|$)", )
+@register(outgoing=True, pattern=r"^\.lfy([\S\s]+|$)", )
 async def let_me_google_that_for_you(e):
     providers = list(PROVIDERS.keys())
     params = e.pattern_match.group(1) or ""

@@ -8,7 +8,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.ytmp3 (\S*)")
+@register(outgoing=True, pattern=r"^\.ytmp3 (\S*)")
 async def youtube_mp3(yt):
     reply_message = await yt.get_reply_message()
     url = yt.pattern_match.group(1)

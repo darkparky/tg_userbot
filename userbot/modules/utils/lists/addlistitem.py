@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import get_list, add_list
 from . import DB_FAILED, CHK_HELP, LIST_NOT_FOUND
 
 
-@register(outgoing=True, pattern=r"^.addlistitem(s)? ?(\w*)\n((.|\n*)*)")
+@register(outgoing=True, pattern=r"^\.addlistitem(s)? ?(\w*)\n((.|\n*)*)")
 async def add_list_items(e):
     """ For .addlistitems command, add item(s) to a list. """
     if not is_mongo_alive() or not is_redis_alive():

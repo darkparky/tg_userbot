@@ -4,7 +4,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.b64\s+(en|de)(?:\s+(.*))?")
+@register(outgoing=True, pattern=r"^\.b64\s+(en|de)(?:\s+(.*))?")
 async def endecrypt(query):
     """ For .b64 command, find the base64 encoding of the given string. """
     reply_message = await query.get_reply_message()

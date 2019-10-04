@@ -10,7 +10,7 @@ USERNAME_TAKEN = "```This username is already taken.```"
 USERNAME_INVALID = "```Nobody is using this username, or the username is unacceptable. If the latter, it must match r\"[a-zA-Z][\w\d]{3,30}[a-zA-Z\d]\"```"
 
 
-@register(outgoing=True, pattern="^.username (.*)")
+@register(outgoing=True, pattern=r"^\.username (.*)")
 async def update_username(username):
     """ For .username command, set a new username in Telegram. """
     newusername = username.pattern_match.group(1)

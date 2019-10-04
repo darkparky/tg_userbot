@@ -5,7 +5,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.str(?:etch)?(?: |$)(.*)")
+@register(outgoing=True, pattern=r"^\.str(?:etch)?(?: |$)(.*)")
 async def stretch(stret):
     """ Stretch it."""
     textx = await stret.get_reply_message()

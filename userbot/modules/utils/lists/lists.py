@@ -4,7 +4,7 @@ from userbot.modules.dbhelper import get_lists, get_list
 from . import NO_LISTS, DB_FAILED, LIST_HEADER, CHK_HELP
 
 
-@register(outgoing=True, pattern="^.lists$")
+@register(outgoing=True, pattern=r"^\.lists$")
 async def lists_active(event):
     """ For .lists command, list all of the lists saved in a chat. """
     if not is_mongo_alive() or not is_redis_alive():

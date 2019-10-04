@@ -3,7 +3,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import add_chat_gban
 
 
-@register(outgoing=True, pattern="^.addgban")
+@register(outgoing=True, pattern=r"^\.addgban")
 async def add_to_gban(chat):
     if not is_mongo_alive() or not is_redis_alive():
         await chat.edit("`Database connections failing!`")

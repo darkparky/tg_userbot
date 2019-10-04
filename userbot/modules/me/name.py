@@ -7,7 +7,7 @@ from userbot.events import register
 NAME_OK = "```Your name was successfully changed.```"
 
 
-@register(outgoing=True, pattern="^.name")
+@register(outgoing=True, pattern=r"^\.name")
 async def update_name(name):
     """ For .name command, change your name in Telegram. """
     newname = name.text[6:]

@@ -5,7 +5,7 @@ from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.restart$")
+@register(outgoing=True, pattern=r"^\.restart$")
 async def knocksomesense(event):
     await event.edit("`Hold tight! I just need a second to be back up....`")
     if BOTLOG:

@@ -5,7 +5,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.hash ([a-zA-z0-9]+)(?:\s+(.*))?")
+@register(outgoing=True, pattern=r"^\.hash ([a-zA-z0-9]+)(?:\s+(.*))?")
 async def gethash(hash_q):
     """ For .hash command, find the md5,
         sha1, sha256, sha512 of the string. """

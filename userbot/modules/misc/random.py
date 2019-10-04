@@ -3,7 +3,7 @@ from random import randint
 from userbot.events import register
 
 
-@register(outgoing=True, pattern="^.rand(?:om)? (.*)")
+@register(outgoing=True, pattern=r"^\.rand(?:om)? (.*)")
 async def randomise(items):
     """ For .random command, get a random item from the list of items. """
     itemo = items.pattern_match.group(1).split()

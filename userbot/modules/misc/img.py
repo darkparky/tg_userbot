@@ -8,7 +8,7 @@ from userbot.events import register
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^.img\s+(.*)")
+@register(outgoing=True, pattern=r"^\.img\s+(.*)")
 async def img_sampler(event):
     """ For .img command, search and return images matching the query. """
     await event.edit("Processing query...")

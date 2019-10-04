@@ -6,7 +6,7 @@ from userbot import bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.rmpfp")
+@register(outgoing=True, pattern=r"^\.rmpfp")
 async def remove_profilepic(delpfp):
     """ For .rmpfp command, delete your current
         profile picture in Telegram. """

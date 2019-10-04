@@ -6,7 +6,7 @@ from userbot.modules.dbhelper import get_list, delete_list
 from . import DB_FAILED, CHK_HELP
 
 
-@register(outgoing=True, pattern=r"^.rmlist ?(\w*)")
+@register(outgoing=True, pattern=r"^\.rmlist ?(\w*)")
 async def removelists(event):
     """ For .rmlist command, delete list with the given name."""
     if not is_mongo_alive() or not is_redis_alive():

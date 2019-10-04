@@ -9,7 +9,7 @@ from userbot.utils import parse_arguments
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.color\s+(.*)")
+@register(outgoing=True, pattern=r"^\.color\s+(.*)")
 async def color_props(e):
     params = e.pattern_match.group(1) or ""
     args, color = parse_arguments(params, ['format', 'extended'])

@@ -3,7 +3,7 @@ from userbot.events import register
 from userbot.utils import list_admins, make_mention
 
 
-@register(outgoing=True, pattern="^.admins?")
+@register(outgoing=True, pattern=r"^\.admins?")
 async def notif_admins(msg):
     mentions = map(make_mention, await list_admins(msg))
     response = ' '.join(mentions)

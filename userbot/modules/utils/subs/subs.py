@@ -5,7 +5,7 @@ from userbot.modules.dbhelper import get_subs
 from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^.subs\s?(.*)?$")
+@register(outgoing=True, pattern=r"^\.subs\s?(.*)?$")
 async def list_subscriptions(event):
     if not is_mongo_alive() or not is_redis_alive():
         await event.edit("`Database connections failing!`", delete_in=3)

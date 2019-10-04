@@ -121,7 +121,7 @@ async def auto_accept(event):
                         )
 
 
-@register(outgoing=True, pattern="^.pm notifoff$")
+@register(outgoing=True, pattern=r"^\.pm notifoff$")
 async def notifoff(noff_event):
     """ For .notifoff command, stop getting
         notifications from unapproved PMs. """
@@ -131,7 +131,7 @@ async def notifoff(noff_event):
         return await noff_event.edit("`Notifications silenced!`")
 
 
-@register(outgoing=True, pattern="^.pm notifon$")
+@register(outgoing=True, pattern=r"^\.pm notifon$")
 async def notifon(non_event):
     """ For .notifoff command, get notifications from unapproved PMs. """
     if await notif_on() is False:
@@ -140,7 +140,7 @@ async def notifon(non_event):
         return await non_event.edit("`Notifications unmuted!`")
 
 
-@register(outgoing=True, pattern="^.pm approve$")
+@register(outgoing=True, pattern=r"^\.pm approve$")
 async def approvepm(apprvpm):
     """ For .approve command, give someone the permissions to PM you. """
     if not is_mongo_alive() or not is_redis_alive():
@@ -171,7 +171,7 @@ async def approvepm(apprvpm):
             )
 
 
-@register(outgoing=True, pattern="^.pm block$")
+@register(outgoing=True, pattern=r"^\.pm block$")
 async def blockpm(block):
     """ For .pm block command, block people from PMing you! """
     if not is_mongo_alive() or not is_redis_alive():
@@ -205,7 +205,7 @@ async def blockpm(block):
             )
 
 
-@register(outgoing=True, pattern="^.pm unblock$")
+@register(outgoing=True, pattern=r"^\.pm unblock$")
 async def unblockpm(unblock):
     """ For .pm unblock command, let people PMing you again! """
     if unblock.reply_to_msg_id:

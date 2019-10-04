@@ -2,7 +2,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.sd ([0-9]+) ([\S\s]+)")
+@register(outgoing=True, pattern=r"^\.sd ([0-9]+) ([\S\s]+)")
 async def selfdestruct(destroy):
     """ For .sd command, make self-destructable messages. """
     seconds = int(destroy.pattern_match.group(1))

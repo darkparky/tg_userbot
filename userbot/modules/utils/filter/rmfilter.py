@@ -4,7 +4,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import delete_filter
 
 
-@register(outgoing=True, pattern="^.rmfilter\\s.*")
+@register(outgoing=True, pattern=r"^\.rmfilter\\s.*")
 async def remove_filter(event):
     """ Command for removing a filter """
     if not is_mongo_alive() or not is_redis_alive():

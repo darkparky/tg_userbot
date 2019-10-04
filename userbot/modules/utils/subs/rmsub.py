@@ -4,7 +4,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import delete_sub
 
 
-@register(outgoing=True, pattern=r"^.rmsub\s+([\w\d]+)$")
+@register(outgoing=True, pattern=r"^\.rmsub\s+([\w\d]+)$")
 async def remove_subscription(event):
     if not is_mongo_alive() or not is_redis_alive():
         await event.edit("`Database connections failing!`", delete_in=3)

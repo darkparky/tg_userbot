@@ -7,7 +7,7 @@ from userbot.events import register
 from userbot.modules.dbhelper import get_fban
 
 
-@register(outgoing=True, pattern="^.fban")
+@register(outgoing=True, pattern=r"^\.fban")
 async def fedban_all(msg):
     if not is_mongo_alive() or not is_redis_alive():
         await msg.edit("`Database connections failing!`")

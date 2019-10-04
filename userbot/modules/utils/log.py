@@ -5,7 +5,7 @@ from userbot import BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^.log(?:\s+|$)([\s\S]*)")
+@register(outgoing=True, pattern=r"^\.log(?:\s+|$)([\s\S]*)")
 async def log(log_text):
     """ For .log command, forwards a message
      or the command argument to the bot logs group """

@@ -9,7 +9,7 @@ from userbot.modules.dbhelper import unmute
 from userbot.utils import get_user_from_event
 
 
-@register(outgoing=True, group_only=True, pattern="^.unmute(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern=r"^\.unmute(?: |$)(.*)")
 async def unmoot(unmot):
     """ For .unmute command, unmute the target """
     # Admin or creator check

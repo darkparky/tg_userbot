@@ -16,7 +16,7 @@ from userbot.events import register
 
 
 # Todo: Replace this with a marionette implementation
-@register(pattern=r"^.(?:screen)cap (.*)", outgoing=True)
+@register(pattern=r"^\.(?:screen)cap (.*)", outgoing=True)
 async def capture(url):
     """ For .screencap command, capture a website and send the photo. """
     if SCREENSHOT_LAYER_ACCESS_KEY is None:

@@ -8,7 +8,7 @@ from userbot.events import register
 from userbot.modules import ALL_MODULES
 
 
-@register(outgoing=True, pattern="^.alive$")
+@register(outgoing=True, pattern=r"^\.alive$")
 async def amireallyalive(e):
     if not is_mongo_alive() and not is_redis_alive():
         db = "Both Mongo and Redis Database seems to be failing!"

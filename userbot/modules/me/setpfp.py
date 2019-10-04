@@ -14,7 +14,7 @@ PP_TOO_SMOL = "```This image is too small, use a bigger image.```"
 PP_ERROR = "```Failure occured while processing image.```"
 
 
-@register(outgoing=True, pattern="^.setpfp")
+@register(outgoing=True, pattern=r"^\.setpfp")
 async def set_profilepic(propic):
     """ For .setpfp command, change your profile picture in Telegram. """
     replymsg = await propic.get_reply_message()
