@@ -8,7 +8,7 @@ from userbot.events import register
 @register(outgoing=True, pattern=r"^\.eval(?:\s+|$)([\S\s]+)")
 async def evaluate(e):
     """ For .eval command, evaluates the given Python expression. """
-    reply = await e.get_reply()
+    reply = await e.get_reply_message()
     if e.is_channel and not e.is_group:
         await e.edit("`Eval isn't permitted on channels`")
         return
