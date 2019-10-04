@@ -8,7 +8,7 @@ from userbot.modules.admin import NO_ADMIN, NO_PERM, BANNED_RIGHTS
 from userbot.utils import get_user_from_event
 
 
-@register(group_only=True, pattern="^.ban(?: |$)(.*)")
+@register(outgoing=True, group_only=True, pattern="^.ban(?: |$)(.*)")
 async def ban(bon):
     """ For .ban command, do a ban at targeted person """
     # Here laying the sanity check
