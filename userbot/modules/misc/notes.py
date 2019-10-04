@@ -70,7 +70,6 @@ async def add_filter(event):
 
 @register(pattern=r"#\w*",
           disable_edited=True,
-          ignore_unsafe=True,
           disable_errors=True)
 async def note(event):
     """ Notes logic. """

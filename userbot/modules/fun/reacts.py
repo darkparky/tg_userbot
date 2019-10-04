@@ -115,7 +115,7 @@ FACEREACTS = (
 )
 
 
-@register(outgoing=True, pattern="^:/$", ignore_unsafe=True)
+@register(outgoing=True, pattern="^:/$")
 async def kek(keks):
     """ Check yourself ;)"""
     uio = ["/", "\\"]
@@ -124,7 +124,7 @@ async def kek(keks):
         await keks.edit(":" + uio[i % 2])
 
 
-@register(outgoing=True, pattern="^-_-$", ignore_unsafe=True)
+@register(outgoing=True, pattern="^-_-$")
 async def lol(lel):
     """ Ok... """
     okay = "-_-"

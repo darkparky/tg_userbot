@@ -40,7 +40,6 @@ async def add_subscription(e):
 
 @register(pattern=r"([\S\s]+)",
           disable_edited=True,
-          ignore_unsafe=True,
           disable_errors=True)
 async def sub_logic(event):
     """ Subs logic. """

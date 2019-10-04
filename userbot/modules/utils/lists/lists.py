@@ -26,7 +26,6 @@ async def lists_active(event):
 
 @register(pattern=r"\$\w*",
           disable_edited=True,
-          ignore_unsafe=True,
           disable_errors=True)
 async def lists_logic(event):
     """ Lists logic. """

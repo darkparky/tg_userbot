@@ -59,7 +59,7 @@ def separate_sed(sed_string):
     return None
 
 
-@register(outgoing=True, pattern="^sed", ignore_unsafe=True)
+@register(outgoing=True, pattern="^sed")
 async def sed(command):
     """ For sed command, use sed on Telegram. """
     sed_result = separate_sed(command.text)

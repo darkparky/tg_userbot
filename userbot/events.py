@@ -21,8 +21,6 @@ def register(**args):
     """ Register a new event. """
     pattern = args.get('pattern', None)
     disable_edited = args.get('disable_edited', False)
-    ignore_unsafe = args.get('ignore_unsafe', False)
-    unsafe_pattern = r'^[^/!#@\$A-Za-z]'
     group_only = args.get('group_only', False)
     disable_errors = args.get('disable_errors', False)
     incoming_func = args.get('incoming', True)
@@ -41,11 +39,8 @@ def register(**args):
     if "disable_errors" in args:
         del args['disable_errors']
 
-    if pattern:
-        if not ignore_unsafe:
-            args['pattern'] = pattern.replace('^.', unsafe_pattern, 1)
-
     def decorator(func):
+        # noinspection PyBroadException
         async def wrapper(check):
             if group_only and not check.is_group:
                 await check.respond("`Are you sure this is a group?`")
