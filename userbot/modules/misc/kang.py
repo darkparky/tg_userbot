@@ -206,8 +206,8 @@ doesn't exist! Making a new one!")
                 await bot.send_read_acknowledge(conv.chat_id)
 
         await args.edit(
-            f"Sticker added! Your pack can be found [here](t.me/addstickers/{packname})",
-            parse_mode='md', delete_in=10)
+            f"**Sticker added to {packname}**.",
+            parse_mode='md', delete_in=3)
 
 
 async def resize_photo(photo):
