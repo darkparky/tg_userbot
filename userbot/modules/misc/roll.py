@@ -26,12 +26,13 @@ async def roll_20(e):
     for roll in rolls.items():
         total = sum(roll[1])
         grand_total += total
+        sides = f"{len(roll[1])}d{roll[0]}:"
 
-        message += f"**d{roll[0]}:** "
-        message += ', '.join(map(str, roll[1]))
+        message += f"`{sides:6}`"
+        message += ', '.join([f"`{i}`" for i in roll[1]])
         message += f" = {total} \n"
 
-    message += f"**total:** {grand_total}"
+    message += f"`total:` **{grand_total}**"
     await e.edit(message)
 
 
