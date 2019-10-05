@@ -16,7 +16,7 @@ async def save_message(e):
 
 add_help_item(
     ".save",
-    "Utils",
+    "Utilities",
     "Save a message by forwarding it to yourself.",
     """
     In reply to the message you want to save

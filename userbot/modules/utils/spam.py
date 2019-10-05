@@ -25,7 +25,7 @@ async def forward_to_spamwatch(e):
 
 add_help_item(
     ".spam",
-    "Utils",
+    "Utilities",
     "Flag a message as spam by forwarding it to "
     "@SpamWatchSupport. Be careful with this, as "
     "it can lead to your account getting limited. "
