@@ -95,7 +95,7 @@ async def unregister_command(e):
 @register(outgoing=True, pattern=r"^\.regs$")
 async def list_commands(e):
     commands = await get_commands()
-    commands = [f"`{c['command']}`" for c in commands]
+    commands = sorted([f"`{c['command']}`" for c in commands])
     message = "**Registered Commands** \n" + ', '.join(commands)
     await e.edit(message)
 
