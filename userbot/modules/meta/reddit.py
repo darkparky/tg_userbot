@@ -6,11 +6,13 @@ from telethon.errors import MessageNotModifiedError
 from ..help import add_help_item
 from userbot import bot
 
+REDDIT_REGEX = r"(?:^|\s+)(\/?r\/\S+)"
+
 
 @bot.on(events.NewMessage())
 async def subreddit(e):
     message = e.text
-    matches = re.findall(r"(/?r/\S+)", message)
+    matches = re.findall(REDDIT_REGEX, message)
     if matches:
         print("REDDIT")
         for match in matches:

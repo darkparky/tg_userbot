@@ -9,7 +9,7 @@ from userbot import github
 from userbot.events import register
 from userbot.utils import parse_arguments
 
-GITHUB_REPO_RE = r"(?:github\.com\/|^)?([\w\d_\-.]+)\/([\w\d_\-.]+)"
+GITHUB_REPO_RE = r"(?:github\.com\/|^|\s+)([\w\d_\-]+)\/([\w\d_\-.]+)"
 
 
 @register(outgoing=True, pattern=r"^\.gh([\S\s]+|$)")

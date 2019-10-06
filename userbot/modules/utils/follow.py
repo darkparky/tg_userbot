@@ -7,7 +7,7 @@ from userbot.events import register
 from userbot.utils import parse_arguments, extract_urls
 
 
-@register(outgoing=True, pattern=r"^\.f(?:ollow)?(?: |$)([\S\s]+)?")
+@register(outgoing=True, pattern=r"^\.f(?:ollow)?([\S\s]+|$)")
 async def follow_url(event):
     reply_message = await event.get_reply_message()
     message_text = event.pattern_match.group(1) or ""
@@ -54,7 +54,7 @@ async def resolve_url(url: str, base_domain: bool = True) -> str:
     if not url.startswith('http'):
         url = f'http://{url}'
     try:
-        req = requests.get(url, headers=headers)
+        req = requests.get(url, headers=headers, timeout=3)
         url = req.url
     except ConnectionError:
         pass
