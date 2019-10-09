@@ -20,7 +20,7 @@ from userbot.utils import parse_arguments
 TMP_DOWNLOAD_DIRECTORY = "./"
 
 
-@register(pattern=r"^\.u(?:ser)?(?: |$)(.*)?", outgoing=True)
+@register(pattern=r"^\.u(?:ser)?(\s+[\S\s]+|$)", outgoing=True)
 async def who(event: NewMessage.Event):
     """ For .user command, get info about a user. """
     if event.fwd_from:
