@@ -170,21 +170,12 @@ async def shrugger(shg):
 
 
 @register(outgoing=True, pattern=r"^\.clap(?: |$)(.*)")
-async def claptext(memereview):
+async def claptext(e):
     """ Praise people! """
-    textx = await memereview.get_reply_message()
-    message = memereview.pattern_match.group(1)
-    if message:
-        pass
-    elif textx:
-        message = textx.text
-    else:
-        await memereview.edit("`Hah, I don't clap pointlessly!`")
-        return
-    reply_text = "👏 "
-    reply_text += message.replace(" ", " 👏 ")
-    reply_text += " 👏"
-    await memereview.edit(reply_text)
+    reply_message = await e.get_reply_message()
+    message = e.pattern_match.group(1) or reply_message.text
+    reply_text = re.sub(r" +", " 👏 ", message)
+    await e.edit(f"👏 {reply_text} 👏")
 
 
 add_help_item(
