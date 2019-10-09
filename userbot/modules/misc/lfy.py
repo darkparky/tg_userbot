@@ -6,23 +6,23 @@ from userbot.utils import parse_arguments
 
 PROVIDERS = {
     "lmgtfy": {
-        "message": "let me Google that for you.",
+        "message": "Let me Google that for you.",
         "source": "https://lmgtfy.com/?s=g&iie=1&q={}"
     },
     "google": {
-        "message": "why don't you try Google?",
+        "message": "Why don't you try Google?",
         "source": "https://google.com/search?q={}&sourceid=yourmom"
     },
     "ddg": {
-        "message": "let's check Duck Duck Go.",
+        "message": "Let's check Duck Duck Go.",
         "source": "https://duckduckgo.com/?q={}"
     },
     "bing": {
-        "message": "why don't you give Bing a go?",
+        "message": "Why don't you give Bing a go?",
         "source": "https://www.bing.com/search?q={}"
     },
     "ecosia": {
-        "message": "try searching and planting a tree or two.",
+        "message": "Try searching and planting a tree or two.",
         "source": "https://www.ecosia.org/search?q={}"
     }
 }
@@ -46,7 +46,7 @@ async def let_me_google_that_for_you(e):
     message = provider['message']
     url = provider['source'].format(query)
 
-    await e.edit(f"Hmm, [{message}]({url})")
+    await e.edit(f"Hmm... [{message}]({url})")
 
 
 add_help_item(
