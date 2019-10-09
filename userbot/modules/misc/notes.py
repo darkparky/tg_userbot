@@ -5,8 +5,7 @@
 #
 """ Userbot module containing commands for keeping notes. """
 
-from userbot import (CMD_HELP, is_mongo_alive,
-                     is_redis_alive)
+from userbot import is_mongo_alive, is_redis_alive
 from userbot.events import register
 from userbot.modules.dbhelper import add_note, delete_note, get_note, get_notes
 
@@ -87,14 +86,14 @@ async def note(event):
         pass
 
 
-CMD_HELP["General"].update({
-    "addnote":
-        "Adds a note by name. \n"
-        "Usage: `.addnote (note name) (note content)`",
-    "delnote":
-        "Deletes a note by name. \n"
-        "Usage: `.delnote (note name)`",
-    "notes":
-        "List all saved notes (names only). \n"
-        "Usage: `.notes`"
-})
+# CMD_HELP["General"].update({
+#     "addnote":
+#         "Adds a note by name. \n"
+#         "Usage: `.addnote (note name) (note content)`",
+#     "delnote":
+#         "Deletes a note by name. \n"
+#         "Usage: `.delnote (note name)`",
+#     "notes":
+#         "List all saved notes (names only). \n"
+#         "Usage: `.notes`"
+# })

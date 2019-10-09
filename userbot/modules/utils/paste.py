@@ -9,7 +9,7 @@
 from requests import post
 
 from ..help import add_help_item
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
+from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 DOGBIN_URL = "https://del.dog/"

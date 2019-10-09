@@ -10,7 +10,7 @@ from telethon.errors.rpcerrorlist import FloodWaitError
 from telethon.tl.functions.account import UpdateProfileRequest
 from telethon.tl.functions.users import GetFullUserRequest
 
-from userbot import (BIO_PREFIX, BOTLOG, BOTLOG_CHATID, CMD_HELP, DEFAULT_BIO,
+from userbot import (BIO_PREFIX, BOTLOG, BOTLOG_CHATID, DEFAULT_BIO,
                      LASTFM_USERNAME, bot, lastfm)
 from userbot.events import register
 
@@ -208,15 +208,15 @@ async def lastlog(lstlog):
         await lstlog.edit(LFM_LOG_ERR)
 
 
-CMD_HELP["Me"].update({
-    'lastfm':
-        "Shows currently scrobbling track or most recent "
-        "scrobbles if nothing is playing. \n"
-        "Usage: `.lastfm`",
-    'lastbio':
-        "Enable/Disable last.fm bio updating \n"
-        "Usage: `.lastbio (on|off)",
-    'lastlog':
-        "Enable/Disable last.fm bio logging \n"
-        "Usage: `.lastlog (on|off)`"
-})
+# CMD_HELP["Me"].update({
+#     'lastfm':
+#         "Shows currently scrobbling track or most recent "
+#         "scrobbles if nothing is playing. \n"
+#         "Usage: `.lastfm`",
+#     'lastbio':
+#         "Enable/Disable last.fm bio updating \n"
+#         "Usage: `.lastbio (on|off)",
+#     'lastlog':
+#         "Enable/Disable last.fm bio logging \n"
+#         "Usage: `.lastlog (on|off)`"
+# })

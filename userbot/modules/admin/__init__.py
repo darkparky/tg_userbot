@@ -2,7 +2,7 @@ from telethon.errors import UserAdminInvalidError, ChatAdminRequiredError, BadRe
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChatBannedRights
 
-from userbot import is_mongo_alive, is_redis_alive, CMD_HELP
+from userbot import is_mongo_alive, is_redis_alive
 from userbot.events import register
 from userbot.modules.dbhelper import get_muted, get_gmuted
 
@@ -83,32 +83,3 @@ async def muter(moot):
     for i in gmuted:
         if i == moot.sender_id:
             await moot.delete()
-
-
-CMD_HELP.update({
-    "Admin": {
-        "promote": "Usage: Reply to message with .promote to promote them.",
-        "ban": "Usage: Reply to message with .ban to ban them.",
-        "demote":
-            "Usage: Reply to message with"
-            ".demote to revoke their admin permissions.",
-        "unban":
-            "Usage: Reply to message with .unban to unban them in this chat.",
-        "mute":
-            "Usage: Reply tomessage with .mute "
-            "to mute them, works on admins too",
-        "unmute":
-            "Usage: Reply to message with .unmute "
-            "to remove them from muted list.",
-        "gmute":
-            "Usage: Reply to message with .gmute to mute them in all "
-            "groups you have in common with them.",
-        "ungmute":
-            "Usage: Reply message with .ungmute "
-            "to remove them from the gmuted list.",
-        "delusers": "Usage: Searches for deleted accounts in a group.",
-        "delusers clean":
-            "Usage: Searches and removes "
-            "deleted accounts from the group"
-    }
-})

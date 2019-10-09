@@ -6,7 +6,7 @@
 """ Userbot module for purging unneeded messages(usually spam or ot). """
 
 from ..help import add_help_item
-from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
+from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
 
 

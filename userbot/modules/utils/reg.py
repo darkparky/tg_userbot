@@ -11,7 +11,7 @@ from userbot import minioClient, MINIO_BUCKET, bot
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^\.reg (\S+)([\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.reg (\S+)(\s+[\S\s]+|$)")
 async def register_command(e):
     reply_message = await e.get_reply_message()
     command = e.pattern_match.group(1)

@@ -10,7 +10,7 @@ from telethon.tl.functions.messages import ReportSpamRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import User
 
-from userbot import (BOTLOG, BOTLOG_CHATID, CMD_HELP, COUNT_PM,
+from userbot import (BOTLOG, BOTLOG_CHATID, COUNT_PM,
                      LASTMSG, LOGS, PM_AUTO_BAN, is_mongo_alive,
                      is_redis_alive)
 from userbot.events import register
@@ -225,20 +225,20 @@ async def unblockpm(unblock):
         )
 
 
-CMD_HELP["General"].update({
-    "pm approve":
-        "Approve the mentioned/replied person to PM. \n"
-        "Usage: `.pm approve`",
-    "pm block":
-        "Block the person from PMing you. \n"
-        "Usage: `.pm block`",
-    "pm unblock":
-        "Unblock the person so they can PM you. \n"
-        "Usage: `.pm unblock`",
-    "pm notifoff":
-        "Clear any notifications of unapproved PMs. \n"
-        "Usage: `.pm notifoff`",
-    "pm notifon":
-        "Allow notifications for unapproved PMs. \n"
-        "Usage: `.pm notifon`"
-})
+# CMD_HELP["General"].update({
+#     "pm approve":
+#         "Approve the mentioned/replied person to PM. \n"
+#         "Usage: `.pm approve`",
+#     "pm block":
+#         "Block the person from PMing you. \n"
+#         "Usage: `.pm block`",
+#     "pm unblock":
+#         "Unblock the person so they can PM you. \n"
+#         "Usage: `.pm unblock`",
+#     "pm notifoff":
+#         "Clear any notifications of unapproved PMs. \n"
+#         "Usage: `.pm notifoff`",
+#     "pm notifon":
+#         "Allow notifications for unapproved PMs. \n"
+#         "Usage: `.pm notifon`"
+# })

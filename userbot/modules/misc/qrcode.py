@@ -14,7 +14,6 @@ from datetime import datetime
 from requests import get, post
 
 from ..help import add_help_item
-from userbot import CMD_HELP
 from userbot.events import register
 
 

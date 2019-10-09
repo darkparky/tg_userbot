@@ -5,7 +5,7 @@ from ..help import add_help_item
 from userbot.events import register
 
 
-@register(outgoing=True, pattern=r"^\.scramble([\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.scramble(\s+[\S\s]+|$)")
 async def scramble_message(e):
     reply_message = await e.get_reply_message()
     text = e.pattern_match.group(1) or reply_message.text

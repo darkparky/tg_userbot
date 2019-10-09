@@ -13,7 +13,6 @@ from os import execl, remove
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 
-from userbot import CMD_HELP
 from userbot.events import register
 from ..help import add_help_item
 

@@ -67,7 +67,7 @@ def transform(text, transliterations=None):
     return ''.join(output)
 
 
-@register(outgoing=True, pattern=r"^\.flip([\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.flip(\s+[\S\s]+|$)")
 async def flip_message(e):
     reply_message = await e.get_reply_message()
     text = e.pattern_match.group(1) or reply_message.text

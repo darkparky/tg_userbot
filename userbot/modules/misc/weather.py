@@ -13,7 +13,6 @@ from pytz import country_names as c_n
 from pytz import country_timezones as c_tz
 from pytz import timezone as tz
 
-from userbot import CMD_HELP
 from userbot import OPEN_WEATHER_MAP_APPID as OWM_API
 from userbot import is_mongo_alive, is_redis_alive
 from userbot.events import register
@@ -191,14 +190,14 @@ async def set_default_city(city):
     await city.edit(f"`Set default city as {cityname}, {fullc_n}.`")
 
 
-CMD_HELP.update({
-    "weather":
-        "Gets the weather of a city. \n"
-        "Usage: `.weather (city/zip)` or `.weather (city), (country name/code)`"
-})
-
-CMD_HELP.update({
-    "setcity":
-        "Sets your default city so you can just use .weather. \n"
-        "Usage: `.setcity (city/zip)` or `.setcity (city), (country name/code)`"
-})
+# CMD_HELP.update({
+#     "weather":
+#         "Gets the weather of a city. \n"
+#         "Usage: `.weather (city/zip)` or `.weather (city), (country name/code)`"
+# })
+#
+# CMD_HELP.update({
+#     "setcity":
+#         "Sets your default city so you can just use .weather. \n"
+#         "Usage: `.setcity (city/zip)` or `.setcity (city), (country name/code)`"
+# })
