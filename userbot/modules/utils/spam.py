@@ -20,7 +20,7 @@ async def forward_to_spamwatch(e):
     replied_user = await e.client(GetFullUserRequest(reply_message.from_id))
     user_info = await fetch_info(replied_user, mention=True)
 
-    await forwarded.reply(user_info)
+    await forwarded.reply(str(user_info))
     await e.edit("**Flagged as spam**", delete_in=3)
 
 add_help_item(

@@ -9,6 +9,7 @@ from userbot import BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register
 from userbot.utils.tgdoc import *
 
+
 @register(outgoing=True, pattern=r"^\.eval(?:\s+|$)([\S\s]+)")
 async def evaluate(e):
     """ For .eval command, evaluates the given Python expression. """
@@ -74,10 +75,8 @@ async def async_eval(code, **kwargs):
     # Note to self: please don't set globals here as they will be lost.
     # Don't clutter locals
     locs = {}
-
     # Restore globals later
     globs = globals().copy()
-
     # This code saves __name__ and __package into a kwarg passed to the function.
     # It is set before the users code runs to make sure relative imports work
     global_args = "_globs"
@@ -115,16 +114,16 @@ async def async_eval(code, **kwargs):
     mod = ast.Module([fun])
     comp = compile(mod, '<string>', 'exec')
 
-    with temp_stdio() as out:
-        exec(comp, {}, locs)
+    exec(comp, {}, locs)
 
-        response = await locs["tmp"](**kwargs)
+    with temp_stdio() as out:
+        result = await locs["tmp"](**kwargs)
         try:
             globals().clear()
             # Inconsistent state
         finally:
             globals().update(**globs)
-        return response, out.getvalue()
+        return result, out.getvalue()
 
 
 # Create a temporary stdio
