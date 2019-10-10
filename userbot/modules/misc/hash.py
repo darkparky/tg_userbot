@@ -13,7 +13,7 @@ async def gethash(hash_q):
     algo_name = hash_q.pattern_match.group(1)
     hashtxt = hash_q.pattern_match.group(2) or reply_message.text
 
-    if not re.match(r"(md[245]|sha1|sha256|ripemd)", algo_name):
+    if not re.match(r"(md[245]|sha(224|256|384|512)?|ripemd)", algo_name):
         await hash_q.reply(f"Unknown hashing function `{algo_name}`. See `.help hash` for info.")
         return
     else:
