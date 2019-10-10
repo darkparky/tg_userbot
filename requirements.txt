@@ -41,3 +41,4 @@ PyGithub
 spectra
 minio
 cryptg
+spamwatch

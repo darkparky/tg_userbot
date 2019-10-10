@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 from github import UnknownObjectException
 from github.NamedUser import NamedUser
@@ -8,6 +9,7 @@ from ..help import add_help_item
 from userbot import github
 from userbot.events import register
 from userbot.utils import parse_arguments
+from userbot.utils.tgdoc import *
 
 GITHUB_REPO_RE = r"(?:github\.com\/|^|\s+)([\w\d_\-]+)\/([\w\d_\-.]+)"
 
@@ -29,33 +31,32 @@ async def github_info(e):
     else:
         args = {}
 
-    if not message and reply_message:
-        message = reply_message.message.strip()
-    else:
-        await e.edit("There's nothing to paste.")
-        return
+    if not message:
+        if reply_message:
+            message = reply_message.message.strip()
+        else:
+            await e.edit(str(Bold("Can't fetch repo information with no repo")))
+            return
 
     repos = re.findall(GITHUB_REPO_RE, message)
     if repos:
         await e.edit(f"Fetching information for {len(repos)} repo(s)...")
-        message_parts = []
-        invalid_repos = []
+        valid_repos: List[str] = []
+        invalid_repos: List[str] = []
         for user, repo in repos:
             try:
                 r: Repository = github.get_repo(f"{user}/{repo}")
-                message = await build_repo_message(r, args)
-                message_parts.append(message)
+                repo = await build_repo_message(r, args)
+                valid_repos.append(str(repo))
             except UnknownObjectException:
                 invalid_repos.append(f"{user}/{repo}")
                 pass
 
         message = ""
-        if message_parts:
-            message += '\n\n'.join(message_parts)
+        if valid_repos:
+            message += '\n\n'.join(valid_repos)
         if invalid_repos:
-            message += "**Invalid repos:**"
-            for repo in invalid_repos:
-                message += str(repo)
+            message += '\n'.join(invalid_repos)
 
         await e.edit(message)
     else:
@@ -72,35 +73,44 @@ async def build_repo_message(repo, args):
         show_general = True
         show_owner = True
 
-    message = f"**[{repo.name}]({repo.html_url})** \n"
+    title = Link(repo.name, repo.html_url)
 
     if show_general:
-        message += f"  **general** \n"
-        message += f"    id: {repo.id} \n"
-        message += f"    full name: {repo.full_name} \n"
-        message += f"    stars: {repo.stargazers_count} \n"
-        message += f"    watchers: {repo.watchers_count} \n"
-        message += f"    forks: {repo.forks_count} \n"
-        message += f"    language: {repo.language} \n"
-        message += f"    is fork: {repo.fork} \n"
-        message += f"    issues: {repo.open_issues} \n"
+        general = SubSection(Bold("general"),
+                             KeyValueItem("id", Code(repo.id)),
+                             KeyValueItem("full name", Code(repo.full_name)),
+                             KeyValueItem("stars", Code(repo.stargazers_count)),
+                             KeyValueItem("watchers", Code(repo.watchers_count)),
+                             KeyValueItem("forks", Code(repo.forks_count)),
+                             KeyValueItem("language", Code(repo.language)),
+                             KeyValueItem("is fork", Code(repo.fork)),
+                             KeyValueItem("issues", Code(repo.open_issues)))
+    else:
+        general = None
 
     if show_owner:
         owner: NamedUser = github.get_user(repo.owner.login)
         bio = str(owner.bio)[:50] + (str(owner.bio)[50:] and '..')
 
-        message += f"  **owner** \n"
-        message += f"    id: {owner.id} \n"
-        message += f"    login: [{owner.login}]({owner.url}) \n"
-        message += f"    name: {owner.name} \n"
-        message += f"    bio: {bio} \n"
-        message += f"    company: {owner.company} \n"
-        message += f"    email: {owner.email} \n"
-        message += f"    followers: {owner.followers} \n"
-        message += f"    following: {owner.following} \n"
-        message += f"    repos: {owner.public_repos} \n"
+        owner_info = SubSection(Bold("owner"),
+                                KeyValueItem("id", owner.id),
+                                KeyValueItem("login", owner.login),
+                                KeyValueItem("name", owner.name),
+                                KeyValueItem("bio", bio),
+                                KeyValueItem("company", owner.company),
+                                KeyValueItem("email", owner.email),
+                                KeyValueItem("followers", owner.followers),
+                                KeyValueItem("following", owner.following),
+                                KeyValueItem("repos", owner.public_repos))
+    else:
+        owner_info = None
 
-    return message
+    return Section(
+        title,
+        general if show_general else None,
+        owner_info if show_owner else None
+    )
+
 
 add_help_item(
     ".gh",

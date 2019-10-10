@@ -13,9 +13,11 @@ from telethon.tl.custom import Message
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 
-from ..help import add_help_item
+from userbot import spamwatch
 from userbot.events import register
 from userbot.utils import parse_arguments
+from userbot.utils.tgdoc import *
+from ..help import add_help_item
 
 TMP_DOWNLOAD_DIRECTORY = "./"
 
@@ -34,14 +36,19 @@ async def who(event: NewMessage.Event):
     args['user'] = user
 
     replied_user = await get_user(event, **args)
-    caption = await fetch_info(replied_user, **args)
+
+    if not replied_user:
+        await event.edit("**Failed to get information for user**")
+        return
+
+    user_info = await fetch_info(replied_user, **args)
 
     message_id_to_reply = event.message.reply_to_msg_id
 
     if not message_id_to_reply:
         pass
 
-    await event.edit(caption, parse_mode="markdown")
+    await event.edit(str(user_info), parse_mode="markdown")
 
 
 async def get_user(event: NewMessage.Event, **kwargs):
@@ -111,44 +118,50 @@ async def fetch_info(replied_user, **kwargs):
     full_name = str(user.first_name + ' ' + (user.last_name or ''))
 
     if mention_name:
-        title = f"[{full_name}](tg://user?id={user.id}) \n"
+        title = Link(full_name, f'tg://user?id={user.id}')
     else:
-        title = f"**{full_name}** \n"
-
-    caption = title
+        title = Bold(full_name)
 
     if id_only:
-        caption += f"id: {user.id}"
-        return caption
+        return KeyValueItem(title, Code(user.id))
 
-    if show_general:
-        caption += "  **general** \n"
-        caption += f"    id: `{user.id}` \n"
-        caption += f"    first name: {user.first_name} \n"
-        caption += f"    last name: {user.last_name} \n"
-        caption += f"    username: {user.username} \n"
-        caption += f"    mutual contact: {user.mutual_contact} \n"
-        caption += f"    groups in common: {replied_user.common_chats_count} \n"
+    general = SubSection(Bold('general'),
+                         KeyValueItem('id', Code(user.id)),
+                         KeyValueItem('first_name', Code(user.first_name)),
+                         KeyValueItem('last_name', Code(user.last_name)),
+                         KeyValueItem('username', Code(user.username)),
+                         KeyValueItem('mutual_contact', Code(user.mutual_contact)),
+                         KeyValueItem('common groups', Code(replied_user.common_chats_count)))
 
-    if show_misc:
-        caption += "  **misc** \n"
-        caption += f"    restricted: {user.restricted} \n"
-        caption += f"    restriction reason: {user.restriction_reason} \n"
-        caption += f"    deleted: {user.deleted} \n"
-        caption += f"    verified: {user.verified} \n"
-        caption += f"    min: {user.min} \n"
-        caption += f"    lang code: {user.lang_code} \n"
+    if spamwatch:
+        banobj = spamwatch.get_ban(user.id)
+        if banobj:
+            general.items.append(KeyValueItem('gbanned', f'True / {banobj.reason}'))
+        else:
+            general.items.append(KeyValueItem('gbanned', 'False'))
 
-    if show_bot:
-        caption += "  **bot info** \n"
-        caption += f"    bot: {user.bot} \n"
-        caption += f"    chat history: {user.bot_chat_history} \n"
-        caption += f"    info version: {user.bot_info_version} \n"
-        caption += f"    inline geo: {user.bot_inline_geo} \n"
-        caption += f"    inline placeholder: {user.bot_inline_placeholder} \n"
-        caption += f"    nochats: {user.bot_nochats} \n"
+    bot = SubSection(Bold('bot'),
+                     KeyValueItem('bot', Code(user.bot)),
+                     KeyValueItem('bot_chat_history', Code(user.bot_chat_history)),
+                     KeyValueItem('bot_info_version', Code(user.bot_info_version)),
+                     KeyValueItem('bot_inline_geo', Code(user.bot_inline_geo)),
+                     KeyValueItem('bot_inline_placeholder',
+                                  Code(user.bot_inline_placeholder)),
+                     KeyValueItem('bot_nochats', Code(user.bot_nochats)))
 
-    return caption
+    misc = SubSection(Bold('misc'),
+                      KeyValueItem('restricted', Code(user.restricted)),
+                      KeyValueItem('restriction_reason', Code(user.restriction_reason)),
+                      KeyValueItem('deleted', Code(user.deleted)),
+                      KeyValueItem('verified', Code(user.verified)),
+                      KeyValueItem('min', Code(user.min)),
+                      KeyValueItem('lang_code', Code(user.lang_code)))
+
+    return Section(title,
+                   general if show_general else None,
+                   misc if show_misc else None,
+                   bot if show_bot else None)
+
 
 add_help_item(
     ".user",
@@ -161,12 +174,12 @@ add_help_item(
     `.u(ser) [options]`
     
     Options:
-    `.id`: Show only the user's ID (default: `False`)
-    `.general`: Show general user info (default: `True`)
-    `.bot`: Show bot related info (default: `False`)
-    `.misc`: Show miscelanious info (default: `False`)
-    `.all`: Show all info (overrides other options) (default: `False`)
-    `.mention`: Inline mention the user (default: `False`)
-    `.forward`: Follow forwarded message (default: `True`)
+    `.id`: Show only the user's ID
+    `.general`: Show general user info
+    `.bot`: Show bot related info
+    `.misc`: Show miscelanious info
+    `.all`: Show all info (overrides other options)
+    `.mention`: Inline mention the user
+    `.forward`: Follow forwarded message
     """
 )
