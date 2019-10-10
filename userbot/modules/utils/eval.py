@@ -5,7 +5,7 @@ from os import remove
 from io import StringIO
 
 from ..help import add_help_item
-from userbot import BOTLOG, BOTLOG_CHATID
+from userbot import BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register
 from userbot.utils.tgdoc import *
 
@@ -28,7 +28,7 @@ async def evaluate(e):
     head = Section(Bold("Query:"), Code(expression), indent=0)
 
     try:
-        response, out = await async_eval(expression, event=e, reply=reply)
+        response, out = await async_eval(expression, bot=bot, event=e, reply=reply)
         evaluation = str(response)
 
         if evaluation:
