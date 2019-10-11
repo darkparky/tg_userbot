@@ -1,18 +1,11 @@
-FROM baalajimaestro/userbot_python:latest
+FROM python:3.7.4-alpine3.9
 
 ENV PATH="/app/bin:$PATH"
 WORKDIR /app
 
-RUN apk add ffmpeg
-RUN git clone https://github.com/watzon/tg_userbot.git -b master /app
+RUN apk add git ffmpeg libpq git bash redis curl sudo neofetch neofetch libxml2 libwebp-dev libffi-dev openssl-dev musl-dev gcc libxslt-dev libxml2-dev zlib zlib-dev libjpeg libjpeg-turbo-dev linux-headers jq pv
+
+COPY . ./
 RUN pip install -r ./requirements.txt
 
-#
-# Copies session and config(if it exists)
-#
-COPY ./userbot.session ./config.env* ./client_secrets.json* ./secret.json* /app/
-
-#
-# Finalization
-#
-CMD ["bash","init/start.sh"]
+CMD ["bash","./init/start.sh"]

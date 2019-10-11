@@ -7,6 +7,7 @@ from telethon.tl.types import Channel, User
 from userbot.utils import parse_arguments, list_admins, inline_mention
 from ..help import add_help_item
 from userbot.events import register
+from userbot.utils.tgdoc import *
 
 
 @register(outgoing=True, pattern=r"^\.c(?:hat)?(\s+[\S\s]+|$)")
@@ -24,8 +25,8 @@ async def get_chat(e):
     #     chat = await e.get_chat()
 
     await e.edit("**Fetching chat info...**")
-    message = await fetch_info(e, **args)
-    await e.edit(message)
+    response = await fetch_info(e, **args)
+    await e.edit(str(response))
 
 
 async def fetch_info(event, **kwargs):
@@ -43,21 +44,19 @@ async def fetch_info(event, **kwargs):
 
     is_private = False
     if isinstance(chat, Channel) and chat.username:
-        title = f"[{chat.username}](https://t.me/{chat.username}) \n"
+        title = Link(chat.username, f"https://t.me/{chat.username}")
     elif chat.title:
         is_private = True
-        title = f"**{chat.title}** \n"
+        title = Bold(chat.title)
     else:
         is_private = True
-        title = f"**Chat {chat.id}** \n"
+        title = Bold(f"Chat {chat.id}")
 
     if show_all:
         show_general = True
         show_admins = True
     elif id_only:
-        return title + f"  id: {chat.id}"
-
-    caption = title
+        return KeyValueItem(title, Code(str(chat.id)))
 
     if show_general:
         participant_count = 0
@@ -65,20 +64,27 @@ async def fetch_info(event, **kwargs):
             print(user)
             participant_count += 1
 
-        caption += "  **general** \n"
-        caption += f"    id: {chat.id} \n"
-        caption += f"    title: {chat.title} \n"
-        caption += f"    private: {is_private} \n"
-        caption += f"    participants: {participant_count} \n"
-        caption += f"    created at: {chat.date.strftime('%b %d %Y %H:%M:%S')} \n"
+        general = SubSection(Bold("general"),
+                             KeyValueItem("id", Code(str(chat.id))),
+                             KeyValueItem("title", Code(chat.title)),
+                             KeyValueItem("private", Code(str(is_private))),
+                             KeyValueItem("participants", Code(str(participant_count))),
+                             KeyValueItem("created at", Code(chat.date.strftime('%b %d %Y %H:%M:%S'))))
+    else:
+        general = None
 
     if show_admins:
-        admins = await list_admins(event)
-        caption += "  **admins** \n"
-        for admin in admins:
-            caption += f"    {inline_mention(admin)} \n"
+        admin_list = await list_admins(event)
+        admins = SubSection(Bold("admins"))
+        for admin in admin_list:
+            admins.items.append(String(inline_mention(admin)))
+    else:
+        admins = None
 
-    return caption
+    return Section(
+        general if show_general else None,
+        admins if show_admins else None
+    )
 
 
 add_help_item(
