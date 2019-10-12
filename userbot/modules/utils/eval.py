@@ -10,7 +10,7 @@ from userbot.events import register
 from userbot.utils.tgdoc import *
 
 
-@register(outgoing=True, pattern=r"^\.eval(?:\s+|$)([\S\s]+)")
+@register(outgoing=True, pattern=r"^\.eval(?:\s+([\S\s]+)|$)")
 async def evaluate(e):
     """ For .eval command, evaluates the given Python expression. """
     reply = await e.get_reply_message()
