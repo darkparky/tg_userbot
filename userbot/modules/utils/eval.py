@@ -21,7 +21,7 @@ async def evaluate(e):
     if e.pattern_match.group(1):
         expression = e.pattern_match.group(1)
     elif reply:
-        expression = reply.text
+        expression = reply.message
     else:
         await e.edit(str(Bold("Give an expression to evaluate")), delete_in=3)
         return
