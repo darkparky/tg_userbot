@@ -179,4 +179,3 @@ USERS = {}
 COUNT_PM = {}
 LASTMSG = {}
 ENABLE_KILLME = True
-AFKREASON = "no reason"

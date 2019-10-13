@@ -4,6 +4,7 @@ from io import BytesIO
 
 from PIL import Image
 from photohash import average_hash
+from spamwatch.errors import UnauthorizedError
 from telethon.tl.functions.users import GetFullUserRequest
 
 from ..help import add_help_item
@@ -21,6 +22,7 @@ REDFLAG_WORDS = [
 ]
 
 SCANNING_MESSAGE = "**Scanning for potential spammers.** {}"
+CLASSIFYING_MESSAGE = "**Classifying as spam.** {}"
 
 
 @register(outgoing=True, pattern=r"^\.spamscan$")
@@ -46,9 +48,9 @@ async def spamscan(e):
             potentials.update({user_full.user.id: score})
 
         scanned += 1
-        if scanned % 100 == 0:
-            await e.edit(SCANNING_MESSAGE.format(f"\n**Checked {scanned}/{total_users}."
-                                                 "{total_users - scanned} remaining.**"))
+        if scanned % 5 == 0:
+            await e.edit(SCANNING_MESSAGE.format(f"\n**Checked {scanned}/{total_users}. "
+                                                 f"{total_users - scanned} remaining.**"))
 
     output = Section(Bold("Scan Results"))
     if potentials:
@@ -64,28 +66,41 @@ async def spamscan(e):
     await e.edit(str(output))
 
 
-@register(outgoing=True, pattern=r"^\.spamscan classify (spam|ham)(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.spamscan flag(\s+[\S\s]+|$)")
 async def spamscan_classify(e):
     """ Feed the algorithm by classifying a user either
     as spam or ham """
-    category = e.pattern_match.group(1)
-    args, user = parse_arguments(e.pattern_match.group(2), ['forward'])
+    args, user = parse_arguments(e.pattern_match.group(1), ['forward', 'reason'])
 
+    reason = args.get('reason', 'spam[gban]')
     args['forward'] = args.get('forward', True)
     args['user'] = user
 
+    await e.edit(CLASSIFYING_MESSAGE.format("**Fetching user information.**"))
     replied_user = await get_user_from_event(e, **args)
     if not replied_user:
         await e.edit("**Failed to get information for user**", delete_in=3)
         return
 
-    if category == "spam":
-        hashes = await gather_profile_pic_hashes(e, replied_user.user)
+    hashes = await gather_profile_pic_hashes(e, replied_user.user)
+    if hashes:
+        await e.edit(CLASSIFYING_MESSAGE.format("**Adding profile pic hashes to DB**"))
         for hsh in hashes:
             await add_profile_pic_hash(hsh, True)
-        await e.edit(f"**Classified {make_mention(replied_user.user)} as spam**")
-    elif category == "ham":
-        await e.delete()
+
+    if spamwatch:
+        await e.edit(CLASSIFYING_MESSAGE.format("**Checking spamwatch.**"))
+        gbanned = spamwatch.get_ban(replied_user.user.id)
+
+        if not gbanned:
+            await e.edit(CLASSIFYING_MESSAGE.format("**Adding to SpamWatch.**"))
+            try:
+                spamwatch.add_ban(replied_user.user.id, reason)
+            except UnauthorizedError:
+                pass
+
+    await e.edit(f"**Flagged** {make_mention(replied_user.user)} **as spam**\n"
+                 f"**Reason:** {reason}")
 
 
 @register(outgoing=True, pattern=r"^\.spamscan score(\s+[\S\s]+|$)")
@@ -106,7 +121,7 @@ async def spamscan_score(e):
     score = await score_user(e, replied_user)
     score_total = sum([i for i in score.values()])
 
-    output = f"**Spam score for** {make_mention(replied_user.user)}: **{score_total}**\n\n"
+    output = f"**Spam score for** {make_mention(replied_user.user)}({replied_user.user.id}): **{score_total}**\n\n"
 
     if score_total > 0:
         output += "**Reasons:**\n"
@@ -204,8 +219,11 @@ async def score_user(event, userfull):
         score.update({'cyrillic bio': 2})
 
     # A username ending in numbers is a +1
-    if user.username and re.match(r".*[0-9]+$", user.username):
-        score.update(({'sequential username': 1}))
+    if user.username:
+        if re.match(r".*[0-9]+$", user.username):
+            score.update(({'sequential username': 2}))
+    else:
+        score.update({'no username': 2})
 
     if userfull.about:
         # Check the bio for red flag words. Each one of these is a +3.

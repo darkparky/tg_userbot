@@ -20,8 +20,9 @@ def parse_arguments(message: str, valid: List[str]) -> (dict, str):
             message = message.replace(opt, '')
 
     # Handle key/value pairs
-    for opt in findall(r'(\S+):(\S+)', message):
-        key, value = opt
+    for opt in findall(r'(\S+):(?:"([\S\s]+)"|(\S+))', message):
+        key, val1, val2 = opt
+        value = val1[1:-1] if val1 else val2
         if key in valid:
             if value.isnumeric():
                 value = int(value)
