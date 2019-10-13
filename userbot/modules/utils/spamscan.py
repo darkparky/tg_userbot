@@ -214,7 +214,7 @@ def unicode_block_match(string, block):
 
 async def gather_profile_pic_hashes(event, user):
     hashes = []
-    async for photo in event.client.iter_profile_photos(user):
+    async for photo in event.client.iter_profile_photos(user, limit=10):
         io = BytesIO()
         await event.client.download_media(photo, io)
         md5 = hashlib.md5(io.getvalue())
