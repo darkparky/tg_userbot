@@ -11,7 +11,7 @@ from userbot.utils.tgdoc import *
 
 
 @register(outgoing=True, pattern=r"^\.c(?:hat)?(\s+[\S\s]+|$)")
-async def get_chat(e):
+async def chat_info(e):
     params = e.pattern_match.group(1) or ""
     args, _ = parse_arguments(params, ['id', 'general', 'admins', 'all'])
 
