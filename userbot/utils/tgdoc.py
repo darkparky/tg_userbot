@@ -16,7 +16,11 @@ class FormattedBase:
         return self.text
 
 
-String = Union[str, FormattedBase]
+class String(FormattedBase):
+    """A plain string."""
+
+    def __init__(self, text: Union[str, int]) -> None:
+        self.text = str(text)
 
 
 class Bold(FormattedBase):
@@ -64,7 +68,7 @@ class Mention(Link):
 class KeyValueItem(FormattedBase):
     """A item that has a key and a value divided by a colon."""
 
-    def __init__(self, key: String, value: String) -> None:
+    def __init__(self, key: Union[str, FormattedBase], value: Union[str, FormattedBase]) -> None:
         self.key = key
         self.value = value
         self.text = f'{key}: {value}'
@@ -80,13 +84,13 @@ class Item(FormattedBase):
 class Section:
     """A section header"""
 
-    def __init__(self, *args: Union[String, 'Section'], spacing: int = 1, indent: int = 4) -> None:
+    def __init__(self, *args: Union[String, 'FormattedBase'], spacing: int = 1, indent: int = 4) -> None:
         self.header = args[0]
         self.items = list(args[1:])
         self.indent = indent
         self.spacing = spacing
 
-    def __add__(self, other: Union[String, 'Section']) -> str:
+    def __add__(self, other: Union[String, 'FormattedBase']) -> str:
         return str(self) + '\n\n' + str(other)
 
     def __str__(self) -> str:
