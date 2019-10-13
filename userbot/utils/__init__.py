@@ -1,6 +1,9 @@
 from re import findall, match
 from typing import List
 
+from telethon.events import NewMessage
+from telethon.tl.custom import Message
+from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName, ChannelParticipantsAdmins
 
 
@@ -43,38 +46,6 @@ def extract_urls(message):
     return list(matches)
 
 
-async def get_user_from_event(event):
-    """ Get the user from argument or replied message. """
-    if event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-        user_obj = await event.client.get_entity(previous_message.from_id)
-    else:
-        user = event.pattern_match.group(1)
-
-        if user.isnumeric():
-            user = int(user)
-
-        if not user:
-            await event.edit("`Pass the user's username, id or reply!`")
-            return
-
-        if event.message.entities is not None:
-            probable_user_mention_entity = event.message.entities[0]
-
-            if isinstance(probable_user_mention_entity,
-                          MessageEntityMentionName):
-                user_id = probable_user_mention_entity.user_id
-                user_obj = await event.client.get_entity(user_id)
-                return user_obj
-        try:
-            user_obj = await event.client.get_entity(user)
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
-            return None
-
-    return user_obj
-
-
 async def get_user_from_id(user, event):
     if isinstance(user, str):
         user = int(user)
@@ -86,6 +57,54 @@ async def get_user_from_id(user, event):
         return None
 
     return user_obj
+
+
+async def get_user_from_event(event: NewMessage.Event, **kwargs):
+    """ Get the user from argument or replied message. """
+    reply_msg: Message = await event.get_reply_message()
+    user = kwargs.get('user', None)
+
+    if user:
+        # First check for a user id
+        if user.isnumeric():
+            user = int(user)
+
+        # Then check for a user mention (@username)
+        elif event.message.entities is not None:
+            probable_user_mention_entity = event.message.entities[0]
+
+            if isinstance(probable_user_mention_entity,
+                          MessageEntityMentionName):
+                user_id = probable_user_mention_entity.user_id
+                replied_user = await event.client(GetFullUserRequest(user_id))
+                return replied_user
+        try:
+            user_object = await event.client.get_entity(user)
+            replied_user = await event.client(
+                GetFullUserRequest(user_object.id))
+        except (TypeError, ValueError) as err:
+            await event.edit(str(err))
+            return None
+
+    # Check for a forwarded message
+    elif (reply_msg and
+          reply_msg.forward and
+          reply_msg.forward.sender_id and
+          kwargs['forward']):
+        forward = reply_msg.forward
+        replied_user = await event.client(GetFullUserRequest(forward.sender_id))
+
+    # Check for a replied to message
+    elif event.reply_to_msg_id:
+        previous_message = await event.get_reply_message()
+        replied_user = await event.client(GetFullUserRequest(previous_message.from_id))
+
+    # Last case scenario is to get the current user
+    else:
+        self_user = await event.client.get_me()
+        replied_user = await event.client(GetFullUserRequest(self_user.id))
+
+    return replied_user
 
 
 async def list_admins(event):
