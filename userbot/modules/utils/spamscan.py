@@ -166,7 +166,7 @@ async def score_user(event, userfull):
         score.update({'single profile pic': 2})
 
     # If all the profile pics are the same that's another red flag
-    elif total_hashes >= 2 and len(set(hashes)) <= 2:
+    elif total_hashes >= 2 and len(set(hashes)) == 1:
         score.update({'profile pics same': 2})
 
     if matching_hashes > 0:
