@@ -83,7 +83,6 @@ async def get_user_from_event(event: NewMessage.Event, **kwargs):
             replied_user = await event.client(
                 GetFullUserRequest(user_object.id))
         except (TypeError, ValueError) as err:
-            await event.edit(str(err))
             return None
 
     # Check for a forwarded message

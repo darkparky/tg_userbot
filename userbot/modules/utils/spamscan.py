@@ -1,10 +1,13 @@
-import hashlib
+import asyncio
 import re
-from asyncio import sleep
 from io import BytesIO
 
+from PIL import Image
+from photohash import average_hash
 from telethon.tl.functions.users import GetFullUserRequest
 
+from ..help import add_help_item
+from userbot import spamwatch
 from userbot.utils.tgdoc import *
 from userbot.events import register
 from userbot.modules.dbhelper import (add_profile_pic_hash,
@@ -17,31 +20,39 @@ REDFLAG_WORDS = [
     'sex', 'eth', 'model',
 ]
 
+SCANNING_MESSAGE = "**Scanning for potential spammers.** {}"
+
 
 @register(outgoing=True, pattern=r"^\.spamscan$")
 async def spamscan(e):
     """ Scan every user in the current chat and match
     them against the spam algorithm. """
-    await e.edit("**Scanning for potential spammers, this may take a while...**")
+    users = []
+    potentials = {}
+    scanned = 0
 
-    users = {}
-    total = 0
+    await e.edit(SCANNING_MESSAGE.format("**Collecting chat participants.**"))
     async for user in e.client.iter_participants(e.chat, aggressive=True):
         user_full = await e.client(GetFullUserRequest(user.id))
+        users.append(user_full)
+
+    total_users = len(users)
+    await e.edit(SCANNING_MESSAGE.format(f"**Checking {total_users} users.**"))
+    for user_full in users:
         score = await score_user(e, user_full)
 
         score_total = sum([i for i in score.values()])
         if score_total >= 5:
-            users.update({user_full.user.id: score})
+            potentials.update({user_full.user.id: score})
 
-        total += 1
-        print(f"Scanned {total} so far")
-        # if total % 500 == 0:
-        #     await sleep(5)
+        scanned += 1
+        if scanned % 100 == 0:
+            await e.edit(SCANNING_MESSAGE.format(f"\n**Checked {scanned}/{total_users}."
+                                                 "{total_users - scanned} remaining.**"))
 
     output = Section(Bold("Scan Results"))
-    if users:
-        for item in users.items():
+    if potentials:
+        for item in potentials.items():
             user_id, score = item
             user_full = await e.client(GetFullUserRequest(user_id))
             score_total = sum([i for i in score.values()])
@@ -64,18 +75,21 @@ async def spamscan_classify(e):
     args['user'] = user
 
     replied_user = await get_user_from_event(e, **args)
+    if not replied_user:
+        await e.edit("**Failed to get information for user**", delete_in=3)
+        return
 
     if category == "spam":
         hashes = await gather_profile_pic_hashes(e, replied_user.user)
-        for md5 in hashes:
-            await add_profile_pic_hash(md5, True)
+        for hsh in hashes:
+            await add_profile_pic_hash(hsh, True)
         await e.edit(f"**Classified {make_mention(replied_user.user)} as spam**")
     elif category == "ham":
         await e.delete()
 
 
-@register(outgoing=True, pattern=r"^\.spamscan test(\s+[\S\s]+|$)")
-async def spamscan_test(e):
+@register(outgoing=True, pattern=r"^\.spamscan score(\s+[\S\s]+|$)")
+async def spamscan_score(e):
     """ Test a single user against the spamscan algorithm """
     args, user = parse_arguments(e.pattern_match.group(1), ['forward'])
 
@@ -83,10 +97,16 @@ async def spamscan_test(e):
     args['user'] = user
 
     replied_user = await get_user_from_event(e, **args)
+    if not replied_user:
+        await e.edit("**Failed to get information for user**", delete_in=3)
+        return
+
+    await e.edit(f"**Calculating spam score for** {make_mention(replied_user.user)}")
+
     score = await score_user(e, replied_user)
     score_total = sum([i for i in score.values()])
 
-    output = f"Spam score for {make_mention(replied_user.user)}: **{score_total}**\n\n"
+    output = f"**Spam score for** {make_mention(replied_user.user)}: **{score_total}**\n\n"
 
     if score_total > 0:
         output += "**Reasons:**\n"
@@ -111,32 +131,38 @@ async def score_user(event, userfull):
     hashes = await gather_profile_pic_hashes(event, user)
     total_hashes = len(hashes)
     matching_hashes = 0
-    for md5 in hashes:
-        match = await get_profile_pic_hash(md5)
-        if match:
+    for hsh in hashes:
+        match = await get_profile_pic_hash(hsh)
+        if match and match.get('spam'):
             matching_hashes += 1
+
+    # Check if this person is banned in spamwatch. This is
+    # basically a guarantee, and therefore nets a +5.
+    spamwatch_ban = spamwatch.get_ban(user.id)
+    if spamwatch_ban:
+        score.update({f'spamwatch ({spamwatch_ban.reason.lower()})': 5})
 
     # No profile pic is a +2
     if total_hashes == 0:
         score.update({'no profile pic': 2})
 
-    if matching_hashes > 0:
-        # If the number of matching hashes is greater than or equal
-        # to half of the total hashes we give them a +5. This is
-        # basically a guarantee.
-        if (total_hashes / matching_hashes) >= (total_hashes / 2):
-            score.update({f'blacklisted photos ({total_hashes}/{matching_hashes})': 5})
+    # A single profile pic can also be a red flag
+    elif total_hashes == 1:
+        score.update({'single profile pic': 2})
 
-        # Otherwise we increase their score by 3 because they still
-        # have matching hashes.
-        else:
-            score.update({f'blacklisted photos ({total_hashes}/{matching_hashes})': 3})
+    # If all the profile pics are the same that's another red flag
+    elif total_hashes >= 2 and len(set(hashes)) <= 2:
+        score.update({'profile pics same': 2})
+
+    if matching_hashes > 0:
+        # If there are matching hashes that's an automatic +5
+        score.update({f'blacklisted photos ({total_hashes}/{matching_hashes})': 5})
 
     # Lots of spammers try and look normal by having a normal(ish)
     # first and last name. A first AND last name with no special
     # characters is a good indicator. This is a +1.
-    if ((user.first_name and re.match(r"[a-zA-Z0-9\s_]+", user.first_name)) or
-            (user.last_name and re.match(r"[a-zA-Z0-9\s_]+", user.last_name))):
+    if ((user.first_name and re.match(r"^[a-zA-Z0-9\s_]+$", user.first_name)) and
+            (user.last_name and re.match(r"^[a-zA-Z0-9\s_]+$", user.last_name))):
         score.update({'alphanum first and last name': 1})
 
     if user.first_name and user.last_name:
@@ -145,9 +171,9 @@ async def score_user(event, userfull):
         # lowercase, all upper or lower, or having one name be
         # numeric. Either way they generally have a first
         # name and a last name.
-        if user.first_name.isupper() or user.first_name.islower():
+        if user.first_name.isupper() and user.first_name.islower():
             score.update({'first upper last lower': 3})
-        elif user.last_name.isupper() or user.last_name.islower():
+        elif user.last_name.isupper() and user.last_name.islower():
             score.update({'first lower last upper': 3})
         elif user.first_name.islower() and user.last_name.islower():
             # This appears less bot like than all upper
@@ -163,12 +189,19 @@ async def score_user(event, userfull):
             (user.last_name and is_cjk(user.last_name))):
         score.update({'ch/jp name': 3})
     elif (user.first_name and is_arabic(user.first_name) or
-            (user.last_name and is_arabic(user.last_name))):
+          (user.last_name and is_arabic(user.last_name))):
         score.update({'arabic name': 3})
     elif (user.first_name and is_cyrillic(user.first_name) or
-            (user.last_name and is_cyrillic(user.last_name))):
+          (user.last_name and is_cyrillic(user.last_name))):
         # Cyrillic names are more common, so we'll drop the score here.
         score.update({'cyrillic name': 2})
+
+    if userfull.about and is_cjk(userfull.about):
+        score.update({'ch/jp bio': 2})
+    elif userfull.about and is_arabic(userfull.about):
+        score.update({'arabic bio': 2})
+    elif userfull.about and is_cyrillic(userfull.about):
+        score.update({'cyrillic bio': 2})
 
     # A username ending in numbers is a +1
     if user.username and re.match(r".*[0-9]+$", user.username):
@@ -207,16 +240,16 @@ def is_cyrillic(string):
 def unicode_block_match(string, block):
     re.sub(r"\s+", "", string)
     for char in string:
-        if not any([start <= ord(char) <= end for start, end in block]):
-            return False
-    return True
+        if any([start <= ord(char) <= end for start, end in block]):
+            return True
+    return False
 
 
 async def gather_profile_pic_hashes(event, user):
     hashes = []
-    async for photo in event.client.iter_profile_photos(user, limit=10):
+    async for photo in event.client.iter_profile_photos(user, limit=5):
         io = BytesIO()
         await event.client.download_media(photo, io)
-        md5 = hashlib.md5(io.getvalue())
-        hashes.append(md5.hexdigest())
+        image = Image.open(io)
+        hashes.append(average_hash(image))
     return hashes

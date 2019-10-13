@@ -3,6 +3,7 @@ import math
 import urllib.request
 
 from PIL import Image
+from telethon.tl.custom import Conversation
 from telethon.tl.types import MessageMediaPhoto, DocumentAttributeFilename
 
 from ..help import add_help_item
@@ -93,6 +94,7 @@ async def kang(args):
 
         if "  A <strong>Telegram</strong> user has created the <strong>Sticker&nbsp;Set</strong>." not in htmlstr:
             async with bot.conversation('Stickers') as conv:
+                conv: Conversation = conv
                 await conv.send_message('/addsticker')
                 await conv.get_response()
                 # Ensure user doesn't get spamming notifications

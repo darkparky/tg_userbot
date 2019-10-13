@@ -545,26 +545,26 @@ async def delete_command(command):
         return True
 
 
-async def add_profile_pic_hash(md5, spam):
-    to_check = MONGO.profile_pic_hashes.find_one({"hash": md5})
+async def add_profile_pic_hash(hsh, spam):
+    to_check = MONGO.profile_pic_hashes.find_one({"hash": hsh})
 
     if to_check:
         return MONGO.profile_pic_hashes.update_one({
             '_id': to_check['_id'],
             'hash': to_check['hash']
         }, {"$set": {
-            'hash': md5,
+            'hash': hsh,
             'spam': spam
         }})
     else:
         return MONGO.profile_pic_hashes.insert_one({
-            'hash': md5,
+            'hash': hsh,
             'spam': spam
         })
 
 
-async def remove_profile_pic_hash(md5):
-    to_check = MONGO.profile_pic_hashes.find_one({"hash": md5})
+async def remove_profile_pic_hash(hsh):
+    to_check = MONGO.profile_pic_hashes.find_one({"hash": hsh})
 
     if not to_check:
         return False
@@ -576,6 +576,6 @@ async def remove_profile_pic_hash(md5):
         return True
 
 
-async def get_profile_pic_hash(md5):
-    return MONGO.profile_pic_hashes.find_one({"hash": md5})
+async def get_profile_pic_hash(hsh):
+    return MONGO.profile_pic_hashes.find_one({"hash": hsh})
 

@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from github import Github
 from minio import Minio
 from pymongo import MongoClient
-# from spamwatch import Client as SpamWatch
+from spamwatch import Client as SpamWatch
 
 from userbot.client import UserBot
 
@@ -104,11 +104,11 @@ CURRENCY_API = os.environ.get("CURRENCY_API", None)
 
 GDRIVE_FOLDER = os.environ.get("GDRIVE_FOLDER", None)
 
-# SPAMWATCH_API_KEY = os.environ.get("SPAMWATCH_API_KEY", None)
-# if SPAMWATCH_API_KEY:
-#     spamwatch = SpamWatch(SPAMWATCH_API_KEY, host="https://staging.spamwat.ch")
-# else:
-#     spamwatch = None
+SPAMWATCH_API_KEY = os.environ.get("SPAMWATCH_API_KEY", None)
+if SPAMWATCH_API_KEY:
+    spamwatch = SpamWatch(SPAMWATCH_API_KEY, host="https://staging.spamwat.ch")
+else:
+    spamwatch = None
 
 # pylint: disable=invalid-name
 bot = UserBot("userbot", API_KEY, API_HASH)

@@ -1,21 +1,28 @@
 """ Allows !! commands to be registered """
 import mimetypes
 import os
+import re
 from datetime import datetime
+from functools import reduce
 
 from minio import ResponseError
 
 from ..help import add_help_item
 from ..dbhelper import add_command, delete_command, get_command, get_commands
-from userbot import minioClient, MINIO_BUCKET, bot
+from userbot import minioClient, MINIO_BUCKET, bot, MONGO
 from userbot.events import register
+from userbot.utils import parse_arguments
 
 
-@register(outgoing=True, pattern=r"^\.reg (\S+)(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.reg(\s+[\S\s]+)")
 async def register_command(e):
     reply_message = await e.get_reply_message()
-    command = e.pattern_match.group(1)
-    text = e.pattern_match.group(2)
+    params = e.pattern_match.group(1)
+    args, params = parse_arguments(params, ['update'])
+    update = args.get('update', False)
+
+    command, _, text = params.partition(' ')
+    command, text = command, text if text else None
 
     await e.edit(f"Registering command `{command}`...")
 
@@ -95,8 +102,34 @@ async def unregister_command(e):
 @register(outgoing=True, pattern=r"^\.regs$")
 async def list_commands(e):
     commands = await get_commands()
-    commands = sorted([f"`{c['command']}`" for c in commands])
-    message = "**Registered Commands** \n" + ', '.join(commands)
+    commands = [c['command'] for c in commands]
+
+    print(commands)
+
+    def rangify(acc, cmd):
+        if re.match(r"(\S+)(\d+)", cmd):
+            cmd, num = re.findall(r"(\S+)(\d+)", cmd)[0]
+            if not acc.get(cmd):
+                acc.update({cmd: 1})
+            else:
+                acc[cmd] = acc[cmd] + 1
+        else:
+            if not acc.get(cmd):
+                acc.update({cmd: None})
+        return acc
+
+    commands = reduce(rangify, commands, {})
+
+    numbered = [cmd for cmd in commands.items() if cmd[1]]
+    numbered = '\n'.join([f"{u[0]}-{u[0]}{u[1]}" for u in numbered])
+
+    unnumbered = [cmd[0] for cmd in commands.items() if not cmd[1]]
+
+    message = f"""**Registered Commands**
+{', '.join(unnumbered)}
+    
+**Sequenced**
+{numbered}"""
     await e.edit(message)
 
 

@@ -1,5 +1,6 @@
 git+https://github.com/LonamiWebs/Telethon.git
 git+https://github.com/bigg215/pytube.git
+git+https://github.com/YouTwitFace/photohash.git
 Pillow>=5.3.0
 aiohttp
 cowpy
@@ -41,4 +42,4 @@ PyGithub
 spectra
 minio
 cryptg
-# spamwatch
+spamwatch
