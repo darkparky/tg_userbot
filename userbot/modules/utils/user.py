@@ -1,21 +1,11 @@
-# Copyright (C) 2019 The Raphielscape Company LLC.
-#
-# Licensed under the Raphielscape Public License, Version 1.c (the "License");
-# you may not use this file except in compliance with the License.
-#
-# The entire source code is OSSRPL except 'user' which is MPL
-# License: MPL and OSSRPL
-""" Userbot module for getiing info
+""" Userbot module for getting info
     about any user on Telegram(including you!). """
 
 from telethon.events import NewMessage
-from telethon.tl.custom import Message
-from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import MessageEntityMentionName
 
 # from userbot import spamwatch
 from userbot.events import register
-from userbot.utils import parse_arguments
+from userbot.utils import parse_arguments, get_user_from_event
 from userbot.utils.tgdoc import *
 from ..help import add_help_item
 
@@ -35,7 +25,7 @@ async def who(event: NewMessage.Event):
     args['forward'] = args.get('forward', True)
     args['user'] = user
 
-    replied_user = await get_user(event, **args)
+    replied_user = await get_user_from_event(event, **args)
 
     if not replied_user:
         await event.edit("**Failed to get information for user**")
@@ -49,54 +39,6 @@ async def who(event: NewMessage.Event):
         pass
 
     await event.edit(str(user_info), parse_mode="markdown")
-
-
-async def get_user(event: NewMessage.Event, **kwargs):
-    """ Get the user from argument or replied message. """
-    reply_msg: Message = await event.get_reply_message()
-    user = kwargs.get('user', None)
-
-    if user:
-        # First check for a user id
-        if user.isnumeric():
-            user = int(user)
-
-        # Then check for a user mention (@username)
-        elif event.message.entities is not None:
-            probable_user_mention_entity = event.message.entities[0]
-
-            if isinstance(probable_user_mention_entity,
-                          MessageEntityMentionName):
-                user_id = probable_user_mention_entity.user_id
-                replied_user = await event.client(GetFullUserRequest(user_id))
-                return replied_user
-        try:
-            user_object = await event.client.get_entity(user)
-            replied_user = await event.client(
-                GetFullUserRequest(user_object.id))
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
-            return None
-
-    # Check for a forwarded message
-    elif (reply_msg and
-          reply_msg.forward and
-          reply_msg.forward.sender_id and
-          kwargs['forward']):
-        forward = reply_msg.forward
-        replied_user = await event.client(GetFullUserRequest(forward.sender_id))
-
-    # Check for a replied to message
-    elif event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-        replied_user = await event.client(GetFullUserRequest(previous_message.from_id))
-
-    # Last case scenario is to get the current user
-    else:
-        self_user = await event.client.get_me()
-        replied_user = await event.client(GetFullUserRequest(self_user.id))
-
-    return replied_user
 
 
 async def fetch_info(replied_user, **kwargs):
