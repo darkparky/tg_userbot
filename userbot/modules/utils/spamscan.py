@@ -36,16 +36,16 @@ async def spamscan(e):
 
         total += 1
         print(f"Scanned {total} so far")
-        if total % 500 == 0:
-            await sleep(5)
+        # if total % 500 == 0:
+        #     await sleep(5)
 
     output = Section(Bold("Scan Results"))
     if users:
         for item in users.items():
             user_id, score = item
-            user = await e.client(GetFullUserRequest(user_id))
+            user_full = await e.client(GetFullUserRequest(user_id))
             score_total = sum([i for i in score.values()])
-            output.items.append(KeyValueItem(String(make_mention(user)),
+            output.items.append(KeyValueItem(String(make_mention(user_full.user)),
                                              Bold(str(score_total))))
     else:
         output.items.append(String("No potential spammers found"))
@@ -69,8 +69,9 @@ async def spamscan_classify(e):
         hashes = await gather_profile_pic_hashes(e, replied_user.user)
         for md5 in hashes:
             await add_profile_pic_hash(md5, True)
+        await e.edit(f"**Classified {make_mention(replied_user.user)} as spam**")
     elif category == "ham":
-        pass
+        await e.delete()
 
 
 @register(outgoing=True, pattern=r"^\.spamscan test(\s+[\S\s]+|$)")
