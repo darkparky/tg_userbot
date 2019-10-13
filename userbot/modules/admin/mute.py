@@ -39,11 +39,11 @@ async def spider(spdr):
     self_user = await spdr.client.get_me()
 
     if user.id == self_user.id:
-        await spdr.edit("`Mute Error! You are not supposed to mute yourself!`")
+        await spdr.edit("You can't mute yourself", delete_in=3)
         return
 
     # If everything goes well, do announcing and mute
-    await spdr.edit("`Gets a tape!`")
+    await spdr.edit(f"Muting `{user.id}`...")
     if await mute(spdr.chat_id, user.id) is False:
         return await spdr.edit('`Error! User probably already muted.`')
     else:
@@ -51,7 +51,7 @@ async def spider(spdr):
             await spdr.client(
                 EditBannedRequest(spdr.chat_id, user.id, MUTE_RIGHTS))
             # Announce that the function is done
-            await spdr.edit("`Safely taped!`")
+            await spdr.edit(f"Muted `{user.id}`")
 
             # Announce to logging group
             if BOTLOG:

@@ -17,11 +17,11 @@ async def ungmoot(un_gmute):
         await un_gmute.edit(NO_SQL)
         return
 
-    user = await get_user_from_event(un_gmute)
-    if user:
-        pass
-    else:
+    user_full = await get_user_from_event(un_gmute)
+    if not user_full:
         return
+
+    user = user_full.user
 
     # If pass, inform and start ungmuting
     await un_gmute.edit('```Ungmuting...```')

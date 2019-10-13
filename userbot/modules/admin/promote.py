@@ -32,11 +32,11 @@ async def promote(promt):
 
     await promt.edit("Promoting...")
 
-    user = await get_user_from_event(promt)
-    if user:
-        pass
-    else:
+    user_full = await get_user_from_event(promt)
+    if not user_full:
         return
+
+    user = user_full.user
 
     # Try to promote if current user is admin or creator
     try:

@@ -24,11 +24,11 @@ async def demote(dmod):
     # If passing, declare that we're going to demote
     await dmod.edit("`Demoting...`")
 
-    user = await get_user_from_event(dmod)
-    if user:
-        pass
-    else:
+    user_full = await get_user_from_event(dmod)
+    if not user_full:
         return
+
+    user = user_full.user
 
     # New rights after demotion
     newrights = ChatAdminRights(add_admins=None,

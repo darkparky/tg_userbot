@@ -24,11 +24,11 @@ async def nothanos(unbon):
     # If everything goes well...
     await unbon.edit("`Unbanning...`")
 
-    user = await get_user_from_event(unbon)
-    if user:
-        pass
-    else:
+    user_full = await get_user_from_event(unbon)
+    if not user_full:
         return
+
+    user = user_full.user
 
     try:
         await unbon.client(

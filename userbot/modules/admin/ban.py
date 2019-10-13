@@ -21,11 +21,11 @@ async def ban(bon):
         await bon.edit(NO_ADMIN)
         return
 
-    user = await get_user_from_event(bon)
-    if user:
-        pass
-    else:
+    user_full = await get_user_from_event(bon)
+    if not user_full:
         return
+
+    user = user_full.user
 
     # Announce that we're going to whack the pest
     await bon.edit("`Whacking the pest!`")

@@ -16,11 +16,12 @@ async def gspider(gspdr):
     if not is_mongo_alive() or not is_redis_alive():
         await gspdr.edit(NO_SQL)
         return
-    user = await get_user_from_event(gspdr)
-    if user:
-        pass
-    else:
+
+    user_full = await get_user_from_event(gspdr)
+    if not user_full:
         return
+
+    user = user_full.user
 
     # If pass, inform and start gmuting
     await gspdr.edit("Grabbing some duct tape...")

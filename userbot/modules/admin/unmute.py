@@ -28,11 +28,12 @@ async def unmoot(unmot):
         return
     # If admin or creator, inform the user and start unmuting
     await unmot.edit('```Unmuting...```')
-    user = await get_user_from_event(unmot)
-    if user:
-        pass
-    else:
+
+    user_full = await get_user_from_event(unmot)
+    if not user_full:
         return
+
+    user = user_full.user
 
     if await unmute(unmot.chat_id, user.id) is False:
         return await unmot.edit("`Error! User probably already unmuted.`")

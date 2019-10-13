@@ -24,10 +24,11 @@ async def kick(usr):
         await usr.edit(NO_ADMIN)
         return
 
-    user = await get_user_from_event(usr)
-    if not user:
-        await usr.edit("`Couldn't fetch user.`")
+    user_full = await get_user_from_event(usr)
+    if not user_full:
         return
+
+    user = user_full.user
 
     await usr.edit("`Kicking...`")
 
