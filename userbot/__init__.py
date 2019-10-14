@@ -166,12 +166,15 @@ MINIO_ACCESS_KEY = os.environ.get('MINIO_ACCESS_KEY', None)
 MINIO_SECRET_KEY = os.environ.get('MINIO_SECRET_KEY', None)
 MINIO_BUCKET = os.environ.get('MINIO_BUCKET', None)
 
-minioClient = Minio(
-    MINIO_HOST,
-    access_key=MINIO_ACCESS_KEY,
-    secret_key=MINIO_SECRET_KEY,
-    secure=True
-)
+if MINIO_HOST:
+    minioClient = Minio(
+        MINIO_HOST,
+        access_key=MINIO_ACCESS_KEY,
+        secret_key=MINIO_SECRET_KEY,
+        secure=True
+    )
+else:
+    minioClient = None
 
 # Global Variables
 COUNT_MSG = 0
