@@ -151,12 +151,6 @@ async def score_user(event, userfull):
         if match and match.get('spam'):
             matching_hashes += 1
 
-    # Check if this person is banned in spamwatch. This is
-    # basically a guarantee, and therefore nets a +5.
-    spamwatch_ban = spamwatch.get_ban(user.id)
-    if spamwatch_ban:
-        score.update({f'spamwatch ({spamwatch_ban.reason.lower()})': 5})
-
     # No profile pic is a +2
     if total_hashes == 0:
         score.update({'no profile pic': 2})
@@ -238,6 +232,13 @@ async def score_user(event, userfull):
     else:
         score.update({'no bio': 2})
 
+    # Check if this person is banned in spamwatch. This is
+    # basically a guarantee, and therefore nets a +5.
+    if spamwatch:
+        spamwatch_ban = spamwatch.get_ban(user.id)
+        if spamwatch_ban:
+            score.update({f'spamwatch ({spamwatch_ban.reason.lower()})': 5})
+
     return score
 
 
@@ -265,7 +266,7 @@ def unicode_block_match(string, block):
 
 async def gather_profile_pic_hashes(event, user):
     hashes = []
-    async for photo in event.client.iter_profile_photos(user, limit=5):
+    async for photo in event.client.iter_profile_photos(user):
         io = BytesIO()
         await event.client.download_media(photo, io)
         image = Image.open(io)
