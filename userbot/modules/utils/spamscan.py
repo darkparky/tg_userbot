@@ -276,7 +276,7 @@ async def gather_profile_pic_hashes(event, user):
 
 add_help_item(
     ".spam scan",
-    "Utilities [spam]",
+    "Utilities",
     "Scan the current group for potential spammers "
     "using the spamscan algorithm.",
     """
@@ -288,7 +288,7 @@ add_help_item(
 
 add_help_item(
     ".spam flag",
-    "Utilities [spam]",
+    "Utilities",
     "Flag the selected user as a spammer. Hashes their profile "
     "photos and adds them to the database and, if you're a "
     "SpamWatch admin, gbans them. If you're not an admin it "
@@ -308,7 +308,7 @@ add_help_item(
 
 add_help_item(
     ".spam score",
-    "Utilities [spam]",
+    "Utilities",
     "Get the spam score of the selected user.",
     """
     `.spam score [options] (user id|username)`

@@ -70,7 +70,7 @@ async def sub_logic(event):
 
 add_help_item(
     ".sub",
-    "Utilities [subs]",
+    "Utilities",
     "Add a subscription, allowing you to be notified "
     "whenever a message matches a specific pattern.",
     """

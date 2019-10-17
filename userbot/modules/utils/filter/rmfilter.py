@@ -25,7 +25,7 @@ async def remove_filter(event):
 
 add_help_item(
     ".rmfilter",
-    "Utilities [filters]",
+    "Utilities",
     "Remove a filter.",
     """
     `.rmfilter "(pattern)"`

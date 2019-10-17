@@ -36,7 +36,7 @@ async def list_subscriptions(event):
 
 add_help_item(
     ".subs",
-    "Utilities [subs]",
+    "Utilities",
     "List all registered subscriptions for the current "
     "chat (or all).",
     """

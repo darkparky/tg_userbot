@@ -51,9 +51,9 @@ async def show_help(event):
         categorized = []
         for cat in categories:
             cat_items = sorted(CAT_ITEMS[cat])
-            cat_items = [f"`{item}`" for item in cat_items]
-            msg = f"**{cat}** \n" + '  '.join(cat_items)
+            msg = f"**{cat}** \n```{', '.join(cat_items)}```"
             categorized.append(msg)
 
         message = "**Please specify which module do you want help for!** \n\n" + '\n\n'.join(categorized)
         await event.edit(message)
+        print(message)

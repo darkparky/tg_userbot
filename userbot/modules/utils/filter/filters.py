@@ -25,7 +25,7 @@ async def filters_active(event):
 
 add_help_item(
     ".filters",
-    "Utilities [filters]",
+    "Utilities",
     "List all registered filters.",
     """
     `.filters`

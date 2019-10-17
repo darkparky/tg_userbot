@@ -19,7 +19,7 @@ async def remove_subscription(event):
 
 add_help_item(
     ".rmsub",
-    "Utilities [subs]",
+    "Utilities",
     "Remove a subscription.",
     """
     `.rmsub (name)`

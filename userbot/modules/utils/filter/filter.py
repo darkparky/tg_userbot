@@ -56,7 +56,7 @@ async def filter_incoming_handler(handler):
 
 add_help_item(
     ".filter",
-    "Utilities [filters]",
+    "Utilities",
     "Add a new filter. Filters allow you to respond "
     "to a specific pattern with a message.",
     """
