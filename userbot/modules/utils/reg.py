@@ -154,7 +154,7 @@ async def save_file(file):
 
 add_help_item(
     ".reg",
-    "Utils [regs]",
+    "Utilities [regs]",
     "Register a simple command which sends a message, "
     "photo, sticker, or file of some kind.",
     """
@@ -168,7 +168,7 @@ add_help_item(
 
 add_help_item(
     ".unreg",
-    "Utils [regs]",
+    "Utilities [regs]",
     "Unregister (delete) a registered command.",
     """
     `.unreg (command)`
@@ -177,7 +177,7 @@ add_help_item(
 
 add_help_item(
     ".regs",
-    "Utils [regs]",
+    "Utilities [regs]",
     "List all registered commands.",
     """
     `.regs`
