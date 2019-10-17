@@ -58,17 +58,11 @@ def register(**args):
                     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
                     text = "**Sorry, I encountered a error!**\n"
-                    link = "[https://t.me/userbot_support](Userbot Support Chat)"
-                    text += "If you wanna you can report it"
-                    text += f"- just forward this message to {link}.\n"
-                    text += "I won't log anything except the fact of error and date\n"
 
-                    ftext = "\nDisclaimer:\nThis file uploaded ONLY here, "
-                    ftext += "we logged only fact of error and date, "
-                    ftext += "we respect your privacy, "
-                    ftext += "you may not report this error if you've "
-                    ftext += "any confidential data here, noone will see your data\n\n"
-                    ftext += "--------BEGIN USERBOT TRACEBACK LOG--------"
+                    ftext = "\nDisclaimer:\nThis file is for your eyes "
+                    ftext += "only and may contain sensitive data. Be "
+                    ftext += "careful before sharing it with anyone. \n\n"
+                    ftext += "--------BEGIN ERROR LOG--------"
                     ftext += "\nDate: " + date
                     ftext += "\nGroup ID: " + str(check.chat_id)
                     ftext += "\nSender ID: " + str(check.sender_id)
@@ -78,7 +72,7 @@ def register(**args):
                     ftext += str(traceback.format_exc())
                     ftext += "\n\nError text:\n"
                     ftext += str(sys.exc_info()[1])
-                    ftext += "\n\n--------END USERBOT TRACEBACK LOG--------"
+                    ftext += "\n\n--------END ERROR LOG--------"
 
                     command = "git log --pretty=format:\"%an: %s\" -5"
 
