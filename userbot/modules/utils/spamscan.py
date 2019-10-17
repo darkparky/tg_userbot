@@ -8,7 +8,7 @@ from spamwatch.errors import UnauthorizedError
 from telethon.tl.functions.users import GetFullUserRequest
 
 from ..help import add_help_item
-from userbot import spamwatch
+from userbot import spamwatch, bot
 from userbot.utils.tgdoc import *
 from userbot.events import register
 from userbot.modules.dbhelper import (add_profile_pic_hash,
@@ -80,6 +80,11 @@ async def spamscan_classify(e):
     replied_user = await get_user_from_event(e, **args)
     if not replied_user:
         await e.edit("**Failed to get information for user**", delete_in=3)
+        return
+
+    me = await bot.get_me()
+    if replied_user.user == me:
+        await e.edit("**Can't flag yourself as spam**", delete_in=3)
         return
 
     hashes = await gather_profile_pic_hashes(e, replied_user.user)
