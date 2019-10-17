@@ -17,6 +17,8 @@ from github import Github
 from minio import Minio
 from pymongo import MongoClient
 from spamwatch import Client as SpamWatch
+from google.cloud import texttospeech_v1 as tts
+from google.cloud import speech_v1 as stt
 
 from userbot.client import UserBot
 
@@ -175,6 +177,14 @@ if MINIO_HOST:
     )
 else:
     minioClient = None
+
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", None)
+if GOOGLE_APPLICATION_CREDENTIALS:
+    TTSClient = tts.TextToSpeechClient()
+    STTClient = stt.SpeechClient()
+else:
+    TTSClient = None
+    STTClient = None
 
 # Global Variables
 COUNT_MSG = 0

@@ -22,15 +22,17 @@ def parse_arguments(message: str, valid: List[str]) -> (dict, str):
     # Handle key/value pairs
     for opt in findall(r'(\S+):(?:"([\S\s]+)"|(\S+))', message):
         key, val1, val2 = opt
-        value = val1[1:-1] if val1 else val2
+        value = val2 or val1[1:-1]
         if key in valid:
             if value.isnumeric():
                 value = int(value)
             elif match(r'[Tt]rue|[Ff]alse', value):
                 match(r'[Tt]rue', value)
             options[key] = value
-            message = message.replace(':'.join(opt), '')
+            print(val1, val2, f"{key}:{value}")
+            message = message.replace(f"{key}:{value}", '')
 
+    print(options, message)
     return options, message.strip()
 
 

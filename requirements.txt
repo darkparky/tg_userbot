@@ -12,7 +12,8 @@ google-api-python-client
 oauth2client
 google_images_download>=2.7.1
 googletrans>=2.4.0
-gtts>=2.0.1
+google-cloud-speech
+google-cloud-texttospeech
 hachoir
 pybase64>=0.4.0
 python-dotenv

@@ -1,62 +1,88 @@
 import os
 
-from gtts import gTTS
+from google.cloud.texttospeech_v1.gapic.enums import SsmlVoiceGender
 
 from ..help import add_help_item
-from userbot import BOTLOG, BOTLOG_CHATID
+from userbot import BOTLOG, BOTLOG_CHATID, TTSClient, tts
 from userbot.events import register
-from userbot.modules.misc import LANG
 from userbot.utils import parse_arguments
 
+DEFAULT_LANG = "en-US"
+DEFAULT_VOICE = "en-US-Wavenet-F"
+DEFAULT_GENDER = "female"
 
-@register(outgoing=True, pattern=r"^\.tts(?: |$)([\s\S]*)")
-async def text_to_speech(query):
+GENDERS = {
+    "male": SsmlVoiceGender.MALE,
+    "female": SsmlVoiceGender.FEMALE,
+    "neutral": SsmlVoiceGender.NEUTRAL
+}
+
+
+@register(outgoing=True, pattern=r"^\.tts(\s+[\s\S]+|$)")
+async def text_to_speech(e):
     """ For .tts command, a wrapper for Google Text-to-Speech. """
-    textx = await query.get_reply_message()
-    message = query.pattern_match.group(1)
+    textx = await e.get_reply_message()
+    message = e.pattern_match.group(1)
     if message:
         pass
     elif textx:
         message = textx.text
     else:
-        await query.edit("`Give a text or reply to a "
+        await e.edit("`Give a text or reply to a "
                          "message for Text-to-Speech!`")
         return
 
-    opts, message = parse_arguments(message, ['slow', 'lang'])
-    lang = opts.get('lang', LANG)
-    slow = opts.get('slow', False)
+    opts, message = parse_arguments(message, [
+        'slow', 'fast', 'lang', 'gender', 'file'
+    ])
+
+    lang = opts.get('lang', DEFAULT_LANG)
+    voice = opts.get('voice', DEFAULT_VOICE)
+    gender = GENDERS.get(opts.get('gender', "neutral"), SsmlVoiceGender.NEUTRAL)
+
+    if opts.get('slow'):
+        speed = 0.5
+    elif opts.get('fast'):
+        speed = 2.0
+    else:
+        speed = 1.0
+
+    synthesis_input = tts.types.SynthesisInput(text=message)
+
+    voice = tts.types.VoiceSelectionParams(
+        name=voice,
+        language_code=lang,
+        ssml_gender=gender)
+
+    audio_config = tts.types.AudioConfig(
+        audio_encoding=tts.enums.AudioEncoding.MP3,
+        speaking_rate=speed)
 
     try:
-        gTTS(message, lang, slow)
+        response = TTSClient.synthesize_speech(synthesis_input, voice, audio_config)
     except AssertionError:
-        await query.edit('The text is empty.\n'
+        await e.edit('The text is empty.\n'
                          'Nothing left to speak after pre-precessing, '
                          'tokenizing and cleaning.')
         return
-    except ValueError:
-        await query.edit('Language is not supported.')
+    except ValueError as err:
+        await e.edit('Language is not supported.')
         return
     except RuntimeError:
-        await query.edit('Error loading the languages dictionary.')
+        await e.edit('Error loading the languages dictionary.')
         return
 
-    await query.delete()
+    await e.delete()
 
-    tts = gTTS(message, lang, slow)
-    tts.save("k.mp3")
-    with open("k.mp3", "rb") as audio:
-        linelist = list(audio)
-        linecount = len(linelist)
-    if linecount == 1:
-        tts = gTTS(message, lang, slow)
-        tts.save("k.mp3")
-    with open("k.mp3", "r"):
-        await query.client.send_file(query.chat_id, "k.mp3", voice_note=True, reply_to=textx)
-        os.remove("k.mp3")
-        if BOTLOG:
-            await query.client.send_message(
-                BOTLOG_CHATID, "tts of " + message + " executed successfully!")
+    with open("k.mp3", "wb") as audio:
+        audio.write(response.audio_content)
+
+    await e.client.send_file(e.chat_id, "k.mp3", voice_note=True, reply_to=textx)
+    os.remove("k.mp3")
+
+    if BOTLOG:
+        await e.client.send_message(
+            BOTLOG_CHATID, "tts of `" + message + "` executed successfully!")
 
 add_help_item(
     ".tts",
@@ -69,7 +95,11 @@ add_help_item(
     `.tts [options]`
     
     Options:
-    `.slow`: Say the message slowly.
-    `.lang`: Message to speak in.
+    `.slow`: Play at half speed.
+    `.fast`: Play at double speed.
+    
+    `lang`: Language code of the message.
+    `gender`: `male`, `female`, or `neutral`.
+    `voice`: Any of the supported [voice names](https://cloud.google.com/text-to-speech/docs/voices).
     """
 )

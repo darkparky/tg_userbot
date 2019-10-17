@@ -25,7 +25,7 @@ SCANNING_MESSAGE = "**Scanning for potential spammers.** {}"
 CLASSIFYING_MESSAGE = "**Classifying as spam.** {}"
 
 
-@register(outgoing=True, pattern=r"^\.spamscan$")
+@register(outgoing=True, pattern=r"^\.spam scan$")
 async def spamscan(e):
     """ Scan every user in the current chat and match
     them against the spam algorithm. """
@@ -66,7 +66,7 @@ async def spamscan(e):
     await e.edit(str(output))
 
 
-@register(outgoing=True, pattern=r"^\.spamscan flag(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.spam flag(\s+[\S\s]+|$)")
 async def spamscan_classify(e):
     """ Feed the algorithm by classifying a user either
     as spam or ham """
@@ -103,7 +103,7 @@ async def spamscan_classify(e):
                  f"**Reason:** {reason}")
 
 
-@register(outgoing=True, pattern=r"^\.spamscan score(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.spam score(\s+[\S\s]+|$)")
 async def spamscan_score(e):
     """ Test a single user against the spamscan algorithm """
     args, user = parse_arguments(e.pattern_match.group(1), ['forward'])
@@ -272,3 +272,51 @@ async def gather_profile_pic_hashes(event, user):
         image = Image.open(io)
         hashes.append(average_hash(image))
     return hashes
+
+
+add_help_item(
+    ".spam scan",
+    "Utils",
+    "Scan the current group for potential spammers "
+    "using the spamscan algorithm.",
+    """
+    `.spam scan`
+    
+    Warning: this can take a __very__ long time.
+    """
+)
+
+add_help_item(
+    ".spam flag",
+    "Utils",
+    "Flag the selected user as a spammer. Hashes their profile "
+    "photos and adds them to the database and, if you're a "
+    "SpamWatch admin, gbans them. If you're not an admin it "
+    "forwards the replied to message to SpamWatch.",
+    """
+    `.spam flag [options] (user id|username)`
+    
+    Or, in reply to a message
+    `.spam flag [options]`
+    
+    **Options:**
+    `.forward`: Follow forwarded message
+    
+    `reason`: The reason for flagging
+    """
+)
+
+add_help_item(
+    ".spam score",
+    "Utils",
+    "Get the spam score of the selected user.",
+    """
+    `.spam score [options] (user id|username)`
+    
+    Or, in reply to a message
+    `.spam score [options]`
+    
+    **Options:**
+    `.forward`: Follow forwarded message
+    """
+)

@@ -144,7 +144,6 @@ async def save_file(file):
     mime = mimetypes.guess_type(photo)[0]
 
     try:
-        print(name, file_stat.st_size, mime)
         with open(photo, 'rb') as file:
             minioClient.put_object(MINIO_BUCKET, name, file, file_stat.st_size, content_type=mime)
         os.remove(photo)
