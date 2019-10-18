@@ -14,7 +14,6 @@ async def yt_search(video_q):
     """ For .yt command, do a YouTube search from Telegram. """
     query = video_q.pattern_match.group(1)
     result = ''
-    i = 1
 
     if not YOUTUBE_API_KEY:
         await video_q.edit("`Error: YouTube API key missing!\
@@ -30,10 +29,9 @@ async def yt_search(video_q):
     full_response = youtube_search(query, order, limit)
     videos_json = full_response[1]
 
+    i = 1
     for video in videos_json:
-        result += f"{i}. {unescape(video['snippet']['title'])} \
-\nhttps://www.youtube.com/watch?v={video['id']['videoId']}\n"
-
+        result += f"{i}. [{unescape(video['snippet']['title'])}](https://www.youtube.com/watch?v={video['id']['videoId']}) \n"
         i += 1
 
     reply_text = f"**Search Query:**\n`{query}`\n\n**Result:**\n{result}"
