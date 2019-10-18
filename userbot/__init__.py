@@ -19,6 +19,7 @@ from pymongo import MongoClient
 from spamwatch import Client as SpamWatch
 from google.cloud import texttospeech_v1 as tts
 from google.cloud import speech_v1 as stt
+from googleapiclient.discovery import build as GAPIService
 
 from userbot.client import UserBot
 

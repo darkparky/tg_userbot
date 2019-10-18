@@ -21,12 +21,13 @@ async def yt_search(video_q):
             Add it to environment vars or config.env.`")
         return
 
-    opts, query = parse_arguments(query, ['limit'])
+    opts, query = parse_arguments(query, ['limit' 'order'])
     limit = opts.get('limit', 5)
+    order = opts.get('order', 'relevance')
 
     await video_q.edit("Processing search query...")
 
-    full_response = youtube_search(query, limit)
+    full_response = youtube_search(query, order, limit)
     videos_json = full_response[1]
 
     for video in videos_json:
@@ -47,10 +48,12 @@ def youtube_search(query,
                    location=None,
                    location_radius=None):
     """ Do a YouTube search. """
+
     youtube = build('youtube',
                     'v3',
                     developerKey=YOUTUBE_API_KEY,
                     cache_discovery=False)
+
     search_response = youtube.search().list(
         q=query,
         type="video",
@@ -85,6 +88,7 @@ add_help_item(
     `.yt [options] (query)`
     
     Options:
-    `.limit`: Limit the results.
+    `limit`: Limit the results.
+    `order`: Order the search results. Must be one of date, rating, relevance, title, videoCount, viewCount.
     """
 )
