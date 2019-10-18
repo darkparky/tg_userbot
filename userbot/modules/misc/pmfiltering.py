@@ -19,12 +19,12 @@ from userbot.modules.dbhelper import (approval, approve, block_pm, notif_off,
 
 # ========================= CONSTANTS ============================
 UNAPPROVED_MSG = (
-    "`Hey there stranger. If you're seeing this message it `"
-    "`means I haven't approved you for PMs yet. If I know `"
-    "`you this doesn't pose a problem, just wait a bit for `"
-    "`me to check my messages and approve you. If I don't `"
-    "`know you please go back to whatever group you found me `"
-    "`in and remove yourself before I report you 😁`")
+    "Hey there stranger. If you're seeing this message it "
+    "means I haven't approved you for PMs yet. If I know "
+    "you this doesn't pose a problem, just wait a bit for "
+    "me to check my messages and approve you. If I don't "
+    "know you please go back to whatever group you found me "
+    "in and remove yourself before I report you 😁")
 # =================================================================
 
 
@@ -68,8 +68,8 @@ async def permitpm(event):
                     COUNT_PM[event.chat_id] = COUNT_PM[event.chat_id] + 1
 
                 if COUNT_PM[event.chat_id] > 4:
-                    await event.respond("`You're spamming my PM, "
-                                        " which I don't like. Reporting as spam.`")
+                    await event.respond("You're spamming my PM, "
+                                        "which I don't like. Reporting as spam.")
 
                     try:
                         del COUNT_PM[event.chat_id]
@@ -144,11 +144,11 @@ async def notifon(non_event):
 async def approvepm(apprvpm):
     """ For .approve command, give someone the permissions to PM you. """
     if not is_mongo_alive() or not is_redis_alive():
-        await apprvpm.edit("`Database connections failing!`")
+        await apprvpm.edit("Database connections failing!")
         return
 
     if await approve(apprvpm.chat_id) is False:
-        return await apprvpm.edit("`User was already approved!`")
+        return await apprvpm.edit("User was already approved!")
     else:
         if apprvpm.reply_to_msg_id:
             reply = await apprvpm.get_reply_message()
