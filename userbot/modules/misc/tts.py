@@ -1,6 +1,6 @@
-import os
-
+from mutagen.mp3 import MP3
 from google.cloud.texttospeech_v1.gapic.enums import SsmlVoiceGender
+from telethon.tl.types import DocumentAttributeAudio
 
 from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID, TTSClient, tts
@@ -74,11 +74,19 @@ async def text_to_speech(e):
 
     await e.delete()
 
-    with open("k.mp3", "wb") as audio:
-        audio.write(response.audio_content)
-
-    await e.client.send_file(e.chat_id, "k.mp3", voice_note=True, reply_to=textx)
-    os.remove("k.mp3")
+    with open("k.mp3", "wb") as file:
+        file.write(response.audio_content)
+        audio = MP3("k.mp3")
+        await e.client.send_file(
+            e.chat_id,
+            "k.mp3",
+            reply_to=textx,
+            attributes=[DocumentAttributeAudio(
+                voice=True,
+                waveform=bytes(response.audio_content),
+                duration=int(audio.info.length)
+            )]
+        )
 
     if BOTLOG:
         await e.client.send_message(

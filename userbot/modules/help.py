@@ -56,4 +56,3 @@ async def show_help(event):
 
         message = "**Please specify which module do you want help for!** \n\n" + '\n\n'.join(categorized)
         await event.edit(message)
-        print(message)

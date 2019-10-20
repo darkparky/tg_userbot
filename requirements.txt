@@ -44,3 +44,4 @@ spectra
 minio
 cryptg
 spamwatch
+mutagen

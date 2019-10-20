@@ -1,114 +1,22 @@
-import asyncio
 import re
 from io import BytesIO
 
 from PIL import Image
 from photohash import average_hash
-from spamwatch.errors import UnauthorizedError
-from telethon.tl.functions.users import GetFullUserRequest
 
-from ..help import add_help_item
-from userbot import spamwatch, bot
-from userbot.utils.tgdoc import *
+from ...help import add_help_item
+from userbot import spamwatch
 from userbot.events import register
-from userbot.modules.dbhelper import (add_profile_pic_hash,
-                                      remove_profile_pic_hash,
-                                      get_profile_pic_hash)
-from userbot.utils import get_user_from_event, parse_arguments, make_mention
+from userbot.modules.dbhelper import get_file_hash
+from userbot.utils import parse_arguments, get_user_from_event, make_mention
 
 REDFLAG_WORDS = [
     'bitcoin', 'crypto', 'forex', 'invest',
     'sex', 'eth', 'model',
 ]
 
-SCANNING_MESSAGE = "**Scanning for potential spammers.** {}"
-CLASSIFYING_MESSAGE = "**Classifying as spam.** {}"
 
-
-@register(outgoing=True, pattern=r"^\.spam scan$")
-async def spamscan(e):
-    """ Scan every user in the current chat and match
-    them against the spam algorithm. """
-    users = []
-    potentials = {}
-    scanned = 0
-
-    await e.edit(SCANNING_MESSAGE.format("**Collecting chat participants.**"))
-    async for user in e.client.iter_participants(e.chat, aggressive=True):
-        user_full = await e.client(GetFullUserRequest(user.id))
-        users.append(user_full)
-
-    total_users = len(users)
-    await e.edit(SCANNING_MESSAGE.format(f"**Checking {total_users} users.**"))
-    for user_full in users:
-        score = await score_user(e, user_full)
-
-        score_total = sum([i for i in score.values()])
-        if score_total >= 5:
-            potentials.update({user_full.user.id: score})
-
-        scanned += 1
-        if scanned % 5 == 0:
-            await e.edit(SCANNING_MESSAGE.format(f"\n**Checked {scanned}/{total_users}. "
-                                                 f"{total_users - scanned} remaining.**"))
-
-    output = Section(Bold("Scan Results"))
-    if potentials:
-        for item in potentials.items():
-            user_id, score = item
-            user_full = await e.client(GetFullUserRequest(user_id))
-            score_total = sum([i for i in score.values()])
-            output.items.append(KeyValueItem(String(make_mention(user_full.user)),
-                                             Bold(str(score_total))))
-    else:
-        output.items.append(String("No potential spammers found"))
-
-    await e.edit(str(output))
-
-
-@register(outgoing=True, pattern=r"^\.spam flag(\s+[\S\s]+|$)")
-async def spamscan_classify(e):
-    """ Feed the algorithm by classifying a user either
-    as spam or ham """
-    args, user = parse_arguments(e.pattern_match.group(1), ['forward', 'reason'])
-
-    reason = args.get('reason', 'spam[gban]')
-    args['forward'] = args.get('forward', True)
-    args['user'] = user
-
-    await e.edit(CLASSIFYING_MESSAGE.format("**Fetching user information.**"))
-    replied_user = await get_user_from_event(e, **args)
-    if not replied_user:
-        await e.edit("**Failed to get information for user**", delete_in=3)
-        return
-
-    me = await bot.get_me()
-    if replied_user.user == me:
-        await e.edit("**Can't flag yourself as spam**", delete_in=3)
-        return
-
-    hashes = await gather_profile_pic_hashes(e, replied_user.user)
-    if hashes:
-        await e.edit(CLASSIFYING_MESSAGE.format("**Adding profile pic hashes to DB**"))
-        for hsh in hashes:
-            await add_profile_pic_hash(hsh, True)
-
-    if spamwatch:
-        await e.edit(CLASSIFYING_MESSAGE.format("**Checking spamwatch.**"))
-        gbanned = spamwatch.get_ban(replied_user.user.id)
-
-        if not gbanned:
-            await e.edit(CLASSIFYING_MESSAGE.format("**Adding to SpamWatch.**"))
-            try:
-                spamwatch.add_ban(replied_user.user.id, reason)
-            except UnauthorizedError:
-                pass
-
-    await e.edit(f"**Flagged** {make_mention(replied_user.user)} **as spam**\n"
-                 f"**Reason:** {reason}")
-
-
-@register(outgoing=True, pattern=r"^\.spam score(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)? score(\s+[\S\s]+|$)")
 async def spamscan_score(e):
     """ Test a single user against the spamscan algorithm """
     args, user = parse_arguments(e.pattern_match.group(1), ['forward'])
@@ -152,7 +60,7 @@ async def score_user(event, userfull):
     total_hashes = len(hashes)
     matching_hashes = 0
     for hsh in hashes:
-        match = await get_profile_pic_hash(hsh)
+        match = await get_file_hash(hsh, 'profile pic')
         if match and match.get('spam'):
             matching_hashes += 1
 
@@ -280,47 +188,15 @@ async def gather_profile_pic_hashes(event, user):
 
 
 add_help_item(
-    ".spam scan",
-    "Utilities",
-    "Scan the current group for potential spammers "
-    "using the spamscan algorithm.",
-    """
-    `.spam scan`
-    
-    Warning: this can take a __very__ long time.
-    """
-)
-
-add_help_item(
-    ".spam flag",
-    "Utilities",
-    "Flag the selected user as a spammer. Hashes their profile "
-    "photos and adds them to the database and, if you're a "
-    "SpamWatch admin, gbans them. If you're not an admin it "
-    "forwards the replied to message to SpamWatch.",
-    """
-    `.spam flag [options] (user id|username)`
-    
-    Or, in reply to a message
-    `.spam flag [options]`
-    
-    **Options:**
-    `.forward`: Follow forwarded message
-    
-    `reason`: The reason for flagging
-    """
-)
-
-add_help_item(
-    ".spam score",
+    ".spamblock score",
     "Utilities",
     "Get the spam score of the selected user.",
     """
-    `.spam score [options] (user id|username)`
-    
+    `.spamblock score [options] (user id|username)`
+
     Or, in reply to a message
-    `.spam score [options]`
-    
+    `.spamblock score [options]`
+
     **Options:**
     `.forward`: Follow forwarded message
     """
