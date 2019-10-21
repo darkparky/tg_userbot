@@ -12,7 +12,7 @@ from userbot.utils import parse_arguments, get_user_from_event, make_mention
 
 REDFLAG_WORDS = [
     'bitcoin', 'crypto', 'forex', 'invest',
-    'sex', 'eth', 'model', 'xrp'
+    'sex', 'eth', 'model', 'xrp', 'btc'
 ]
 
 
