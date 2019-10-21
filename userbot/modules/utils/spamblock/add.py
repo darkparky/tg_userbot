@@ -10,8 +10,22 @@ from userbot.modules.dbhelper import get_file_hash, add_file_hash
 from userbot.utils.tgdoc import *
 
 
-@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)? add photo$")
-async def spamblock_add_pic(e):
+@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)?\s+add\S+(\S)(\s+[\S\s]+|$)")
+async def spamblock_add(e):
+    command = e.pattern_match.group(1)
+    opts = e.pattern_match.group(2)
+
+    if command in ["photo", "pic"]:
+        await _add_photo(e, opts)
+    elif command == "file":
+        await _add_file(e, opts)
+    elif command in ["chat", "group", "channel"]:
+        await _add_chat(e, opts)
+    elif command in ["site", "domain"]:
+        await _add_domain(e, opts)
+
+
+async def _add_photo(e, opts):
     reply = await e.get_reply_message()
     message = reply if reply else e.message
 
@@ -37,8 +51,7 @@ async def spamblock_add_pic(e):
         await e.edit("**Failed to add photo**", delete_in=3)
 
 
-@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)? add file$")
-async def spamblock_add_file(e):
+async def _add_file(e, opts):
     reply = await e.get_reply_message()
     message = reply if reply else e.message
 
@@ -68,17 +81,12 @@ async def spamblock_add_file(e):
         await e.edit("**Failed to add file**", delete_in=3)
 
 
-# @register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)? add chat (\S+)$")
-# async def spamblock_add_chat(e):
-#     chat = e.pattern_match.group(1)
-#     entity = await e.client.get_entity(chat)
-#
-#
-#
-#
-# @register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)? add (?:key)?word ([\S\s]+)$")
-# async def spamblock_add_keyword(e):
-#     pass
+async def _add_chat(e, opts):
+    pass
+
+
+async def _add_domain(e, opts):
+    pass
 
 
 add_help_item(
