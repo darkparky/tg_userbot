@@ -64,6 +64,14 @@ async def score_user(event, userfull):
         if match and match.get('spam'):
             matching_hashes += 1
 
+    # User was flagged as a scammer
+    if user.scam:
+        score.update({'flagged as scammer': 5})
+
+    # User is restricted
+    if user.restricted:
+        score.update({'restricted': 3})
+
     # No profile pic is a +2
     if total_hashes == 0:
         score.update({'no profile pic': 2})
