@@ -3,8 +3,12 @@ from typing import List
 
 from telethon.events import NewMessage
 from telethon.tl.custom import Message
+from telethon.tl.functions.channels import GetFullChannelRequest
+from telethon.tl.functions.messages import GetFullChatRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import MessageEntityMentionName, ChannelParticipantsAdmins
+from telethon.tl.types import (MessageEntityMentionName,
+                               ChannelParticipantsAdmins,
+                               ChannelParticipantsBots, MessageEntityMention, InputPeerChannel, InputPeerChat)
 
 
 def parse_arguments(message: str, valid: List[str]) -> (dict, str):
@@ -29,10 +33,8 @@ def parse_arguments(message: str, valid: List[str]) -> (dict, str):
             elif match(r'[Tt]rue|[Ff]alse', value):
                 match(r'[Tt]rue', value)
             options[key] = value
-            print(val1, val2, f"{key}:{value}")
             message = message.replace(f"{key}:{value}", '')
 
-    print(options, message)
     return options, message.strip()
 
 
@@ -81,6 +83,7 @@ async def get_user_from_event(event: NewMessage.Event, **kwargs):
                 user_id = probable_user_mention_entity.user_id
                 replied_user = await event.client(GetFullUserRequest(user_id))
                 return replied_user
+
         try:
             user_object = await event.client.get_entity(user)
             replied_user = await event.client(
@@ -109,11 +112,39 @@ async def get_user_from_event(event: NewMessage.Event, **kwargs):
     return replied_user
 
 
+async def get_chat_from_event(event: NewMessage.Event, **kwargs):
+    reply_msg: Message = await event.get_reply_message()
+    chat = kwargs.get('chat', None)
+
+    if chat:
+        try:
+            input_entity = await event.client.get_input_entity(chat)
+            if isinstance(input_entity, InputPeerChannel):
+                return await event.client(GetFullChannelRequest(input_entity.channel_id))
+            elif isinstance(input_entity, InputPeerChat):
+                return await event.client(GetFullChatRequest(input_entity.chat_id))
+            else:
+                return None
+        except(TypeError, ValueError):
+            return None
+    # elif reply_msg and reply_msg.forward:
+    #     return None
+    else:
+        chat = await event.get_chat()
+        return await event.client(GetFullChannelRequest(chat.id))
+
+
+
 async def list_admins(event):
     adms = await event.client.get_participants(event.chat, filter=ChannelParticipantsAdmins)
     adms = map(lambda x: x if not x.bot else None, adms)
     adms = [i for i in list(adms) if i]
     return adms
+
+
+async def list_bots(event):
+    bots = await event.client.get_participants(event.chat, filter=ChannelParticipantsBots)
+    return bots
 
 
 def make_mention(user):

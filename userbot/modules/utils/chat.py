@@ -2,9 +2,10 @@ import inspect
 
 from telethon.tl.functions.channels import GetFullChannelRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import Channel, User
+from telethon.tl.types.messages import ChatFull
+from telethon.tl.types import Channel, User, ChatInviteExported
 
-from userbot.utils import parse_arguments, list_admins, inline_mention
+from userbot.utils import parse_arguments, list_admins, inline_mention, list_bots, get_chat_from_event
 from ..help import add_help_item
 from userbot.events import register
 from userbot.utils.tgdoc import *
@@ -13,38 +14,35 @@ from userbot.utils.tgdoc import *
 @register(outgoing=True, pattern=r"^\.c(?:hat)?(\s+[\S\s]+|$)")
 async def chat_info(e):
     params = e.pattern_match.group(1) or ""
-    args, _ = parse_arguments(params, ['id', 'general', 'admins', 'all'])
+    args, chat = parse_arguments(params, ['id', 'general', 'admins', 'bots', 'all'])
+    args['chat'] = chat
 
-    reply_message = await e.get_reply_message()
+    if isinstance(e.chat, User):
+        from .user import fetch_info as fetch_user_info
+        replied_user = await e.client(GetFullUserRequest(e.chat.id))
+        response = await fetch_user_info(replied_user, **args)
+    else:
+        full_chat: ChatFull = await get_chat_from_event(e, **args)
 
-    # TODO: Get information about the chat a message was forwarded from
-    # if reply_message and reply_message.forward:
-    #     chat = await reply_message.forward.get_chat()
-    #     print(reply_message.forward.original_fwd)
-    # else:
-    #     chat = await e.get_chat()
+        await e.edit("**Fetching chat info...**")
+        response = await fetch_info(e, full_chat, **args)
 
-    await e.edit("**Fetching chat info...**")
-    response = await fetch_info(e, **args)
     await e.edit(str(response))
 
 
-async def fetch_info(event, **kwargs):
-    chat = await event.get_chat()
-
-    if isinstance(chat, User):
-        from .user import fetch_info as fetch_user_info
-        replied_user = await event.client(GetFullUserRequest(chat.id))
-        return await fetch_user_info(replied_user, **kwargs)
+async def fetch_info(event, full_chat, **kwargs):
+    chat = full_chat.chats[0]
 
     show_all = kwargs.get('all', False)
     id_only = kwargs.get('id', False)
     show_general = kwargs.get('general', True)
     show_admins = kwargs.get('admins', False)
+    show_bots = kwargs.get('bots', False)
 
     is_private = False
     if isinstance(chat, Channel) and chat.username:
-        title = Link(chat.username, f"https://t.me/{chat.username}")
+        name = chat.title if chat.title else chat.username
+        title = Link(name, f"https://t.me/{chat.username}")
     elif chat.title:
         is_private = True
         title = Bold(chat.title)
@@ -55,21 +53,22 @@ async def fetch_info(event, **kwargs):
     if show_all:
         show_general = True
         show_admins = True
+        show_bots = True
     elif id_only:
         return KeyValueItem(title, Code(str(chat.id)))
 
     if show_general:
-        participant_count = 0
-        async for user in event.client.iter_participants(chat, aggressive=True):
-            print(user)
-            participant_count += 1
-
+        exported_invite = full_chat.full_chat.exported_invite
+        invite_link = exported_invite.link if isinstance(exported_invite, ChatInviteExported) else None
         general = SubSection(Bold("general"),
                              KeyValueItem("id", Code(str(chat.id))),
                              KeyValueItem("title", Code(chat.title)),
                              KeyValueItem("private", Code(str(is_private))),
-                             KeyValueItem("participants", Code(str(participant_count))),
-                             KeyValueItem("created at", Code(chat.date.strftime('%b %d %Y %H:%M:%S'))))
+                             KeyValueItem("invite link", Link(invite_link.split('/')[-1], invite_link)) if invite_link else None,
+                             SubSubSection("participants",
+                                           KeyValueItem("admins", Code(str(full_chat.full_chat.admins_count))),
+                                           KeyValueItem("online", Code(str(full_chat.full_chat.online_count))),
+                                           KeyValueItem("total", Code(str(full_chat.full_chat.participants_count)))))
     else:
         general = None
 
@@ -78,13 +77,21 @@ async def fetch_info(event, **kwargs):
         admins = SubSection(Bold("admins"))
         for admin in admin_list:
             admins.items.append(String(inline_mention(admin)))
-    else:
-        admins = None
+        if not admins:
+            admins.items.append(String("No admins"))
 
-    return Section(
-        general if show_general else None,
-        admins if show_admins else None
-    )
+    if show_bots:
+        bots_list = await list_bots(event)
+        bots = SubSection(Bold("bots"))
+        for bot in bots_list:
+            bots.items.append(String(inline_mention(bot)))
+        if not bots:
+            bots.items.append(String("No bots"))
+
+    return TGDoc(Section(title,
+                         general if show_general else None,
+                         admins if show_admins else None,
+                         bots if show_bots else None))
 
 
 add_help_item(
