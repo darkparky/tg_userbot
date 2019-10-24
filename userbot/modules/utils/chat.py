@@ -1,6 +1,6 @@
 import inspect
 
-from telethon.tl.functions.channels import GetFullChannelRequest
+from telethon.tl.functions.channels import GetFullChannelRequest, GetParticipantRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types.messages import ChatFull
 from telethon.tl.types import Channel, User, ChatInviteExported
@@ -57,23 +57,26 @@ async def fetch_info(event, full_chat, **kwargs):
     elif id_only:
         return KeyValueItem(title, Code(str(chat.id)))
 
+    admin_list = await list_admins(event)
+
     if show_general:
         exported_invite = full_chat.full_chat.exported_invite
         invite_link = exported_invite.link if isinstance(exported_invite, ChatInviteExported) else None
+        admin_count = full_chat.full_chat.admins_count or len(admin_list)
+
         general = SubSection(Bold("general"),
                              KeyValueItem("id", Code(str(chat.id))),
                              KeyValueItem("title", Code(chat.title)),
                              KeyValueItem("private", Code(str(is_private))),
                              KeyValueItem("invite link", Link(invite_link.split('/')[-1], invite_link)) if invite_link else None,
                              SubSubSection("participants",
-                                           KeyValueItem("admins", Code(str(full_chat.full_chat.admins_count))),
+                                           KeyValueItem("admins", Code(str(admin_count))),
                                            KeyValueItem("online", Code(str(full_chat.full_chat.online_count))),
                                            KeyValueItem("total", Code(str(full_chat.full_chat.participants_count)))))
     else:
         general = None
 
     if show_admins:
-        admin_list = await list_admins(event)
         admins = SubSection(Bold("admins"))
         for admin in admin_list:
             admins.items.append(String(inline_mention(admin)))

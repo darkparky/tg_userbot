@@ -134,7 +134,6 @@ async def get_chat_from_event(event: NewMessage.Event, **kwargs):
         return await event.client(GetFullChannelRequest(chat.id))
 
 
-
 async def list_admins(event):
     adms = await event.client.get_participants(event.chat, filter=ChannelParticipantsAdmins)
     adms = map(lambda x: x if not x.bot else None, adms)
