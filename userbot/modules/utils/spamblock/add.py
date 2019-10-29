@@ -10,7 +10,7 @@ from userbot.modules.dbhelper import get_file_hash, add_file_hash
 from userbot.utils.tgdoc import *
 
 
-@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)?\s+add\s+(\S)(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)?\s+add\s+(\S+)(?:\s+([\S\s]+)|$)")
 async def spamblock_add(e):
     command = e.pattern_match.group(1)
     opts = e.pattern_match.group(2)
@@ -90,21 +90,21 @@ async def _add_domain(e, opts):
 
 
 add_help_item(
-    ".spamblock add photo",
+    ".sb add photo",
     "Utilities",
     "Get the average hash for a photo and add it "
     "to the blacklist.",
     """
-    `.spamblock add photo`
+    `.sb add photo`
     """
 )
 
 add_help_item(
-    ".spamblock add file",
+    ".sb add file",
     "Utilities",
     "Get the hash for a file and add it "
     "to the blacklist.",
     """
-    `.spamblock add file`
+    `.sb add file`
     """
 )
