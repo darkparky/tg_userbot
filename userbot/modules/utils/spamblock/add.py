@@ -10,7 +10,7 @@ from userbot.modules.dbhelper import get_file_hash, add_file_hash
 from userbot.utils.tgdoc import *
 
 
-@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)?\s+add\S+(\S)(\s+[\S\s]+|$)")
+@register(outgoing=True, pattern=r"^\.s(?:pam)?b(?:lock)?\s+add\s+(\S)(\s+[\S\s]+|$)")
 async def spamblock_add(e):
     command = e.pattern_match.group(1)
     opts = e.pattern_match.group(2)
