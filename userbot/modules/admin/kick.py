@@ -1,13 +1,9 @@
 from asyncio.tasks import sleep
 
-from telethon.errors import BadRequestError
-from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChatBannedRights
-
 from ..help import add_help_item
 from userbot import BOTLOG, BOTLOG_CHATID
 from userbot.events import register
-from userbot.modules.admin import NO_ADMIN, KICK_RIGHTS, NO_PERM
+from userbot.modules.admin import NO_ADMIN, NO_PERM
 from userbot.utils import get_user_from_event
 
 
@@ -33,14 +29,11 @@ async def kick(usr):
     await usr.edit("`Kicking...`")
 
     try:
-        await usr.client(EditBannedRequest(usr.chat_id, user.id, KICK_RIGHTS))
+        await usr.client.kick_participant(usr.chat_id, user.id)
         await sleep(.5)
-    except BadRequestError:
+    except:
         await usr.edit(NO_PERM)
         return
-    await usr.client(
-        EditBannedRequest(usr.chat_id, user.id,
-                          ChatBannedRights(until_date=None)))
 
     kmsg = "`Kicked` [{}](tg://user?id={})`!`"
     await usr.edit(kmsg.format(user.first_name, user.id))
