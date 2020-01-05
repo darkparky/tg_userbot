@@ -48,7 +48,7 @@ async def fedban_all(msg):
     fbanlist = []
     x = (await get_fban())
     for i in x:
-        fbanlist.append(i["chatid"])
+        fbanlist.append(i["chat_id"])
     for bangroup in fbanlist:
 
         # Send to proof to Spamwatch in case it was spam

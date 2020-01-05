@@ -64,11 +64,14 @@ async def call_registered_command(e):
         await e.delete()
         if command.get('attachment'):
             name = command.get('attachment')
-            attachment = minioClient.fget_object(
+            print([o.object_name.encode('utf-8') for o in minioClient.list_objects(MINIO_BUCKET)])
+            
+            minioClient.fget_object(
                 MINIO_BUCKET,
                 name,
                 f'./downloads/{name}'
             )
+            
             await e.client.send_file(
                 e.chat_id,
                 f"./downloads/{name}",
