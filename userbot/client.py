@@ -9,23 +9,23 @@ class UserBot(TelegramClient):
     async def send_message_sd(
             self: 'TelegramClient',
             entity: 'hints.EntityLike',
-            destroy_in: int,
+            delete_in: int,
             message: 'hints.MessageLike' = '',
             **kwargs
     ) -> 'types.Message':
         message = await self.send_message(entity, message, **kwargs)
-        await asyncio.sleep(destroy_in)
+        await asyncio.sleep(delete_in)
         await message.delete()
 
     async def edit_message_sd(
             self: 'TelegramClient',
             message: 'hints.MessageLike' = None,
-            destroy_in: int = None,
+            delete_in: int = None,
             text: str = None,
             **kwargs
     ) -> 'types.Message':
         message = await self.edit_message(message, text, **kwargs)
-        await asyncio.sleep(destroy_in)
+        await asyncio.sleep(delete_in)
         await message.delete()
 
 
