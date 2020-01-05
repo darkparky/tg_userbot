@@ -14,16 +14,16 @@ async def fedban_all(msg):
         return
 
     textx = await msg.get_reply_message()
-    spamwatch = False
 
     if textx:
+        banid = textx.from_id
         try:
-            banreason = "[userbot] "
+            banreason = "[spam] "
             banreason += banreason.join(msg.text.split(" ")[1:])
-            if banreason == "[userbot]":
+            if banreason == "[spam]":
                 raise TypeError
         except TypeError:
-            banreason = "[userbot] fban"
+            banreason = "[spam] fban"
     else:
         banid = msg.text.split(" ")[1]
         if banid.isnumeric():
@@ -35,12 +35,12 @@ async def fedban_all(msg):
                                                                MessageEntityMentionName):
                 ban_id = msg.message.entities[0].user_id
         try:
-            banreason = "[userbot] "
+            banreason = "[spam] "
             banreason += banreason.join(msg.text.split(" ")[2:])
-            if banreason == "[userbot]":
+            if banreason == "[spam]":
                 raise TypeError
         except TypeError:
-            banreason = "[userbot] fban"
+            banreason = "[spam] fban"
         if "spam" in banreason:
             spamwatch = True
     failed = dict()
@@ -50,30 +50,15 @@ async def fedban_all(msg):
     for i in x:
         fbanlist.append(i["chat_id"])
     for bangroup in fbanlist:
-
-        # Send to proof to Spamwatch in case it was spam
-        # Spamwatch is a reputed fed fighting against spam on telegram
-
-        if bangroup == -1001312712379:
-            if spamwatch:
-                if textx:
-                    await textx.forward_to(-1001312712379)
-                    # Tag him, coz we can't fban xd
-                    await bot.send_message(-1001312712379, "@SitiSchu")
-                else:
-                    await msg.reply(
-                        "`Spam message detected. But no reply message, can't forward to spamwatch`"
-                    )
-            continue
         async with bot.conversation(bangroup) as conv:
-            await conv.send_message(f"!fban {banid} {banreason}")
+            await conv.send_message(f"/fban {banid} {banreason}")
             resp = await conv.get_response()
             await bot.send_read_acknowledge(conv.chat_id)
-            if "Beginning federation ban " not in resp.text:
+            if "New FedBan" not in resp.text:
                 failed[bangroup] = str(conv.chat_id)
             else:
                 count += 1
-                await msg.edit("`Fbanned on " + str(count) + " feds!`")
+                await msg.edit("**Fbanned in " + str(count) + " feds!**", delete_in=3)
             # Sleep to avoid a floodwait.
             # Prevents floodwait if user is a fedadmin on too many feds
             await asyncio.sleep(0.2)
@@ -82,6 +67,6 @@ async def fedban_all(msg):
         for i in failed.keys():
             failedstr += failed[i]
             failedstr += " "
-        await msg.reply(f"`Failed to fban in {failedstr}`")
+        await msg.edit(f"**Failed to fban in {failedstr}**", delete_in=3)
     else:
-        await msg.reply("`Fbanned in all feds!`")
+        await msg.edit("**Fbanned in all feds!**", delete_in=3)
