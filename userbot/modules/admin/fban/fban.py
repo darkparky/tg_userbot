@@ -67,6 +67,6 @@ async def fedban_all(msg):
         for i in failed.keys():
             failedstr += failed[i]
             failedstr += " "
-        await msg.edit(f"**Failed to fban in {failedstr}**", delete_in=3)
+        await msg.reply(f"**Failed to fban in {failedstr}**", delete_in=4)
     else:
-        await msg.edit("**Fbanned in all feds!**", delete_in=3)
+        await msg.reply("**Fbanned in all feds!**", delete_in=4)
