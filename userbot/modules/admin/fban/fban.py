@@ -5,7 +5,7 @@ from telethon.tl.types import MessageEntityMentionName
 from userbot import is_mongo_alive, is_redis_alive, bot
 from userbot.events import register
 from userbot.modules.dbhelper import get_fban
-
+from userbot.utils import parse_arguments
 
 @register(outgoing=True, pattern=r"^\.fban")
 async def fedban_all(msg):
@@ -13,42 +13,24 @@ async def fedban_all(msg):
         await msg.edit("`Database connections failing!`")
         return
 
-    textx = await msg.get_reply_message()
+    reply_message = await msg.get_reply_message()
+    args, text = parse_arguments(params, ['reason'])
 
-    if textx:
-        banid = textx.from_id
-        try:
-            banreason = "[spam] "
-            banreason += banreason.join(msg.text.split(" ")[1:])
-            if banreason == "[spam]":
-                raise TypeError
-        except TypeError:
-            banreason = "[spam] fban"
+    if reply_message:
+        banid = reply_message.from_id
+        banreason = args.get('reason', '[spam]')
     else:
-        banid = msg.text.split(" ")[1]
-        if banid.isnumeric():
-            # if its a user id
-            banid = int(banid)
-        else:
-            # deal wid the usernames
-            if msg.message.entities is not None and isinstance(msg.message.entities[0],
-                                                               MessageEntityMentionName):
-                ban_id = msg.message.entities[0].user_id
-        try:
-            banreason = "[spam] "
-            banreason += banreason.join(msg.text.split(" ")[2:])
-            if banreason == "[spam]":
-                raise TypeError
-        except TypeError:
-            banreason = "[spam] fban"
-        if "spam" in banreason:
-            spamwatch = True
+        banid = int(text) if text.isnumeric()
+        banreason = args.get('reason', '[fban]')
+
+    if msg.message.entities and isinstance(msg.message.entities[0], MessageEntityMentionName):
+        ban_id = msg.message.entities[0].user_id
+
+
     failed = dict()
     count = 1
-    fbanlist = []
-    x = (await get_fban())
-    for i in x:
-        fbanlist.append(i["chat_id"])
+    fbanlist = [i['chat_id'] async for i in get_fban()]
+
     for bangroup in fbanlist:
         async with bot.conversation(bangroup) as conv:
             await conv.send_message(f"/fban {banid} {banreason}")
@@ -62,11 +44,9 @@ async def fedban_all(msg):
             # Sleep to avoid a floodwait.
             # Prevents floodwait if user is a fedadmin on too many feds
             await asyncio.sleep(0.2)
+
     if failed:
-        failedstr = ""
-        for i in failed.keys():
-            failedstr += failed[i]
-            failedstr += " "
+        failedstr = ', '.join([f'`i`' in failed.keys()])
         await msg.reply(f"**Failed to fban in {failedstr}**", delete_in=4)
     else:
         await msg.reply("**Fbanned in all feds!**", delete_in=4)
